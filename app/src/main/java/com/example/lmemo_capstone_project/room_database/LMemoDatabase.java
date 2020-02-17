@@ -7,7 +7,15 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import com.example.lmemo_capstone_project.room_database.dao.ExampleDAO;
+import com.example.lmemo_capstone_project.room_database.dao.FlashcardDAO;
+import com.example.lmemo_capstone_project.room_database.dao.KanjiDAO;
+import com.example.lmemo_capstone_project.room_database.dao.NoteDAO;
+import com.example.lmemo_capstone_project.room_database.dao.RewardDAO;
+import com.example.lmemo_capstone_project.room_database.dao.SetFlashcardDAO;
 import com.example.lmemo_capstone_project.room_database.dao.UserDAO;
+import com.example.lmemo_capstone_project.room_database.dao.WordDAO;
+import com.example.lmemo_capstone_project.room_database.data_classes.Flashcard;
 import com.example.lmemo_capstone_project.room_database.data_classes.User;
 
 @Database(entities = {User.class}, version = 1)
@@ -45,6 +53,14 @@ public abstract class LMemoDatabase extends RoomDatabase {
     // End of singleton part.
     // シングルトンパータンにするのが終った。
 
+    public abstract ExampleDAO exampleDAO();
+    public abstract FlashcardDAO flashcardDAO();
+    public abstract KanjiDAO kanjiDAO();
+    public abstract NoteDAO noteDAO();
+    public abstract RewardDAO rewardDAO();
+    public abstract SetFlashcardDAO setFlashcardDAO();
     public abstract UserDAO userDAO();
+    public abstract WordDAO wordDAO();
+
 }
 
