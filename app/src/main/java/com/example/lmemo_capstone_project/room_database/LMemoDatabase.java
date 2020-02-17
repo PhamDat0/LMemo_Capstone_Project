@@ -15,7 +15,6 @@ import com.example.lmemo_capstone_project.room_database.dao.RewardDAO;
 import com.example.lmemo_capstone_project.room_database.dao.SetFlashcardDAO;
 import com.example.lmemo_capstone_project.room_database.dao.UserDAO;
 import com.example.lmemo_capstone_project.room_database.dao.WordDAO;
-import com.example.lmemo_capstone_project.room_database.data_classes.Flashcard;
 import com.example.lmemo_capstone_project.room_database.data_classes.User;
 
 @Database(entities = {User.class}, version = 1)
