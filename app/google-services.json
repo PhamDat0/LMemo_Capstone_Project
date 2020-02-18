@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "905667778819",
+    "firebase_url": "https://lmemodatabase-22b12.firebaseio.com",
+    "project_id": "lmemodatabase-22b12",
+    "storage_bucket": "lmemodatabase-22b12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905667778819:android:262102f57b4fc405b37136",
+        "android_client_info": {
+          "package_name": "com.example.lmemo_capstone_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905667778819-ec8kug5cmv6b72a35rrv77b35vckaed0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lmemo_capstone_project",
+            "certificate_hash": "297fae77a76d5961a9b2f289ce6c89ba2a36415e"
+          }
+        },
+        {
+          "client_id": "905667778819-v7ntrd22a4i9qgfickkup8gpshb34561.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8nr7oyrKO5LkPhljosLcwGJ1u801PkhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905667778819-v7ntrd22a4i9qgfickkup8gpshb34561.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
