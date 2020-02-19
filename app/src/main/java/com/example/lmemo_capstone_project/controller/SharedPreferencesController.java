@@ -6,23 +6,20 @@ import android.content.SharedPreferences;
 import com.example.lmemo_capstone_project.R;
 
 public class SharedPreferencesController {
-    private static Context context;
-    private static SharedPreferences sharedPreferences;
-    private static SharedPreferences.Editor editor;
 
-    public static void setContext(Context context) {
-        SharedPreferencesController.context = context;
-        SharedPreferencesController.sharedPreferences = context.getSharedPreferences(
-                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        SharedPreferencesController.editor = sharedPreferences.edit();
-    }
-
-    public static boolean hasDictionaryData() {
-        return sharedPreferences.getBoolean(
+    public static boolean hasDictionaryData(Context context) {
+        return getSharedPreferences(context).getBoolean(
                 context.getString(R.string.dictionary_state), false);
     }
 
-    public static void setDictionaryDataState(boolean hasData) {
+    private static SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+    }
+
+    public static void setDictionaryDataState(Context context, boolean hasData) {
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(context.getString(R.string.dictionary_state), hasData);
+        editor.commit();
     }
 }

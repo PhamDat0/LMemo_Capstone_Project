@@ -6,22 +6,28 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SharedPreferencesControllerTest {
 
     @Test
     public void hasDictionaryData() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        SharedPreferencesController.setContext(context);
-        assertEquals(SharedPreferencesController.hasDictionaryData(), false);
+        assertFalse(SharedPreferencesController.hasDictionaryData(context));
     }
 
     @Test
-    public void setDictionaryDataState() {
+    public void setDictionaryDataStateToTrue() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        SharedPreferencesController.setContext(context);
-        SharedPreferencesController.setDictionaryDataState(true);
-        assertEquals(SharedPreferencesController.hasDictionaryData(), true);
+        SharedPreferencesController.setDictionaryDataState(context, true);
+        assertTrue(SharedPreferencesController.hasDictionaryData(context));
+    }
+
+    @Test
+    public void setDictionaryDataStateToFalse() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        SharedPreferencesController.setDictionaryDataState(context, false);
+        assertFalse(SharedPreferencesController.hasDictionaryData(context));
     }
 }

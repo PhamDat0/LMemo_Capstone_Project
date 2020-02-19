@@ -2,6 +2,7 @@ package com.example.lmemo_capstone_project.model.room_db_entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -17,6 +18,7 @@ public class Word {
     public Word() {
     }
 
+    @Ignore
     public Word(int wordID, String kana, String kanjiWriting, String meaning, String partOfSpeech) {
         this.wordID = wordID;
         this.kana = kana;

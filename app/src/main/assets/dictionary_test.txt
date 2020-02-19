@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <body>
+      <entry xml:id="a1002580">
+        <form type="k_ele">
+          <orth>お付き</orth>
+        </form>
+        <form type="k_ele">
+          <orth>御付き</orth>
+        </form>
+        <form type="r_ele">
+          <orth>おつき</orth>
+        </form>
+        <sense>
+          <note type="pos">noun (common) (futsuumeishi)</note>
+          <cit type="trans">
+            <quote>retainer</quote>
+          </cit>
+          <cit type="trans">
+            <quote>attendant</quote>
+          </cit>
+          <cit type="trans">
+            <quote>escort</quote>
+          </cit>
+        </sense>
+      </entry>
+      <entry xml:id="a1002590">
+        <form type="k_ele">
+          <orth>お父さん</orth>
+          <usg type="pri">ichi1</usg>
+          <usg type="pri">news1</usg>
+          <usg type="pri">nf07</usg>
+        </form>
+        <form type="k_ele">
+          <orth>御父さん</orth>
+        </form>
+        <form type="r_ele">
+          <orth>おとうさん</orth>
+          <usg type="re_pri">ichi1</usg>
+          <usg type="re_pri">news1</usg>
+          <usg type="re_pri">nf07</usg>
+        </form>
+        <form type="r_ele">
+          <orth>おとっさん</orth>
+          <lbl type="re_inf">out-dated or obsolete kana usage</lbl>
+        </form>
+        <sense>
+          <note type="pos">noun (common) (futsuumeishi)</note>
+          <ref>父さん</ref>
+          <note>honorific or respectful (sonkeigo) language</note>
+          <cit type="trans">
+            <quote>father</quote>
+          </cit>
+          <cit type="trans">
+            <quote>dad</quote>
+          </cit>
+          <cit type="trans">
+            <quote>papa</quote>
+          </cit>
+          <cit type="trans">
+            <quote>pa</quote>
+          </cit>
+          <cit type="trans">
+            <quote>pop</quote>
+          </cit>
+          <cit type="trans">
+            <quote>daddy</quote>
+          </cit>
+          <cit type="trans">
+            <quote>dada</quote>
+          </cit>
+        </sense>
+      </entry>
+      <entry xml:id="a1002600">
+        <form type="k_ele">
+          <orth>お風呂に入る</orth>
+        </form>
+        <form type="r_ele">
+          <orth>おふろにはいる</orth>
+        </form>
+        <sense>
+          <note type="pos">expressions (phrases, clauses, etc.)</note>
+          <note type="pos">Godan verb with `ru' ending</note>
+          <cit type="trans">
+            <quote>to take a bath</quote>
+          </cit>
+        </sense>
+      </entry>
+      <entry xml:id="a1002610">
+        <form type="k_ele">
+          <orth>お腹</orth>
+          <usg type="pri">ichi1</usg>
+        </form>
+        <form type="k_ele">
+          <orth>御腹</orth>
+        </form>
+        <form type="k_ele">
+          <orth>お中</orth>
+        </form>
+        <form type="k_ele">
+          <orth>御中</orth>
+        </form>
+        <form type="r_ele">
+          <orth>おなか</orth>
+          <usg type="re_pri">ichi1</usg>
+        </form>
+        <sense>
+          <note type="pos">noun (common) (futsuumeishi)</note>
+          <note>polite (teineigo) language</note>
+          <cit type="trans">
+            <quote>stomach</quote>
+          </cit>
+        </sense>
+      </entry>
+    </body>

@@ -15,9 +15,18 @@ import com.example.lmemo_capstone_project.controller.database_controller.dao.Rew
 import com.example.lmemo_capstone_project.controller.database_controller.dao.SetFlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.dao.UserDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.dao.WordDAO;
+import com.example.lmemo_capstone_project.model.room_db_entity.Example;
+import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
+import com.example.lmemo_capstone_project.model.room_db_entity.FlashcardBelongToSet;
+import com.example.lmemo_capstone_project.model.room_db_entity.Kanji;
+import com.example.lmemo_capstone_project.model.room_db_entity.Note;
+import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
+import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
+import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
-@Database(entities = {User.class}, version = 1)
+@Database(entities = {User.class, Word.class, Example.class, Flashcard.class, FlashcardBelongToSet.class, Kanji.class, Note.class, NoteOfWord.class, Reward.class, SetFlashcard.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class LMemoDatabase extends RoomDatabase {
     private static final String DB_NAME = "lmemoDatabase.db";
@@ -25,13 +34,6 @@ public abstract class LMemoDatabase extends RoomDatabase {
     //This part of code make the database object become singleton
     //このコードはデータベースのオブジェクトをシングルトンパータンにする。
     private static volatile LMemoDatabase instance;
-
-    /**
-     * Make constructor private to not allow create object
-     * データベースのオブジェクトをほかのクラスで作れないように構築子を非公開にする。
-     */
-    private LMemoDatabase() {
-    }
 
     /**
      * @return an object where we can take DAO from.
