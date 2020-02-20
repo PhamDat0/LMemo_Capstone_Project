@@ -20,6 +20,6 @@ public class SharedPreferencesController {
     public static void setDictionaryDataState(Context context, boolean hasData) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(context.getString(R.string.dictionary_state), hasData);
-        editor.commit();
+        editor.apply();
     }
 }

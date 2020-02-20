@@ -32,4 +32,5 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    implementation 'com.ximpleware:vtd-xml:2.13.4'
 }
