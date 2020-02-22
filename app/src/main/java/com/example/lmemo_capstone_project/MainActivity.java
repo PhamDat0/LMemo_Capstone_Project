@@ -1,5 +1,6 @@
 package com.example.lmemo_capstone_project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         if (!SharedPreferencesController.hasDictionaryData(getApplicationContext())) {
             loadDictionaryDatabase();
         }
+        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+        startActivity(intent);
     }
 
     private void loadDictionaryDatabase() {
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         //At the same time display a loading bar
         //After done change the Preference
     }
+
 
 
 }

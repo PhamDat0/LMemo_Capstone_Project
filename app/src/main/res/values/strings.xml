@@ -13,4 +13,6 @@
     <string name="sign_out">Log Out</string>
     <string name="signed_out">Logged Out</string>
     <string name="web_client_id">905667778819-nroid4eiom7jr8dsrjgrrpoajt3h9tuv.apps.googleusercontent.com</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
 </resources>
