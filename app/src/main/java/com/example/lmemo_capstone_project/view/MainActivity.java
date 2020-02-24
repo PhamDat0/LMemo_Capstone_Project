@@ -1,4 +1,4 @@
-package com.example.lmemo_capstone_project;
+package com.example.lmemo_capstone_project.view;
 
 import android.content.Intent;
 import android.os.Build;
@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.SharedPreferencesController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.DictionaryFileReader;
