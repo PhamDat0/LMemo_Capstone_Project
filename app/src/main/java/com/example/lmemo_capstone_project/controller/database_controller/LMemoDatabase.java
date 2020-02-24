@@ -69,7 +69,7 @@ public abstract class LMemoDatabase extends RoomDatabase {
 
     //Create a database object
     private static LMemoDatabase createDBObject(Context context) {
-        return Room.databaseBuilder(context, LMemoDatabase.class, DB_NAME).build();
+        return Room.databaseBuilder(context, LMemoDatabase.class, DB_NAME).allowMainThreadQueries().build();
     }
     // End of singleton part.
     // シングルトンパータンにするのが終った。
