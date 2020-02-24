@@ -12,5 +12,8 @@ public interface KanjiDAO {
     void insertKanji(Kanji kanji);
 
     @Query("SELECT * FROM Kanji WHERE Kanji LIKE :keyword")
-    Kanji[] getKanji(char keyword);
+    Kanji[] getKanji(String keyword);
+
+    @Query("DELETE FROM Kanji")
+    void deleteAllKanji();
 }

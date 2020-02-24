@@ -12,6 +12,11 @@ public class SharedPreferencesController {
                 context.getString(R.string.dictionary_state), false);
     }
 
+    public static boolean hasKanjiData(Context context) {
+        return getSharedPreferences(context).getBoolean(
+                context.getString(R.string.kanji_state), false);
+    }
+
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(
                 context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -20,6 +25,12 @@ public class SharedPreferencesController {
     public static void setDictionaryDataState(Context context, boolean hasData) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(context.getString(R.string.dictionary_state), hasData);
+        editor.commit();
+    }
+
+    public static void setKanjiDataState(Context context, boolean hasData) {
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putBoolean(context.getString(R.string.kanji_state), hasData);
         editor.commit();
     }
 }

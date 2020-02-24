@@ -12,6 +12,7 @@ import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.SharedPreferencesController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.DictionaryFileReader;
+import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.KanjiFileReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,14 +21,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         LMemoDatabase.getInstance(getApplicationContext());
-//        SharedPreferencesController.setDictionaryDataState(getApplicationContext(),false);
+        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
+        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
         Log.i("SHARE_PRE", SharedPreferencesController.hasDictionaryData(getApplicationContext()) + "");
-        if (!SharedPreferencesController.hasDictionaryData(getApplicationContext())) {
-            loadDictionaryDatabase();
-        } else {
-            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-            startActivity(intent);
-        }
+
+        loadDictionaryDatabase();
+
     }
 
     private void updateProgressBar() {
@@ -41,12 +40,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadDictionaryDatabase() {
         //Start read file to SQLite
-        final Thread reader = new DictionaryFileReader(getApplicationContext());
-        reader.start();
+        final Thread dictionaryFileReader = new DictionaryFileReader(getApplicationContext());
+        dictionaryFileReader.start();
+        final Thread kanjiReader = new KanjiFileReader(getApplicationContext());
+        kanjiReader.start();
         Thread progressBarUpdate = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (reader.isAlive()) {
+                while (kanjiReader.isAlive() || dictionaryFileReader.isAlive()) {
                     try {
                         Thread.sleep(3000);
                         updateProgressBar();

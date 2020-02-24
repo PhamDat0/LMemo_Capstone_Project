@@ -47,19 +47,21 @@ public class DictionaryFileReader extends Thread {
      */
     @Override
     public void run() {
-        Log.i("START_READING", "Start reading file");
-        deleteAllRemainsWords();
-        try {
-            addAllWordsToSQLite();
-        } catch (IOException e) {
-            Log.i("EXC", "IOException");
-            e.printStackTrace();
-        } catch (XmlPullParserException e) {
-            Log.i("EXC", "XmlPullException");
-            e.printStackTrace();
+        if (!SharedPreferencesController.hasDictionaryData(context)) {
+            Log.i("START_READING", "Start reading file");
+            deleteAllRemainingWords();
+            try {
+                addAllWordsToSQLite();
+            } catch (IOException e) {
+                Log.i("EXC", "IOException");
+                e.printStackTrace();
+            } catch (XmlPullParserException e) {
+                Log.i("EXC", "XmlPullException");
+                e.printStackTrace();
+            }
+            SharedPreferencesController.setDictionaryDataState(context, true);
+            Log.i("END_READING", "End reading file");
         }
-        SharedPreferencesController.setDictionaryDataState(context, true);
-        Log.i("END_READING", "End reading file");
     }
 
     private static void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -209,7 +211,7 @@ public class DictionaryFileReader extends Thread {
     /**
      *　この関数はSQLiteから残っている言葉を削除します。
      */
-    private void deleteAllRemainsWords() {
+    private void deleteAllRemainingWords() {
         wordDAO.deleteAllWords();
         while (wordDAO.getAllWords().length != 0) {
         }

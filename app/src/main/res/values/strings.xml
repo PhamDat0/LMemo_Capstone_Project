@@ -15,4 +15,6 @@
     <string name="web_client_id">905667778819-nroid4eiom7jr8dsrjgrrpoajt3h9tuv.apps.googleusercontent.com</string>
     <string name="open">open</string>
     <string name="close">close</string>
+    <string name="kanji_file_name">kanjidic2.xml</string>
+    <string name="kanji_state">has_kanji_data</string>
 </resources>

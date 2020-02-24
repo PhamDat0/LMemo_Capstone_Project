@@ -1,5 +1,6 @@
 package com.example.lmemo_capstone_project.model.room_db_entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -7,17 +8,19 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Kanji {
     @PrimaryKey
-    @ColumnInfo(name = "Kanji") private char kanji;
+    @NonNull
+    @ColumnInfo(name = "Kanji")
+    private String kanji;
 
     @ColumnInfo(name = "SGVStrokeFile") private String SGVStrokeFile;
     @ColumnInfo(name = "Onyomi") private String onyomi;
     @ColumnInfo(name = "Kunyomi") private String kunyomi;
 
-    public char getKanji() {
+    public String getKanji() {
         return kanji;
     }
 
-    public void setKanji(char kanji) {
+    public void setKanji(String kanji) {
         this.kanji = kanji;
     }
 
