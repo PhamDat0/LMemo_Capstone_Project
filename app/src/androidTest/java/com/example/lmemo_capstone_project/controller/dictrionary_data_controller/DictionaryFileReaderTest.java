@@ -20,6 +20,8 @@ public class DictionaryFileReaderTest {
         WordDAO wordDAO = LMemoDatabase.getInstance(context).wordDAO();
         Thread reader = new DictionaryFileReader(context);
         reader.start();
+        while (reader.isAlive()) {
+        }
         Word[] allWords = wordDAO.getAllWords();
 
         assertEquals(allWords.length, 4);
@@ -31,8 +33,13 @@ public class DictionaryFileReaderTest {
         WordDAO wordDAO = LMemoDatabase.getInstance(context).wordDAO();
         Thread reader = new DictionaryFileReader(context);
         reader.start();
+        while (reader.isAlive()) {
+        }
         Word word = wordDAO.getWords("お父さん")[0];
         assertEquals(word.getWordID(), 1002590);
-        assertEquals(word.getKana(), " / おとうさん / おとっさん");
+        assertEquals(word.getKana(), "おとうさん / おとっさん");
+        assertEquals(word.getKanjiWriting(), "お父さん / 御父さん");
+        assertEquals(word.getPartOfSpeech(), "noun (common) (futsuumeishi)");
+        assertEquals(word.getMeaning(), "father / dad / papa / pa / pop / daddy / dada");
     }
 }

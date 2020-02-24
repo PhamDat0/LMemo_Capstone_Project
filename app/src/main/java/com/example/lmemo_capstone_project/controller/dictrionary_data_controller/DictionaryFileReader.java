@@ -5,6 +5,7 @@ import android.util.Log;
 import android.util.Xml;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.SharedPreferencesController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
@@ -12,6 +13,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -28,7 +30,7 @@ public class DictionaryFileReader extends Thread {
         this.context = context;
         wordDAO = LMemoDatabase.getInstance().wordDAO();
         try {
-            parser = parse(context.getAssets().open(context.getString(R.string.dictionary_file_name)));
+            parser = parse(new BufferedInputStream(context.getAssets().open(context.getString(R.string.dictionary_file_name))));
             //The following line is for test only
 //            parser = parse(context.getAssets().open("dictionary_test.txt"));
         } catch (XmlPullParserException e) {
@@ -38,12 +40,13 @@ public class DictionaryFileReader extends Thread {
         }
     }
 
+    /**
+     * This method first deletes every record in the SQLite to avoid conflict.
+     * Then it will add every word in the dictionary file to SQLite.
+     * この関数は最初にSQLiteから残っている言葉を削除します。それから、辞書のファイルの中の言葉を読んでSQLiteに書きます。
+     */
     @Override
     public void run() {
-        readFileToSQLite();
-    }
-
-    private void readFileToSQLite() {
         Log.i("START_READING", "Start reading file");
         deleteAllRemainsWords();
         try {
@@ -55,6 +58,7 @@ public class DictionaryFileReader extends Thread {
             Log.i("EXC", "XmlPullException");
             e.printStackTrace();
         }
+        SharedPreferencesController.setDictionaryDataState(context, true);
         Log.i("END_READING", "End reading file");
     }
 
@@ -75,6 +79,12 @@ public class DictionaryFileReader extends Thread {
         }
     }
 
+    /**
+     * @param parser The XMLPullParser using to parse the XML file.
+     * @return The word parsed from the dictionary file
+     * @throws IOException            This exception is thrown if reading file issue occurs
+     * @throws XmlPullParserException This exception is thrown if there are problems with parsing xml
+     */
     private Word parseWord(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, "entry");
         int wordID = Integer.parseInt(
@@ -100,7 +110,10 @@ public class DictionaryFileReader extends Thread {
                 skip(parser);
             }
         }
-        return new Word(wordID, kana.toString(), kanji.toString(), sense.meaning, sense.partOfSpeech);
+        return new Word(wordID, kana.length() >= 3 ? kana.toString().substring(3) : kana.toString(),
+                kanji.length() >= 3 ? kanji.toString().substring(3) : kanji.toString(),
+                sense.meaning.length() >= 3 ? sense.meaning.toString().substring(3) : sense.meaning,
+                sense.partOfSpeech.length() >= 3 ? sense.partOfSpeech.toString().substring(3) : sense.partOfSpeech);
     }
 
     private Sense readSense(XmlPullParser parser) throws IOException, XmlPullParserException {
@@ -193,12 +206,21 @@ public class DictionaryFileReader extends Thread {
         return " / " + result;
     }
 
+    /**
+     *　この関数はSQLiteから残っている言葉を削除します。
+     */
     private void deleteAllRemainsWords() {
         wordDAO.deleteAllWords();
         while (wordDAO.getAllWords().length != 0) {
         }
     }
 
+    /**
+     * @throws IOException This exception is thrown if reading file issue occurs
+     * @throws XmlPullParserException This exception is thrown if there are problems with parsing xml
+     * file.
+     * この関数は辞書のファイルの中の言葉を読んでSQLiteに書きます。
+     */
     private void addAllWordsToSQLite() throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "body");
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -207,6 +229,7 @@ public class DictionaryFileReader extends Thread {
             }
             String name = parser.getName();
             // Starts by looking for the entry tag
+            // 「entry」というタグは1つの言葉ですから、このタグを探して解析します。
             if (name.equals("entry")) {
                 Word word = parseWord(parser);
                 wordDAO.insertWord(word);

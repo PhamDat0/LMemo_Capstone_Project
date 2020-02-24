@@ -1,11 +1,13 @@
-package com.example.lmemo_capstone_project;
+package com.example.lmemo_capstone_project.view;
+
+import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.os.Bundle;
+import com.example.lmemo_capstone_project.R;
 
 public class HomeActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
