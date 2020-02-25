@@ -28,7 +28,7 @@ public class DictionaryFileReader extends Thread {
      */
     public DictionaryFileReader(Context context) {
         this.context = context;
-        wordDAO = LMemoDatabase.getInstance().wordDAO();
+        wordDAO = LMemoDatabase.getInstance(context).wordDAO();
         try {
             parser = parse(new BufferedInputStream(context.getAssets().open(context.getString(R.string.dictionary_file_name))));
         } catch (XmlPullParserException e) {
