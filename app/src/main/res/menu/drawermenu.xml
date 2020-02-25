@@ -1,41 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     xmlns:tools="http://schemas.android.com/tools"
+    <item
+        android:id="@+id/Search_Home"
+        android:title="Search"
+        android:icon="@drawable/ic_search"
+        android:visible="true"
+
+        />
     <item android:title="Account">
         <menu>
             <item
                 android:id="@+id/login"
                 android:title="Sign in"
                 android:icon="@drawable/ic_enter"
+                android:visible="true"
+
             />
             <item
                 android:id="@+id/createAcc"
                 android:title="Create Account"
                 android:icon="@drawable/ic_createaccount"
+                android:visible="true"
                 />
             <item
                 android:id="@+id/myAccount"
                 android:title="My Account"
                 android:icon="@drawable/ic_myaccount"
-                android:visible="false"
+                android:visible="true"
                 />
             <item
                 android:id="@+id/myFlashcard"
                 android:title="Flash Card"
                 android:icon="@drawable/ic_flashcard"
-                android:visible="false"
+                android:visible="true"
                 />
             <item
                 android:id="@+id/myNote"
                 android:title="Notes"
                 android:icon="@drawable/ic_note"
-                android:visible="false"
+                android:visible="true"
                 />
             <item
                 android:id="@+id/signOut"
                 android:title="Sign out"
-                android:icon="@drawable/ic_signout"
-                android:visible="false"
+                android:icon="@drawable/ic_logout"
+                android:visible="true"
                 />
         </menu>
 
@@ -68,8 +78,6 @@
                 android:icon="@drawable/ic_privacy"
                 />
         </menu>
-
     </item>
-
 
 </menu>

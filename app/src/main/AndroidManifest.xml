@@ -11,12 +11,10 @@
         android:label="LMemo"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
-        android:theme="@style/AppTheme"
-        >
-        <activity android:name=".controller.authentication_controller.LoginActivity"  android:exported="true">
-
-        </activity>
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".controller.authentication_controller.LoginActivity"
+            android:exported="true" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -31,10 +29,13 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
+
         </activity>
 <!--        android:theme="@style/AppTheme">-->
         <activity
@@ -43,6 +44,7 @@
 
         </activity>
         <activity android:name=".view.MainActivity">
+>>>>>>> 169df15525224d15a3af6087b8cc7c5cb0f16a62
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
