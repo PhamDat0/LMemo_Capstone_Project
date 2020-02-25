@@ -14,7 +14,7 @@ public class LMemoDatabaseTest {
     public void testSingleton() {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         LMemoDatabase lMemoDatabase = LMemoDatabase.getInstance(appContext);
-        assertSame(lMemoDatabase, LMemoDatabase.getInstance());
+        assertSame(lMemoDatabase, LMemoDatabase.getInstance(appContext));
     }
 
 }

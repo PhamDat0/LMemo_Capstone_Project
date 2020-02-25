@@ -28,7 +28,7 @@ public class KanjiFileReader extends Thread {
      */
     public KanjiFileReader(Context context) {
         this.context = context;
-        kanjiDAO = LMemoDatabase.getInstance().kanjiDAO();
+        kanjiDAO = LMemoDatabase.getInstance(context).kanjiDAO();
         try {
             parser = parse(new BufferedInputStream(context.getAssets().open(context.getString(R.string.kanji_file_name))));
         } catch (XmlPullParserException e) {
