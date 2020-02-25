@@ -36,17 +36,6 @@ public abstract class LMemoDatabase extends RoomDatabase {
     private static volatile LMemoDatabase instance;
 
     /**
-     * @return an object where we can take DAO from.
-     * この関数はデータベースのオブジェクトを返します。オブジェクトがない場合には新しいオブジェクトを作りません。
-     */
-    public static LMemoDatabase getInstance() {
-        if (instance == null) {
-            throw new NullPointerException();
-        }
-        return instance;
-    }
-
-    /**
      * @param context : The context that contains this database
      * @return an object where we can take DAO from.
      * This method provides an access to the database object or creates one　if there are no database

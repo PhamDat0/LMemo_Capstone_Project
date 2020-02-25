@@ -1,7 +1,6 @@
 package com.example.lmemo_capstone_project.view;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -10,9 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
+import com.facebook.login.LoginFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
@@ -66,7 +68,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         }
         else if(id == R.id.myAccount){
-            MyAccountFragment fragment = new MyAccountFragment();
+            Fragment fragment = LMemoDatabase.getInstance(getApplicationContext()).userDAO().
+                    getLocalUser()[0].isGuest() ? new LoginFragment() : new MyAccountFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"myAccount");
             fragmentTransaction.commit();

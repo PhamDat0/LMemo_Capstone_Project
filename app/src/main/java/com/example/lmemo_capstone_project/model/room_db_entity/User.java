@@ -3,6 +3,7 @@ package com.example.lmemo_capstone_project.model.room_db_entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -56,5 +57,10 @@ public class User {
 
     public void setContributionPoint(int contributionPoint) {
         this.contributionPoint = contributionPoint;
+    }
+
+    @Ignore
+    public boolean isGuest() {
+        return this.userID.equalsIgnoreCase("GUEST");
     }
 }
