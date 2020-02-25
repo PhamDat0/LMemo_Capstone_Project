@@ -21,8 +21,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         LMemoDatabase.getInstance(getApplicationContext());
-        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
-        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
+//        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
+//        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
         Log.i("SHARE_PRE", SharedPreferencesController.hasDictionaryData(getApplicationContext()) + "");
 
         loadDictionaryDatabase();
