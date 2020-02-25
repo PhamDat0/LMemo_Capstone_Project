@@ -30,4 +30,24 @@ public class SharedPreferencesControllerTest {
         SharedPreferencesController.setDictionaryDataState(context, false);
         assertFalse(SharedPreferencesController.hasDictionaryData(context));
     }
+
+    @Test
+    public void hasKanjiData() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        assertFalse(SharedPreferencesController.hasKanjiData(context));
+    }
+
+    @Test
+    public void setKanjiDataStateToTrue() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        SharedPreferencesController.setKanjiDataState(context, true);
+        assertTrue(SharedPreferencesController.hasDictionaryData(context));
+    }
+
+    @Test
+    public void setKanjiDataStateToFalse() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        SharedPreferencesController.setKanjiDataState(context, false);
+        assertFalse(SharedPreferencesController.hasDictionaryData(context));
+    }
 }

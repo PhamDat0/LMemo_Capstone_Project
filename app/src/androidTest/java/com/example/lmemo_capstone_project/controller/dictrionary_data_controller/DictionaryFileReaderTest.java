@@ -24,7 +24,7 @@ public class DictionaryFileReaderTest {
         }
         Word[] allWords = wordDAO.getAllWords();
 
-        assertEquals(allWords.length, 4);
+        assertEquals(allWords.length, 173747);
     }
 
     @Test
