@@ -44,7 +44,6 @@
 
         </activity>
         <activity android:name=".view.MainActivity">
->>>>>>> 169df15525224d15a3af6087b8cc7c5cb0f16a62
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
