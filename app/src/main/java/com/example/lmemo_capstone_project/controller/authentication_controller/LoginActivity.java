@@ -9,16 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.database_controller.Converters;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.dao.UserDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -46,12 +44,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,17 +61,14 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "LoginActivity";
-
-    private DatabaseReference databaseReference;
     private GoogleSignInClient mGoogleSignInClient;
     private TextView mStatusTextView;
     private TextView mDetailTextView;
     private FirebaseAuth mAuth;
-    private AccessTokenTracker accessTokenTracker;
     private CallbackManager mCallbackManager;
     private UserDAO userDAO;
     private FirebaseFirestore db;
-
+    private List<String> listFUID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +77,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mDetailTextView = findViewById(R.id.detail);
         db = FirebaseFirestore.getInstance();
         loginWithFacebook();
-        loginWithGoogle();
+        createActivityWithGoogle();
         listFUID = new ArrayList<>();
     }
 
@@ -88,10 +86,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null){
+            useAppAsGuest();
+        }
+        else{
+
+        }
         updateUI(currentUser);
     }
-
-    private List<String> listFUID;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -99,34 +101,44 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Pass the activity result back to the Facebook SDK
         googleActivityResult(requestCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
-
+        Log.w(TAG, "local user is: "+userDAO.getLocalUser()[0].getDisplayName());
     }
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.buttonFacebookSignout) {
+        // direct  event of button
+        if (i == R.id.buttonSignout) {
             facebookSignOut();
+            googleSignOut();
+            useAppAsGuest();
         } else if (i == R.id.buttonGoogleLogin) {
             googleSignIn();
-        } else if (i == R.id.goolgleSignOutButton) {
-            googleSignOut();
-        } else if (i == R.id.googleDisconnectButton) {
-            googleRevokeAccess();
         }
+
     }
+
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
+            //update UI if user login successful
             mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
             mStatusTextView.setText(getString(R.string.facebook_status_fmt, user.getDisplayName()));
             mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
             Toast.makeText(LoginActivity.this, user.getEmail(), Toast.LENGTH_SHORT).show();
+            findViewById(R.id.buttonFacebookLogin).setVisibility(View.INVISIBLE);
+            findViewById(R.id.buttonGoogleLogin).setVisibility(View.INVISIBLE);
+            findViewById(R.id.buttonSignout).setVisibility(View.VISIBLE);
         } else {
+            //update UI if user login fail or log out
             mStatusTextView.setText(R.string.signed_out);
             mDetailTextView.setText(null);
             Toast.makeText(LoginActivity.this, "Logged out", Toast.LENGTH_SHORT).show();
+            findViewById(R.id.buttonFacebookLogin).setVisibility(View.VISIBLE);
+            findViewById(R.id.buttonGoogleLogin).setVisibility(View.VISIBLE);
+            findViewById(R.id.buttonSignout).setVisibility(View.INVISIBLE);
         }
+
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -140,9 +152,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            addUserToCloudFireStore();
-                            addUserToSQLite();
+                            handlingLogin();
                             updateUI(user);
+                            findViewById(R.id.buttonFacebookLogin).setVisibility(View.GONE);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -155,8 +167,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void loginWithFacebook() {
-        findViewById(R.id.buttonFacebookSignout).setOnClickListener(this);
-        findViewById(R.id.buttonFacebookLogin);
+        findViewById(R.id.buttonSignout).setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
         FacebookSdk.sdkInitialize(getApplicationContext());
         // Initialize Facebook Login button
@@ -182,14 +193,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 updateUI(null);
             }
         });
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                if (currentAccessToken == null) {
-                    mAuth.signOut();
-                }
-            }
-        };
+
     }
 
     public void facebookSignOut() {
@@ -201,13 +205,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .Callback() {
             @Override
             public void onCompleted(GraphResponse graphResponse) {
-
                 SharedPreferences pref = LoginActivity.this.getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.clear();
                 editor.commit();
                 LoginManager.getInstance().logOut();
-
                 Intent logoutint = new Intent(LoginActivity.this, LoginActivity.class);
                 logoutint.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(logoutint);
@@ -216,10 +218,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         updateUI(null);
     }
 
-    public void loginWithGoogle() {
+    public void createActivityWithGoogle() {
+        //create google login activity
         findViewById(R.id.buttonGoogleLogin).setOnClickListener(this);
-        findViewById(R.id.goolgleSignOutButton).setOnClickListener(this);
-        findViewById(R.id.googleDisconnectButton).setOnClickListener(this);
+        findViewById(R.id.buttonSignout).setOnClickListener(this);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -229,13 +231,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void googleActivityResult(int requestCode, Intent data) {
+        //result of google login activity
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
-
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
@@ -247,6 +249,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void googleSignIn() {
+        //active google login activity when button is clicked
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -264,20 +267,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    private void googleRevokeAccess() {
-        // Firebase sign out
-        mAuth.signOut();
-        // Google revoke access
-        mGoogleSignInClient.revokeAccess().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
-                    }
-                });
-    }
-
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        //add google to firebase with user authentication id
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -289,8 +280,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithCredential:success");
                             Toast.makeText(LoginActivity.this, "Successful", Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
-                            addUserToCloudFireStore();
-                            addUserToSQLite();
+                            handlingLogin();
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -302,99 +292,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-//    private List<String> listFireStoreID;
-//    private List<String> listFUID;
-//
-//    private void addUserToCloudFireStore() {
-//
-//        String FID = mAuth.getCurrentUser().getUid();
-//        String email = mAuth.getCurrentUser().getEmail();
-//        String name = mAuth.getCurrentUser().getDisplayName();
-//
-//        // get all document id on cloud firestore
-//        Log.w(TAG, "before getting listfirestore");
-//        listFireStoreID = getAllDocumentID();
-//        listFUID = getAllFID();
-//        Log.w(TAG, "size of list fuid id" + listFUID.size());
-//        Log.w(TAG, "size of list firestore id" + listFireStoreID.size());
-//
-//        Map<String, Object> addUser = new HashMap<>();
-//        addUser.put("FUID", FID);
-//        addUser.put("gender", true);
-//        addUser.put("displayName", name);
-//        addUser.put("email", email);
-//        addUser.put("contributionPoint", 0);
-//        db.collection("users").add(addUser).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//            @Override
-//            public void onSuccess(DocumentReference documentReference) {
-//                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.w(TAG, "Error adding document", e);
-//            }
-//        });
-//
-//
-//    }
-//
-//    private List<String> getAllDocumentID() {
-//        com.google.firebase.firestore.Query query = db.collection("users");
-////        db.collection("users")
-////                .get()
-////                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
-////                    @Override
-////                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-////                        if (task.isSuccessful()){
-////                            for(QueryDocumentSnapshot document : task.getResult()){
-////                                listFireStoreID.add(document.getId());
-////                                Log.w(TAG, "get in loop of getting firebase id"+listFireStoreID.size());
-////                            }
-////                        }
-////                    }
-////
-////                });
-//        db.collection("users")
-//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-//                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-//                            listFireStoreID.add(document.getId());
-//                            Log.w(TAG, "get in loop of getting firebase id" + listFireStoreID.size() + "id" + document.getId());
-//                        }
-//                    }
-//                });
-//
-//        Log.w(TAG, "get out loop of getting firebase id" + listFireStoreID.size());
-//        return listFireStoreID;
-//    }
-//
-//    private List<String> getAllFID() {
-//        if (!listFireStoreID.isEmpty()) {
-//            for (int i = 0; i < listFireStoreID.size(); i++) {
-//                Log.w(TAG, "get in loop of getting list FUID" + listFireStoreID.get(i));
-//                DocumentReference docRef = db.collection("users").document(listFireStoreID.get(i));
-//                Log.w(TAG, "firebase id of FUID" + listFireStoreID.get(i));
-//                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            DocumentSnapshot documentSnapshot = task.getResult();
-//                            if (documentSnapshot.exists()) {
-//                                listFUID.add(documentSnapshot.getString("FUID"));
-//                                Log.w(TAG, "size of list FUID" + listFUID.size());
-//                            }
-//                        }
-//                    }
-//                });
-//            }
-//        }
-//        return listFUID;
-//    }
 
-    private void addUserToSQLite() {
-        final User user = new User();
+    private void addUserToSQLite(final User user ) {
+        // initialize new thread to add to sqlite, because sqlite doesn't allow to run command in Activity
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                userDAO = LMemoDatabase.getInstance(getApplicationContext()).userDAO();
+                userDAO.insertUser(user);
+            }
+        });
+
+
+    }
+    private User createUser(){
+        // create new user with personal information from firebase authentication
+        Date date = new Date();
+        User user = new User();
         String FID = mAuth.getCurrentUser().getUid();
         String email = mAuth.getCurrentUser().getEmail();
         String name = mAuth.getCurrentUser().getDisplayName();
@@ -403,29 +317,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         user.setMale(true);
         user.setContributionPoint(0);
         user.setEmail(email);
-        // initialize new thread to add to sqlite, because sqlite doesn't allow to run command in Activity
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                userDAO = LMemoDatabase.getInstance(getApplicationContext()).userDAO();
-                userDAO.insertUser(user);
-                Log.w(TAG, "create on sqlite how to snoop dog");
-                User[] localUser = userDAO.getLocalUser();
-                Log.w(TAG, "create on sqlite how to snoop dog" + localUser[0].getUserID());
-            }
-        });
-
-
+        user.setLoginTime(date);
+        return user;
     }
 
-    private void addUserToCloudFireStore() {
-
-        // get all document id on cloud firestore
-        Log.w(TAG, "before getting listfirestore");
+    private void handlingLogin() {
+        // handling login activity when login with google/facebook is successful
         getAllDocumentID();
+
     }
 
     private List<String> getAllDocumentID() {
+        // get all document id from cloud firestore
         com.google.firebase.firestore.Query query = db.collection("users");
         db.collection("users")
                 .get()
@@ -434,9 +337,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                listFUID.add(document.getData().get("FUID").toString());
+                                listFUID.add(document.getData().get("userID").toString());
                             }
-                            putInFirestore();
+                            addUserToDatabase();
                         }
                     }
 
@@ -445,28 +348,87 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return listFUID;
     }
 
-    private void putInFirestore() {
+    private void addUserToDatabase() {
+        // add user to sqlite at local database and cloud firebase at online database
         String FID = mAuth.getCurrentUser().getUid();
         String email = mAuth.getCurrentUser().getEmail();
         String name = mAuth.getCurrentUser().getDisplayName();
 
-        Map<String, Object> addUser = new HashMap<>();
-        addUser.put("FUID", FID);
-        addUser.put("gender", true);
-        addUser.put("displayName", name);
-        addUser.put("email", email);
-        addUser.put("contributionPoint", 0);
-        db.collection("users").add(addUser).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+        boolean isExisted = true;
+        // check if user is existed
+        if(listFUID.isEmpty() ){
+            isExisted = false;
+            Log.w(TAG, "this is empty "+ listFUID.size());
+        }
+        else{
+            for (int i=0;i<listFUID.size();i++){
+            if(listFUID.get(i).equals(FID)){
+                    isExisted = true;
+                    break;
+                }
+                else {
+                    isExisted = false;
+                }
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        }
+
+        if (!isExisted){
+            final User user = createUser();
+            addUserToSQLite(user);
+            Map<String, Object> addUser = new HashMap<>();
+            addUser.put("userID", FID);
+            addUser.put("isMale", true);
+            addUser.put("displayName", name);
+            addUser.put("email", email);
+            addUser.put("contributionPoint", 0);
+            db.collection("users").document(FID).set(addUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.w(TAG, "Logged in "+ user.getDisplayName()+ " at time "+ user.getLoginTime());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(TAG, "Error writing document");
+                }
+            });
+
+        }
+        else{
+            DocumentReference docRef = db.collection("users").document(FID);
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    User user = documentSnapshot.toObject(User.class);
+                    Date date = new Date();
+                    user.setLoginTime(date);
+                    addUserToSQLite(user);
+                    Log.w(TAG, "Logged in after add to sqlite with updated"+ user.getDisplayName()+ "at time "+ user.getLoginTime()+ " gender " + user.isMale());
+
+                }
+            });
+        }
+        listFUID.clear();
+
+    }
+    private void useAppAsGuest(){
+        Date date = new Date();
+        final User user = new User();
+        String FID = "GUEST";
+        String email = "GUEST";
+        String name = "GUEST";
+        user.setUserID(FID);
+        user.setDisplayName(name);
+        user.setMale(true);
+        user.setContributionPoint(0);
+        user.setEmail(email);
+        user.setLoginTime(date);
+        AsyncTask.execute(new Runnable() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error adding document", e);
+            public void run() {
+                userDAO = LMemoDatabase.getInstance(getApplicationContext()).userDAO();
+                userDAO.insertUser(user);
             }
         });
     }
-
 }

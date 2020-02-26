@@ -11,29 +11,7 @@
         android:id="@+id/buttonGoogleLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/buttonFacebookSignout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonFacebookLogin" />
-
-    <Button
-        android:id="@+id/goolgleSignOutButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/sign_out"
-        app:layout_constraintBottom_toTopOf="@+id/buttonFacebookSignout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonGoogleLogin" />
-
-    <Button
-        android:id="@+id/googleDisconnectButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/disconnect"
-        app:layout_constraintBottom_toTopOf="@+id/buttonGoogleLogin"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSignout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonFacebookLogin" />
@@ -45,15 +23,16 @@
         android:layout_centerInParent="true"
         android:layout_marginStart="108dp"
         android:layout_marginLeft="108dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="72dp"
         android:layout_marginEnd="111dp"
         android:layout_marginRight="111dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/buttonFacebookSignout"
+        android:id="@+id/buttonSignout"
         android:layout_width="0dp"
         android:layout_height="89dp"
         android:layout_centerInParent="true"
@@ -84,4 +63,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonFacebookLogin"
         tools:text="Firebase User ID: 123456789abc" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

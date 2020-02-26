@@ -22,7 +22,10 @@ public interface UserDAO {
     @Update
     void updateUser(User user);
 
-    @Query("SELECT * FROM User order by UserID asc LIMIT 1")
+    @Query("DELETE FROM User")
+    void deleteAllUser();
+
+    @Query("SELECT * FROM User order by LoginTime desc LIMIT 1")
     User[] getLocalUser();
 
 

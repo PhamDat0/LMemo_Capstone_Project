@@ -6,6 +6,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity
 public class User {
     @PrimaryKey
@@ -17,8 +19,9 @@ public class User {
     @ColumnInfo(name = "Email") private String email;
     @ColumnInfo(name = "DisplayName") private String displayName;
     @ColumnInfo(name = "ContributionPoint") private int contributionPoint;
-
+    @ColumnInfo(name = "LoginTime") private Date loginTime;
     @NonNull
+
     public String getUserID() {
         return userID;
     }
@@ -32,9 +35,8 @@ public class User {
     }
 
     public void setMale(boolean male) {
-        this.isMale = male;
+        isMale = male;
     }
-
     public String getEmail() {
         return email;
     }
@@ -55,8 +57,14 @@ public class User {
         return contributionPoint;
     }
 
-    public void setContributionPoint(int contributionPoint) {
-        this.contributionPoint = contributionPoint;
+    public void setContributionPoint(int contributionPoint) { this.contributionPoint = contributionPoint; }
+
+    public Date getLoginTime() { return loginTime; }
+
+    public void setLoginTime(Date loginTime) { this.loginTime = loginTime; }
+
+    public User(){
+
     }
 
     @Ignore
