@@ -7,7 +7,7 @@ import android.util.Xml;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.SharedPreferencesController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.dao.WordDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
 import org.xmlpull.v1.XmlPullParser;

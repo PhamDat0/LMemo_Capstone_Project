@@ -7,16 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.dao.RewardDAO;
-import com.example.lmemo_capstone_project.controller.database_controller.dao.UserDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.firebase_dao.OnlineUserDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+
+import java.io.IOException;
 
 
 /**
@@ -24,9 +29,9 @@ import com.example.lmemo_capstone_project.model.room_db_entity.User;
  */
 public class MyAccountFragment extends Fragment {
 
-
     public MyAccountFragment() {
         // Required empty public constructor
+
     }
 
 
@@ -35,9 +40,89 @@ public class MyAccountFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_account, container, false);
         updateInformationToUI(container);
+        final ViewGroup containerClone = container;
+        container.findViewById(R.id.btSaveAccount).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (hasAnInternetConnection()) {
+                    updateUserInformation(containerClone);
+                } else {
+                    notifyNoInternetConnections();
+                }
+            }
+        });
         return view;
     }
 
+    private void notifyNoInternetConnections() {
+        Toast.makeText(getContext(), "There are no internet connections.", Toast.LENGTH_LONG);
+    }
+
+    /**
+     * @return true if there is at least 1 Internet connection
+     * この関数はインターネットの接続を確認します。ある場合はtrueを返します。
+     */
+    private boolean hasAnInternetConnection() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * @param container The container contains every View Object in this fragment
+     *                  この関数はcontainerからユーザーの情報を取って、FirebaseとSQLiteに情報を更新します。
+     */
+    private void updateUserInformation(ViewGroup container) {
+        User user = getUserInformationFromView(container);
+        updateUserToFirebase(user);
+        updateUserToSQLite(user);
+    }
+
+    /**
+     * @param container The container contains every View Object in this fragment
+     * @return The user's information
+     * この関数はcontainerからユーザーの情報を取ります。
+     */
+    private User getUserInformationFromView(ViewGroup container) {
+        String email = ((EditText) container.findViewById(R.id.etEmail)).getText().toString();
+        String displayName = ((EditText) container.findViewById(R.id.etDisplayName)).getText().toString();
+        int checkedRadioButtonId = ((RadioGroup) container.findViewById(R.id.rgGender)).getCheckedRadioButtonId();
+        boolean gender = ((RadioButton) container.findViewById(checkedRadioButtonId)).getText().equals("Male");
+        UserDAO userDAO = LMemoDatabase.getInstance(getContext()).userDAO();
+        User currentUser = userDAO.getLocalUser()[0];
+        return new User(currentUser.getUserID(), email, displayName, gender, currentUser.getContributionPoint(), currentUser.getLoginTime());
+    }
+
+    /**
+     * @param user The user's information
+     *             この関数はユーザーの情報をSQLiteに情報を更新します。
+     */
+    private void updateUserToSQLite(User user) {
+        UserDAO userDAO = LMemoDatabase.getInstance(getContext()).userDAO();
+        userDAO.updateUser(user);
+    }
+
+    /**
+     * @param user The user's information
+     *             この関数はユーザーの情報をFirebaseに情報を更新します。
+     */
+    private void updateUserToFirebase(User user) {
+        OnlineUserDAO onlineUserDAO = new OnlineUserDAO();
+        onlineUserDAO.updateUser(user);
+    }
+
+    /**
+     * @param container The container contains every View Object in this fragment
+     *                  この関数はユーザーの情報をSQLiteから読んで、ユーザーインターフェイス に書きます。
+     */
     private void updateInformationToUI(ViewGroup container) {
         LMemoDatabase lMemoDatabase = LMemoDatabase.getInstance(getContext());
         UserDAO userDAO = lMemoDatabase.userDAO();

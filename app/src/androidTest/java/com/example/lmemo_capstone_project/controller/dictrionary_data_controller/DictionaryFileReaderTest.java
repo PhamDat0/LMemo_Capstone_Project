@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.dao.WordDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
 import org.junit.Test;
