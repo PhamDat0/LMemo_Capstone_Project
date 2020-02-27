@@ -2,28 +2,22 @@ package com.example.lmemo_capstone_project.view;
 
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.dao.WordDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
-
-import java.io.Serializable;
 
 
 /**

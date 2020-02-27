@@ -27,7 +27,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mDrawerLayout = findViewById(R.id.drawerLayout);
+        mDrawerLayout = findViewById(R.id.home_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.open,R.string.close);
 
         mDrawerLayout.addDrawerListener(mDrawerToggle);
