@@ -30,9 +30,9 @@ public class KanjiSearchingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_kanji_searching, container, false);
-        listKanji = new ArrayList<>();
-        getKanji();
-        kanjiListView = view.findViewById(R.id.kanjiListView);
+//        listKanji = new ArrayList<>();
+//        getKanji();
+//        kanjiListView = view.findViewById(R.id.kanjiListView);
 //        kanjiListView.setAdapter(new KanjiListAdapter(KanjiSearchingFragment.this,listKanji));
         return view;
     }
