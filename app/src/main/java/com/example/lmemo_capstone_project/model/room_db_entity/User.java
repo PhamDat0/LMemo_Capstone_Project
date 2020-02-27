@@ -15,11 +15,27 @@ public class User {
     @NonNull
     private String userID = "";
 
-    @ColumnInfo(name = "Gender") private boolean isMale;
-    @ColumnInfo(name = "Email") private String email;
-    @ColumnInfo(name = "DisplayName") private String displayName;
-    @ColumnInfo(name = "ContributionPoint") private int contributionPoint;
-    @ColumnInfo(name = "LoginTime") private Date loginTime;
+    @ColumnInfo(name = "Gender")
+    private boolean male;
+    @ColumnInfo(name = "Email")
+    private String email;
+    @ColumnInfo(name = "DisplayName")
+    private String displayName;
+    @ColumnInfo(name = "ContributionPoint")
+    private int contributionPoint;
+    @ColumnInfo(name = "LoginTime")
+    private Date loginTime;
+
+    @Ignore
+    public User(String userID, String email, String displayName, boolean gender, int contributionPoint, Date loginTime) {
+        this.userID = userID;
+        this.email = email;
+        this.displayName = displayName;
+        this.male = gender;
+        this.contributionPoint = contributionPoint;
+        this.loginTime = loginTime;
+    }
+
     @NonNull
 
     public String getUserID() {
@@ -30,13 +46,14 @@ public class User {
         this.userID = userID;
     }
 
-    public boolean isMale() {
-        return isMale;
+    public User() {
+
     }
 
-    public void setMale(boolean male) {
-        isMale = male;
+    public boolean isMale() {
+        return male;
     }
+
     public String getEmail() {
         return email;
     }
@@ -57,14 +74,20 @@ public class User {
         return contributionPoint;
     }
 
-    public void setContributionPoint(int contributionPoint) { this.contributionPoint = contributionPoint; }
+    public void setMale(boolean male) {
+        this.male = male;
+    }
 
-    public Date getLoginTime() { return loginTime; }
+    public void setContributionPoint(int contributionPoint) {
+        this.contributionPoint = contributionPoint;
+    }
 
-    public void setLoginTime(Date loginTime) { this.loginTime = loginTime; }
+    public Date getLoginTime() {
+        return loginTime;
+    }
 
-    public User(){
-
+    public void setLoginTime(Date loginTime) {
+        this.loginTime = loginTime;
     }
 
     @Ignore

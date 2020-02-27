@@ -9,12 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.lmemo_capstone_project.R;
-import com.example.lmemo_capstone_project.controller.database_controller.Converters;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.dao.UserDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -43,8 +44,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -111,6 +110,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (i == R.id.buttonSignout) {
             facebookSignOut();
             googleSignOut();
+            Log.w(TAG, "local user is: " + userDAO.getLocalUser()[0].getDisplayName());
             useAppAsGuest();
         } else if (i == R.id.buttonGoogleLogin) {
             googleSignIn();
@@ -428,6 +428,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void run() {
                 userDAO = LMemoDatabase.getInstance(getApplicationContext()).userDAO();
                 userDAO.insertUser(user);
+                Log.w(TAG, "local user is: " + userDAO.getLocalUser()[0].getDisplayName());
             }
         });
     }

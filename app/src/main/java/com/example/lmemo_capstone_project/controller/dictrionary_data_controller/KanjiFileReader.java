@@ -7,7 +7,7 @@ import android.util.Xml;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.SharedPreferencesController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.dao.KanjiDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.KanjiDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Kanji;
 
 import org.xmlpull.v1.XmlPullParser;
