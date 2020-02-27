@@ -1,12 +1,17 @@
 package com.example.lmemo_capstone_project.model.room_db_entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity
-public class Word {
+public class Word implements Serializable {
     @PrimaryKey
     @ColumnInfo(name = "WordID") private int wordID;
 
@@ -66,4 +71,5 @@ public class Word {
     public void setPartOfSpeech(String partOfSpeech) {
         this.partOfSpeech = partOfSpeech;
     }
+
 }

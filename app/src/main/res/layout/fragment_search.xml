@@ -12,17 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
-        <EditText
-            android:clickable="true"
-            android:focusableInTouchMode="true"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:id="@+id/edtSearch"
-            android:layout_width="200dp"
+
+        <AutoCompleteTextView
+            android:id="@+id/txtSearch"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="日本, nihon, Japan"
-            />
+            android:layout_weight="1"
+            android:hint="日本,Japan"
+            android:imeOptions="actionSearch"
+            android:singleLine="true" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
