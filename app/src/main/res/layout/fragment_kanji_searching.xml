@@ -6,10 +6,14 @@
     tools:context=".view.KanjiSearchingFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="kanji searching"
-        android:gravity="center"/>
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/kanjiListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
 
 </RelativeLayout>
