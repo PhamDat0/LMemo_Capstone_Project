@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.view;
 
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FilterQueryProvider;
@@ -58,12 +61,17 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Word word = performSearch();
-                    fragmentDataTransfer(word);
-                    addToFlashCard();
+                    getSearchResult();
                     return true;
                 }
                 return false;
+            }
+        });
+
+        edtSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getSearchResult();
             }
         });
 
@@ -176,20 +184,37 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     //onclick listener for 2 tab word + kanji
     @Override
     public void onClick(View v) {
-        Word word = performSearch();
         switch (v.getId()){
             case R.id.tabWord:
 //                performSearch();
-                fragmentDataTransfer(word);
-                addToFlashCard();
+                getSearchResult();
                 break;
             case R.id.tabKanji:
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 KanjiSearchingFragment kanjiFragment = new KanjiSearchingFragment(edtSearch.getText().toString());
                 fragmentTransaction.replace(R.id.searchFrameLayout,kanjiFragment,"SearchKanji");
                 fragmentTransaction.commit();
+                hideKeyboard(getActivity());
                 break;
         }
+    }
 
+    private void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void getSearchResult() {
+        Word word = performSearch();
+        fragmentDataTransfer(word);
+        addToFlashCard();
+        edtSearch.dismissDropDown();
+        hideKeyboard(getActivity());
     }
 }
