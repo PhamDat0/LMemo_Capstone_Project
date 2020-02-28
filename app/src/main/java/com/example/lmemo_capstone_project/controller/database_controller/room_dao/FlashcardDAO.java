@@ -22,6 +22,9 @@ public interface FlashcardDAO {
     @Query("SELECT * FROM Flashcard")
     Flashcard[] getAllFlashcard();
 
+    @Query("SELECT * FROM Flashcard Where FlashcardID LIKE :keyword")
+    Flashcard[] checkID(int keyword);
+
     @Transaction
     @Query("Select * FROM Flashcard")
     List<FlashcardWithSets> getFlashcardsWithSets();

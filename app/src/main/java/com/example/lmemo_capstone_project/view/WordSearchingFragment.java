@@ -35,9 +35,9 @@ public class WordSearchingFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle  != null) {
-            for (String key: bundle.keySet()) {
-                Log.d ("myApplication", key + " is a key in the bundle");
-            }
+//            for (String key: bundle.keySet()) {
+//                Log.d ("myApplication", key + " is a key in the bundle");
+//            }
             Word word = (Word) bundle.getSerializable("result");
 //            Log.i("Object",container.findViewById(R.id.tvKana)==null?"null":"tvKana");
             ((TextView) container.findViewById(R.id.tvKana)).setText(word.getKana());
