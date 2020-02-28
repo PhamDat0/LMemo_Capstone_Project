@@ -40,9 +40,9 @@ public class WordSearchingFragment extends Fragment {
 //            }
             Word word = (Word) bundle.getSerializable("result");
 //            Log.i("Object",container.findViewById(R.id.tvKana)==null?"null":"tvKana");
-            ((TextView) container.findViewById(R.id.tvKana)).setText(word.getKana());
-            ((TextView) container.findViewById(R.id.tvKanji)).setText(word.getKanjiWriting());
-            ((TextView) container.findViewById(R.id.tvMeaning)).setText(word.getMeaning());
+            ((TextView) container.findViewById(R.id.tvKana)).setText("[ "+ word.getKana()+" ]");
+            ((TextView) container.findViewById(R.id.tvKanji)).setText(" * " + word.getKanjiWriting());
+            ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . "+ word.getMeaning());
             ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(word.getPartOfSpeech());
 
         } else {
