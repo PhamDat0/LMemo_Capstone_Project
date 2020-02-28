@@ -9,55 +9,55 @@
     tools:context=".view.KanjiListAdapter">
     <TextView
         android:id="@+id/tvKanji"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:textStyle="bold"
-        android:textSize="40sp"
+        android:textSize="80sp"
         android:gravity="center"
         android:textColor="#DA0F0F"
         />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="120dp"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
             <TextView
                 android:gravity="center"
-                android:layout_marginLeft="20dp"
                 android:text="訓:"
                 android:textColor="#117C8A"
-                android:textSize="20sp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:textSize="40sp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"/>
             <TextView
                 android:id="@+id/tvKunyomi"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
+                android:textSize="30sp"
                 android:gravity="center_vertical" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
             <TextView
                 android:gravity="center"
-                android:layout_marginLeft="20dp"
                 android:text="音:"
                 android:textColor="#117C8A"
-                android:textSize="20sp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:textSize="40sp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"/>
             <TextView
                 android:id="@+id/tvOnyomi"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
+                android:textSize="30sp"
                 android:gravity="center_vertical" />
         </LinearLayout>
     </LinearLayout>
