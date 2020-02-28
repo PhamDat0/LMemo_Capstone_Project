@@ -1,20 +1,15 @@
 package com.example.lmemo_capstone_project.view;
 
 
-import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FilterQueryProvider;
@@ -30,11 +25,6 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -195,7 +185,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.tabKanji:
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                KanjiSearchingFragment kanjiFragment = new KanjiSearchingFragment();
+                KanjiSearchingFragment kanjiFragment = new KanjiSearchingFragment(edtSearch.getText().toString());
                 fragmentTransaction.replace(R.id.searchFrameLayout,kanjiFragment,"SearchKanji");
                 fragmentTransaction.commit();
                 break;

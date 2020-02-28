@@ -1,10 +1,6 @@
 package com.example.lmemo_capstone_project.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +17,13 @@ public class KanjiListAdapter extends BaseAdapter {
     private Activity aContext;
     private List<Kanji> listKanji;
     private LayoutInflater layoutInflater;
-    public KanjiListAdapter(Activity aContext, List<Kanji> listKanji){
+
+    public KanjiListAdapter(Activity aContext, List<Kanji> listKanji) {
         this.aContext = aContext;
         this.listKanji = listKanji;
         layoutInflater = LayoutInflater.from(aContext);
     }
+
     @Override
     public int getCount() {
         return listKanji.size();
@@ -45,7 +43,7 @@ public class KanjiListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(aContext).inflate(R.layout.activity_kanji_list_adapter,null);
+            convertView = LayoutInflater.from(aContext).inflate(R.layout.activity_kanji_list_adapter, null);
             holder = new ViewHolder();
             holder.tvKanji = convertView.findViewById(R.id.tvKanji);
             holder.tvKunyomi = convertView.findViewById(R.id.tvKunyomi);
@@ -58,9 +56,10 @@ public class KanjiListAdapter extends BaseAdapter {
 
         holder.tvKanji.setText(listKanji.get(position).getKanji());
         holder.tvKunyomi.setText(listKanji.get(position).getKunyomi());
-        holder.tvKunyomi.setText(listKanji.get(position).getOnyomi());
+        holder.tvOnyomi.setText(listKanji.get(position).getOnyomi());
         return convertView;
     }
+
     static class ViewHolder {
         TextView tvKanji;
         TextView tvKunyomi;
