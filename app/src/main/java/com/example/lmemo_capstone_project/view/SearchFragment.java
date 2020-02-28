@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,13 +90,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private void performSuggestion() {
         final String searchWord = edtSearch.getText().toString();
         final String[] kanji = wordDAO.getKanji(searchWord);
-//        final ArrayAdapter adapterSuggestion = new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,kanji);
+
+        //set threshold for suggestion show up
         edtSearch.setThreshold(1);
 
-
-        //?????????????? Không hiểu cái này???
         String[] from = { "name" };
         int[] to = { android.R.id.text1 };
+
         //create a simple cursorAdapter
         SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getContext(),
                 android.R.layout.simple_dropdown_item_1line, null, from, to, 0);
@@ -109,7 +110,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 if (constraint == null) {
                     return null;
                 }
-                //????????????????Này nữa ??????????????????
+
                 String[] columns = { SyncStateContract.Columns._ID, "name" };
                 MatrixCursor c = new MatrixCursor(columns);
                 try {
@@ -141,7 +142,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         } catch (ArrayIndexOutOfBoundsException e) {
             word = new Word(-1,"Not Found","Not Found","Not Found","Not Found");
         }
+
+//        Log.d ("myApplication",  "id:"+ );
+
         return word;
+
     }
 
     //Transfer data between fragment
@@ -162,6 +167,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             Flashcard[] checkingID = flashcardDAO.checkID(word.getWordID());
             if(checkingID == null) {
                 flashcard.setFlashcardID(word.getWordID());
+                flashcard.setAccuracy(0);
+                flashcard.setSpeedPerCharacter(10);
+                flashcard.setLastState(1);
+                flashcard.setKanaLength(word.getKana().length());
                 flashcardDAO.insertFlashcard(flashcard);
             }
         }
