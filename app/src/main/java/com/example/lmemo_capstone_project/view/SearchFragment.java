@@ -91,20 +91,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         final String[] kanji = wordDAO.getKanji(searchWord);
 //        final ArrayAdapter adapterSuggestion = new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,kanji);
         edtSearch.setThreshold(1);
-//        edtSearch.setAdapter(adapterSuggestion);
-//        edtSearch.setOnTouchListener(new View.OnTouchListener() {
-//            @SuppressLint("ClickableViewAccessibility")
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (kanji.length > 0) {
-//                    // show all suggestions
-//                    if (!edtSearch.getText().equals(searchWord))
-//                        adapterSuggestion.getFilter().filter(null);
-//                    edtSearch.showDropDown();
-//                }
-//                return false;
-//            }
-//        });
+
+
         //?????????????? Không hiểu cái này???
         String[] from = { "name" };
         int[] to = { android.R.id.text1 };
