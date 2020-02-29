@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,52 +7,62 @@
     tools:context=".view.KanjiListAdapter">
     <TextView
         android:id="@+id/tvKanji"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:textStyle="bold"
-        android:textSize="40sp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:fontFamily="@font/kanji_stroke_order_font"
+        android:textStyle="normal"
+        android:textSize="110sp"
         android:gravity="center"
+        android:textColor="#DA0F0F"
+        android:layout_marginBottom="25dp"
         />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="120dp"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
             <TextView
+                android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:layout_marginLeft="20dp"
                 android:text="訓:"
                 android:textColor="#117C8A"
-                android:textSize="20sp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:textSize="30sp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"/>
             <TextView
+                android:layout_marginTop="20dp"
                 android:id="@+id/tvKunyomi"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textColor="#000000"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textSize="30sp"
                 android:gravity="center_vertical" />
         </LinearLayout>
         <LinearLayout
+
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
             <TextView
+                android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:layout_marginLeft="20dp"
                 android:text="音:"
                 android:textColor="#117C8A"
-                android:textSize="20sp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:textSize="30sp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"/>
             <TextView
+                android:layout_marginTop="20dp"
                 android:id="@+id/tvOnyomi"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textColor="#000000"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textSize="30sp"
                 android:gravity="center_vertical" />
         </LinearLayout>
     </LinearLayout>

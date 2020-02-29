@@ -1,20 +1,19 @@
 package com.example.lmemo_capstone_project.view;
 
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FilterQueryProvider;
@@ -30,11 +29,6 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -68,12 +62,17 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Word word = performSearch();
-                    fragmentDataTransfer(word);
-                    addToFlashCard();
+                    getSearchResult();
                     return true;
                 }
                 return false;
+            }
+        });
+
+        edtSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getSearchResult();
             }
         });
 
@@ -91,25 +90,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private void performSuggestion() {
         final String searchWord = edtSearch.getText().toString();
         final String[] kanji = wordDAO.getKanji(searchWord);
-//        final ArrayAdapter adapterSuggestion = new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,kanji);
+
+        //set threshold for suggestion show up
         edtSearch.setThreshold(1);
-//        edtSearch.setAdapter(adapterSuggestion);
-//        edtSearch.setOnTouchListener(new View.OnTouchListener() {
-//            @SuppressLint("ClickableViewAccessibility")
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (kanji.length > 0) {
-//                    // show all suggestions
-//                    if (!edtSearch.getText().equals(searchWord))
-//                        adapterSuggestion.getFilter().filter(null);
-//                    edtSearch.showDropDown();
-//                }
-//                return false;
-//            }
-//        });
-        //?????????????? Không hiểu cái này???
+
         String[] from = { "name" };
         int[] to = { android.R.id.text1 };
+
         //create a simple cursorAdapter
         SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getContext(),
                 android.R.layout.simple_dropdown_item_1line, null, from, to, 0);
@@ -123,7 +110,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 if (constraint == null) {
                     return null;
                 }
-                //????????????????Này nữa ??????????????????
+
                 String[] columns = { SyncStateContract.Columns._ID, "name" };
                 MatrixCursor c = new MatrixCursor(columns);
                 try {
@@ -155,7 +142,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         } catch (ArrayIndexOutOfBoundsException e) {
             word = new Word(-1,"Not Found","Not Found","Not Found","Not Found");
         }
+
+//        Log.d ("myApplication",  "id:"+ );
+
         return word;
+
     }
 
     //Transfer data between fragment
@@ -176,6 +167,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             Flashcard[] checkingID = flashcardDAO.checkID(word.getWordID());
             if(checkingID == null) {
                 flashcard.setFlashcardID(word.getWordID());
+                flashcard.setAccuracy(0);
+                flashcard.setSpeedPerCharacter(10);
+                flashcard.setLastState(1);
+                flashcard.setKanaLength(word.getKana().length());
                 flashcardDAO.insertFlashcard(flashcard);
             }
         }
@@ -186,20 +181,37 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     //onclick listener for 2 tab word + kanji
     @Override
     public void onClick(View v) {
-        Word word = performSearch();
         switch (v.getId()){
             case R.id.tabWord:
 //                performSearch();
-                fragmentDataTransfer(word);
-                addToFlashCard();
+                getSearchResult();
                 break;
             case R.id.tabKanji:
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                KanjiSearchingFragment kanjiFragment = new KanjiSearchingFragment();
+                KanjiSearchingFragment kanjiFragment = new KanjiSearchingFragment(edtSearch.getText().toString());
                 fragmentTransaction.replace(R.id.searchFrameLayout,kanjiFragment,"SearchKanji");
                 fragmentTransaction.commit();
+                hideKeyboard(getActivity());
                 break;
         }
+    }
 
+    private void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void getSearchResult() {
+        Word word = performSearch();
+        fragmentDataTransfer(word);
+        addToFlashCard();
+        edtSearch.dismissDropDown();
+        hideKeyboard(getActivity());
     }
 }
