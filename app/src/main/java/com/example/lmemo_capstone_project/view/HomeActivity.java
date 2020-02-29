@@ -10,7 +10,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.lmemo_capstone_project.R;
@@ -44,6 +43,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         mAuth = FirebaseAuth.getInstance();
 
+//        RewardDAO rewardDAO = LMemoDatabase.getInstance(getApplicationContext()).rewardDAO();
+//        for(int i=0;i<=5;i++) {
+//            Reward r = new Reward();
+//            r.setRewardID(i);
+//            r.setRewardName("Reward:" + i);
+//            r.setMinimumReachPoint(i*10);
+//            rewardDAO.insertReward(r);
+//        }
     }
     @Override
     public void onStart() {
