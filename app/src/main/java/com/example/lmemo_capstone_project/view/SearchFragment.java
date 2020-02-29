@@ -129,9 +129,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 try {
                     //when a list item contains the user input, add that to the Matrix Cursor
                     //this matrix cursor will be returned and the contents will be displayed
-                    String[] kanji = wordDAO.getKanji(constrain);
+                    Word[] kanji = wordDAO.getSuggestion(constrain);
                     for (int i = 0; i < kanji.length; i++) {
-                        c.newRow().add(i).add(kanji[i].length() == 0 ? "No Kanji" : kanji[i]);
+                        c.newRow().add(i).add(kanji[i].getKanjiWriting().length() == 0 ? kanji[i].getKana() : kanji[i].getKanjiWriting());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

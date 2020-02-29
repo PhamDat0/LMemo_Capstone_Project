@@ -28,8 +28,8 @@ public interface WordDAO {
     @Query("SELECT * FROM Word WHERE Kana LIKE '%' || :keyword || '%' OR Kanji LIKE '%' || :keyword || '%' OR Meaning LIKE '%' || :keyword || '%' order by WordID asc")
     Word[] getAWord(String keyword);
 
-    @Query("SELECT Kanji From Word WHERE Kana LIKE :keyword OR Kanji LIKE :keyword OR Meaning LIKE :keyword")
-    String[] getKanji(String keyword);
+    @Query("SELECT * From Word WHERE Kana LIKE :keyword OR Kanji LIKE :keyword OR Meaning LIKE :keyword")
+    Word[] getSuggestion(String keyword);
 
     @Query("SELECT * FROM Word order by WordID asc")
     Word[] getAllWords();
