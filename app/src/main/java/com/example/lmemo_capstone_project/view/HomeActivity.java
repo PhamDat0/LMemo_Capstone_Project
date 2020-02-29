@@ -17,7 +17,6 @@ import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
-import com.facebook.login.LoginFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -147,7 +146,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(id == R.id.myAccount){
             Fragment fragment = LMemoDatabase.getInstance(getApplicationContext()).userDAO().
-                    getLocalUser()[0].isGuest() ? new LoginFragment() : new MyAccountFragment();
+                    getLocalUser()[0].isGuest() ? new SignInFragment() : new MyAccountFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"myAccount");
             fragmentTransaction.commit();
