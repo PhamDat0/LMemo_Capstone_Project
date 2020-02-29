@@ -13,9 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".view.KanjiListAdapter"></activity>
-        <activity
-            android:name=".controller.authentication_controller.LoginActivity"
-            android:exported="true" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -39,7 +36,9 @@
         </activity> <!-- android:theme="@style/AppTheme"> -->
         <activity
             android:name=".view.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
