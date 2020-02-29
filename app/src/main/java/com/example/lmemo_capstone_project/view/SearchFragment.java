@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +88,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     //Suggestion word Function
     private void performSuggestion() {
         final String searchWord = edtSearch.getText().toString();
-        final String[] kanji = wordDAO.getKanji(searchWord);
+        String s = searchWord.replace("*", "%");
+        s = s.replace("?", "_");
+        final String[] kanji = wordDAO.getKanji(s);
 
         //set threshold for suggestion show up
         edtSearch.setThreshold(1);

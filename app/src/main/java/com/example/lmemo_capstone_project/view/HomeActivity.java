@@ -120,7 +120,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
         else{
-            super.onBackPressed();
+//            super.onBackPressed();
         }
 
     }
