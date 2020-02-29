@@ -87,40 +87,51 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     //Suggestion word Function
     private void performSuggestion() {
-        final String searchWord = edtSearch.getText().toString();
-        String s = searchWord.replace("*", "%");
-        s = s.replace("?", "_");
-        final String[] kanji = wordDAO.getKanji(s);
+//        final String searchWord = edtSearch.getText().toString();
+//        String s = searchWord.replace("*", "%");
+//        s = s.replace("?", "_");
+//        if((!s.contains("%"))&&(!s.contains("_"))) {
+//            s += "%";
+//        }
+//        Log.i("STRING",s);
+//        final String[] kanji = wordDAO.getKanji(s);
+//        Log.i("Result_Length",kanji.length+"");
 
         //set threshold for suggestion show up
         edtSearch.setThreshold(1);
 
-        String[] from = { "name" };
-        int[] to = { android.R.id.text1 };
+        String[] from = {"name"};
+        int[] to = {android.R.id.text1};
 
         //create a simple cursorAdapter
         SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getContext(),
                 android.R.layout.simple_dropdown_item_1line, null, from, to, 0);
         cursorAdapter.setStringConversionColumn(1);
         //create the filter query provider
-        FilterQueryProvider provider = new FilterQueryProvider(){
+        FilterQueryProvider provider = new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence constraint) {
                 String constrain = (String) constraint;
+                constrain = constrain.replace("*", "%");
+                constrain = constrain.replace("?", "_");
+                if ((!constrain.contains("%")) && (!constrain.contains("_"))) {
+                    constrain += "%";
+                }
+//                constrain = constrain.replace("*","%");
+//                constrain = constrain.replace("?","_");
                 constrain = constrain.toUpperCase();
                 if (constraint == null) {
                     return null;
                 }
 
-                String[] columns = { SyncStateContract.Columns._ID, "name" };
+                String[] columns = {SyncStateContract.Columns._ID, "name"};
                 MatrixCursor c = new MatrixCursor(columns);
                 try {
                     //when a list item contains the user input, add that to the Matrix Cursor
                     //this matrix cursor will be returned and the contents will be displayed
+                    String[] kanji = wordDAO.getKanji(constrain);
                     for (int i = 0; i < kanji.length; i++) {
-                        if(kanji[i].contains(constrain)){
-                            c.newRow().add(i).add(kanji[i]);
-                        }
+                        c.newRow().add(i).add(kanji[i].length() == 0 ? "No Kanji" : kanji[i]);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -141,7 +152,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         try {
             word = wordDAO.getAWord(searchWord)[0];
         } catch (ArrayIndexOutOfBoundsException e) {
-            word = new Word(-1,"Not Found","Not Found","Not Found","Not Found");
+            word = new Word(-1, "Not Found", "Not Found", "Not Found", "Not Found");
         }
 
 //        Log.d ("myApplication",  "id:"+ );
@@ -156,7 +167,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         WordSearchingFragment wordFragment = new WordSearchingFragment();
         bundle.putSerializable("result", word);
         wordFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.searchFrameLayout,wordFragment,"SearchWord");
+        fragmentTransaction.replace(R.id.searchFrameLayout, wordFragment, "SearchWord");
         fragmentTransaction.commit();
     }
 
@@ -164,9 +175,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private void addToFlashCard() {
         flashcard = new Flashcard();
         Word word = performSearch();
-        if(word.getWordID()!=-1) {
+        if (word.getWordID() != -1) {
             Flashcard[] checkingID = flashcardDAO.checkID(word.getWordID());
-            if(checkingID == null) {
+            if (checkingID == null) {
                 flashcard.setFlashcardID(word.getWordID());
                 flashcard.setAccuracy(0);
                 flashcard.setSpeedPerCharacter(10);
@@ -182,7 +193,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     //onclick listener for 2 tab word + kanji
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tabWord:
 //                performSearch();
                 getSearchResult();
@@ -190,7 +201,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             case R.id.tabKanji:
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 KanjiSearchingFragment kanjiFragment = new KanjiSearchingFragment(edtSearch.getText().toString());
-                fragmentTransaction.replace(R.id.searchFrameLayout,kanjiFragment,"SearchKanji");
+                fragmentTransaction.replace(R.id.searchFrameLayout, kanjiFragment, "SearchKanji");
                 fragmentTransaction.commit();
                 hideKeyboard(getActivity());
                 break;
