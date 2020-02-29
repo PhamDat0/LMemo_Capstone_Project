@@ -18,6 +18,7 @@ import com.example.lmemo_capstone_project.controller.database_controller.LMemoDa
 import com.example.lmemo_capstone_project.controller.database_controller.firebase_dao.OnlineUserDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
+import com.example.lmemo_capstone_project.exception.DublicatedMailException;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 
@@ -38,14 +39,13 @@ public class MyAccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_account, container, false);
-        updateInformationToUI(container);
-        final ViewGroup containerClone = container;
-        container.findViewById(R.id.btSaveAccount).setOnClickListener(new View.OnClickListener() {
+        final View view = inflater.inflate(R.layout.fragment_my_account, container, false);
+        updateInformationToUI(view);
+        view.findViewById(R.id.btSaveAccount).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hasAnInternetConnection()) {
-                    updateUserInformation(containerClone);
+                    updateUserInformation(view);
                 } else {
                     notifyNoInternetConnections();
                 }
@@ -80,7 +80,7 @@ public class MyAccountFragment extends Fragment {
      * @param container The container contains every View Object in this fragment
      *                  この関数はcontainerからユーザーの情報を取って、FirebaseとSQLiteに情報を更新します。
      */
-    private void updateUserInformation(ViewGroup container) {
+    private void updateUserInformation(View container) {
         User user = getUserInformationFromView(container);
         updateUserToFirebase(user);
         updateUserToSQLite(user);
@@ -91,8 +91,8 @@ public class MyAccountFragment extends Fragment {
      * @return The user's information
      * この関数はcontainerからユーザーの情報を取ります。
      */
-    private User getUserInformationFromView(ViewGroup container) {
-        String email = ((EditText) container.findViewById(R.id.etEmail)).getText().toString();
+    private User getUserInformationFromView(View container) {
+        String email = ((EditText) container.findViewById(R.id.etEmail)).getText().toString().toLowerCase();
         String displayName = ((EditText) container.findViewById(R.id.etDisplayName)).getText().toString();
         int checkedRadioButtonId = ((RadioGroup) container.findViewById(R.id.rgGender)).getCheckedRadioButtonId();
         boolean gender = ((RadioButton) container.findViewById(checkedRadioButtonId)).getText().equals("Male");
@@ -116,14 +116,18 @@ public class MyAccountFragment extends Fragment {
      */
     private void updateUserToFirebase(User user) {
         OnlineUserDAO onlineUserDAO = new OnlineUserDAO();
-        onlineUserDAO.updateUser(user);
+        try {
+            onlineUserDAO.updateUser(user);
+        } catch (DublicatedMailException e) {
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
+        }
     }
 
     /**
      * @param container The container contains every View Object in this fragment
      *                  この関数はユーザーの情報をSQLiteから読んで、ユーザーインターフェイス に書きます。
      */
-    private void updateInformationToUI(ViewGroup container) {
+    private void updateInformationToUI(View container) {
         LMemoDatabase lMemoDatabase = LMemoDatabase.getInstance(getContext());
         UserDAO userDAO = lMemoDatabase.userDAO();
         RewardDAO rewardDAO = lMemoDatabase.rewardDAO();
@@ -135,7 +139,7 @@ public class MyAccountFragment extends Fragment {
         ((RadioButton) container.findViewById(user.isMale() ? R.id.rbMale : R.id.rbFemale)).setChecked(true);
         ((TextView) container.findViewById(R.id.tvContributtionPoint)).setText("" + user.getContributionPoint());
         ((TextView) container.findViewById(R.id.tvReward)).setText("" + currentReward.getRewardName());
-        ((TextView) container.findViewById(R.id.tvReward)).setText("" + nextReward.getRewardName());
+        ((TextView) container.findViewById(R.id.tvNextReward)).setText("" + nextReward.getRewardName());
     }
 
 }
