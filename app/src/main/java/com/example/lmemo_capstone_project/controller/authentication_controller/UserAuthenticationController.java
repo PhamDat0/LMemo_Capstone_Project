@@ -151,6 +151,9 @@ public class UserAuthenticationController {
         User user = new User();
         String FID = currentUser.getUid();
         String email = currentUser.getEmail();
+        if (email == null) {
+            email = currentUser.getProviderData().get(0).getEmail();
+        }
         String name = currentUser.getDisplayName();
         user.setUserID(FID);
         user.setDisplayName(name);

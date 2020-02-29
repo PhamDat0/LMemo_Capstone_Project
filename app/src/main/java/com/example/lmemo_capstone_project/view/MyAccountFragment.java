@@ -2,6 +2,7 @@ package com.example.lmemo_capstone_project.view;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,9 @@ import com.example.lmemo_capstone_project.controller.database_controller.LMemoDa
 import com.example.lmemo_capstone_project.controller.database_controller.firebase_dao.OnlineUserDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
-import com.example.lmemo_capstone_project.exception.DublicatedMailException;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 
@@ -30,9 +31,11 @@ import java.io.IOException;
  */
 public class MyAccountFragment extends Fragment {
 
+    private FirebaseAuth mAuth;
+
     public MyAccountFragment() {
         // Required empty public constructor
-
+        mAuth = FirebaseAuth.getInstance();
     }
 
 
@@ -55,7 +58,8 @@ public class MyAccountFragment extends Fragment {
     }
 
     private void notifyNoInternetConnections() {
-        Toast.makeText(getContext(), "There are no internet connections.", Toast.LENGTH_LONG);
+        Log.i("NO_INTERNET", "No internet");
+        Toast.makeText(getContext(), "There are no internet connections.", Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -116,11 +120,7 @@ public class MyAccountFragment extends Fragment {
      */
     private void updateUserToFirebase(User user) {
         OnlineUserDAO onlineUserDAO = new OnlineUserDAO();
-        try {
-            onlineUserDAO.updateUser(user);
-        } catch (DublicatedMailException e) {
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG);
-        }
+        onlineUserDAO.updateUser(user);
     }
 
     /**
