@@ -10,16 +10,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.facebook.login.LoginFragment;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +42,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         DefaultFragment();
 
+        mAuth = FirebaseAuth.getInstance();
+
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
     //Default cho man hinh home la search
@@ -109,6 +120,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"privacy");
             fragmentTransaction.commit();
+        }
+        else if(id == R.id.signOut){
+            final SignInFragment fragment = new SignInFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"signIn");
+            fragmentTransaction.runOnCommit(new Runnable() {
+                @Override
+                public void run() {
+                    fragment.LogOutFirebaseAndSQLite();
+                }
+            });
+            fragmentTransaction.commit();
+
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;

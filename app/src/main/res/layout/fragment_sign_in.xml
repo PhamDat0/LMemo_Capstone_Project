@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signIn_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -12,12 +13,12 @@
         android:layout_weight=".5"
         android:gravity="center_horizontal"
         android:background="@drawable/gradientbackground">
-        <Button
+
+        <com.facebook.login.widget.LoginButton
             android:id="@+id/btnFaceLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="290dp"
-            />
+            android:layout_marginTop="55dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,11 +26,50 @@
         android:layout_weight=".5"
         android:gravity="center_horizontal"
         android:background="@drawable/whitegradient">
-        <ImageButton
+        <com.google.android.gms.common.SignInButton
             android:id="@+id/btnGoogleLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="55dp"
+            android:layout_marginTop="15dp"
             />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".5"
+        android:gravity="center_horizontal"
+        android:background="@drawable/whitegradient"
+        >
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
+
+            android:text="@string/sign_out" />
+        <TextView
+            android:id="@+id/detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
+            android:layout_marginLeft="25dp"
+            tools:text="Firebase User ID: 123456789abc" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".5"
+        android:gravity="center_horizontal"
+        android:background="@drawable/whitegradient"
+        >
+        <Button
+            android:id="@+id/btnLogOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
+            android:layout_marginRight="65dp"
+            android:text="@string/sign_out" />
     </LinearLayout>
 </LinearLayout>

@@ -58,6 +58,18 @@ public class UserAuthenticationController {
                 });
         return listFUID;
     }
+    public boolean checkUserLogged(FirebaseUser user){
+        boolean isLogged = true;
+        if (user == null){
+            isLogged= false;
+        }
+        else{
+            isLogged= true;
+        }
+        return isLogged;
+    }
+
+
 
     private boolean checkUserExisted(String FID) {
         boolean isExisted = true;
@@ -103,7 +115,7 @@ public class UserAuthenticationController {
                 Date date = new Date();
                 user.setLoginTime(date);
                 addUserToSQLite(user);
-                Log.w(TAG, "Logged in after add to sqlite with updated" + user.getDisplayName() + "at time " + user.getLoginTime() + " gender " + user.isMale());
+                Log.w(TAG, "Logged in after add to sqlite with updated"+ user.getDisplayName()+ "at time "+ user.getLoginTime()+ " gender " + user.isMale());
 
             }
         });
@@ -174,6 +186,7 @@ public class UserAuthenticationController {
                 Log.w(TAG, "local user is: " + userDAO.getLocalUser()[0].getDisplayName());
             }
         });
+
     }
 
     public void checkCurrentUser(FirebaseUser currentUser) {
