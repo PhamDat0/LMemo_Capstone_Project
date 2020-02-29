@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
+import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.facebook.login.LoginFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,10 +44,66 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         DefaultFragment();
+        setRewardData();
 
         mAuth = FirebaseAuth.getInstance();
 
     }
+
+
+    //set item to reward table in database
+    private void setRewardData() {
+        LMemoDatabase lMemoDatabase = LMemoDatabase.getInstance(getApplicationContext());
+        Reward reward = new Reward();
+        Reward reward1 = new Reward();
+        Reward reward2 = new Reward();
+        Reward reward3 = new Reward();
+        Reward reward4= new Reward();
+        Reward reward5 = new Reward();
+        RewardDAO rewardDAO = lMemoDatabase.rewardDAO();
+        Reward[] getRewards = rewardDAO.getRewards();
+        if(getRewards.length==0) {
+            reward.setRewardName("User");
+            reward.setMinimumReachPoint(0);
+            rewardDAO.insertReward(reward);
+
+            reward1.setRewardName("First contribution");
+            reward1.setRewardID(1);
+            reward1.setMinimumReachPoint(1);
+            rewardDAO.insertReward(reward1);
+
+            reward2.setRewardName("Valuable Contributor");
+            reward2.setMinimumReachPoint(5);
+            reward2.setRewardID(2);
+            rewardDAO.insertReward(reward2);
+
+            reward3.setRewardName("Rising Stars");
+            reward3.setMinimumReachPoint(10);
+            reward3.setRewardID(3);
+            rewardDAO.insertReward(reward3);
+
+
+            reward4.setRewardName("Excellent Specialist");
+            reward4.setMinimumReachPoint(20);
+            reward4.setRewardID(4);
+            rewardDAO.insertReward(reward4);
+
+            reward5.setRewardName("Supreme Professor");
+            reward5.setMinimumReachPoint(50);
+            reward5.setRewardID(5);
+            rewardDAO.insertReward(reward5);
+        } else {
+            Log.d("myApp","Reward info:" +getRewards.length + getRewards[0].getRewardID() +" --" +
+                            getRewards[0].getRewardName()+"-"+getRewards[0].getMinimumReachPoint()
+                    + "---"
+                    + getRewards[1].getRewardName()+"-"+getRewards[1].getMinimumReachPoint() + "---"
+                    + getRewards[2].getRewardName()+"-"+getRewards[2].getMinimumReachPoint() + "---"
+                    + getRewards[3].getRewardName() +"-"+getRewards[3].getMinimumReachPoint() + "---"
+                    + getRewards[4].getRewardName()+"-"+getRewards[4].getMinimumReachPoint()
+                    + "---" + getRewards[5].getRewardName() +"-"+getRewards[5].getMinimumReachPoint() + "---");
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -61,6 +120,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction.commit();
 
     }
+
 
     //Set item listener tren navigation
     @Override
@@ -146,8 +206,5 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         else{
 //            super.onBackPressed();
         }
-
     }
-
-
 }

@@ -11,6 +11,9 @@ public interface RewardDAO {
     @Insert
     void insertReward(Reward reward);
 
+    @Query("SELECT * FROM Reward")
+    Reward[] getRewards();
+
     @Query("SELECT * FROM Reward WHERE MinimumPoint <= :minimumPoint order by MinimumPoint desc LIMIT 1")
     Reward[] getBestReward(int minimumPoint);
 
