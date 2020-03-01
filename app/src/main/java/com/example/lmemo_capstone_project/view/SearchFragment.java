@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.FilterQueryProvider;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -61,7 +62,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    getSearchResult();
+                    try {
+                        getSearchResult();
+                    } catch (WordNotFoundException e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                     return true;
                 }
                 return false;
@@ -71,7 +76,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         edtSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getSearchResult();
+                try {
+                    getSearchResult();
+                } catch (WordNotFoundException e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -148,17 +157,51 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     //Perform Search desire word in database
     private Word performSearch() {
         String searchWord = edtSearch.getText().toString();
+        if (searchWord.trim().length() == 0)
+            return new Word(-2, "", "", "", "");
 //        Word word;
         try {
-            word = wordDAO.getAWord(searchWord)[0];
+            Word[] words = wordDAO.getWords(searchWord);
+            word = bestFit(words, searchWord);
         } catch (ArrayIndexOutOfBoundsException e) {
             word = new Word(-1, "Not Found", "Not Found", "Not Found", "Not Found");
         }
-
 //        Log.d ("myApplication",  "id:"+ );
 
         return word;
 
+    }
+
+    private Word bestFit(Word[] words, String searchWord) {
+        Word result = words[0];
+
+        for (Word word : words) {
+            if (checkForBestFit(word, searchWord)) {
+                result = word;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private boolean checkForBestFit(Word word, String searchWord) {
+        String[] kanjiWritings = word.getKanjiWriting().split("/");
+        String[] kanaWritings = word.getKana().split("/");
+        String[] meanings = word.getMeaning().split("/");
+        for (String kanjiWriting : kanjiWritings) {
+            if (searchWord.equals(kanjiWriting.trim()))
+                return true;
+        }
+        for (String kanaWriting : kanaWritings) {
+            if (searchWord.equals(kanaWriting.trim()))
+                return true;
+        }
+        for (String meaning : meanings) {
+            if (searchWord.equals(meaning.trim()))
+                return true;
+        }
+        return false;
     }
 
     //Transfer data between fragment
@@ -196,7 +239,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.tabWord:
 //                performSearch();
-                getSearchResult();
+                try {
+                    getSearchResult();
+                } catch (WordNotFoundException e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.tabKanji:
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -219,11 +266,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    private void getSearchResult() {
+    private void getSearchResult() throws WordNotFoundException {
         Word word = performSearch();
+        if (word.getWordID() == -1)
+            throw new WordNotFoundException("That word does not exist.");
+        if (word.getWordID() == -2)
+            throw new WordNotFoundException("You didn't enter anything.");
         fragmentDataTransfer(word);
         addToFlashCard();
         edtSearch.dismissDropDown();
         hideKeyboard(getActivity());
+    }
+
+    private class WordNotFoundException extends Exception {
+        public WordNotFoundException(String s) {
+            super(s);
+        }
     }
 }

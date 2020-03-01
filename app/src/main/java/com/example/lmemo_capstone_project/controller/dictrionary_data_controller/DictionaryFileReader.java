@@ -105,7 +105,7 @@ public class DictionaryFileReader extends Thread {
                     kana.append(readForm(parser));
                 }
             } else if (name.equals("sense")) {
-                sense = readSense(parser);
+                sense = readSense(parser, sense);
             } else {
                 skip(parser);
             }
@@ -116,9 +116,8 @@ public class DictionaryFileReader extends Thread {
                 sense.partOfSpeech.length() >= 3 ? sense.partOfSpeech.toString().substring(3) : sense.partOfSpeech);
     }
 
-    private Sense readSense(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private Sense readSense(XmlPullParser parser, Sense result) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "sense");
-        Sense result = new Sense();
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
