@@ -23,7 +23,7 @@ public interface FlashcardDAO {
     Flashcard[] getAllFlashcard();
 
     @Query("SELECT * FROM Flashcard Where FlashcardID LIKE :keyword")
-    Flashcard[] checkID(int keyword);
+    Flashcard[] getFlashCardByID(int keyword);
 
     @Transaction
     @Query("Select * FROM Flashcard")

@@ -219,8 +219,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         flashcard = new Flashcard();
         Word word = performSearch();
         if (word.getWordID() != -1) {
-            Flashcard[] checkingID = flashcardDAO.checkID(word.getWordID());
-            if (checkingID == null) {
+            Flashcard[] checkingID = flashcardDAO.getFlashCardByID(word.getWordID());
+            if (checkingID.length == 0) {
                 flashcard.setFlashcardID(word.getWordID());
                 flashcard.setAccuracy(0);
                 flashcard.setSpeedPerCharacter(10);
