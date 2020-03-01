@@ -24,7 +24,9 @@ public class KanjiFileReader extends Thread {
 
     /**
      * @param context The context to get dictionary file
-     *                This constructor initializes the context, the DAO for Kanji and the XML parser
+     *                辞書ファイルを取るためのContextオブジェクト
+     * This constructor initializes the context, the DAO for kanji and the XML parser
+     * この構築子はContextとKanjiDAOとXML分析エンジンのオブジェクトを初期化子します。
      */
     public KanjiFileReader(Context context) {
         this.context = context;
@@ -58,7 +60,8 @@ public class KanjiFileReader extends Thread {
     /**
      * This method first deletes every record in the SQLite to avoid conflict.
      * Then it will add every kanji in the kanji file to SQLite.
-     * この関数は最初にSQLiteから残っている漢字を削除します。それから、辞書のファイルの中の漢字を読んでSQLiteに書きます。
+     * この関数は最初にSQLiteから残っている漢字を削除します。それから、辞書のファイルの中の漢字を読んで
+     * SQLiteに書きます。
      */
     @Override
     public void run() {
@@ -81,9 +84,15 @@ public class KanjiFileReader extends Thread {
 
     /**
      * @param parser The XMLPullParser using to parse the XML file.
-     * @return The kanji parsed from the kanji file
-     * @throws IOException            This exception is thrown if reading file issue occurs
-     * @throws XmlPullParserException This exception is thrown if there are problems with parsing xml
+     *               これはXMLファイルを分析のためのXMLPullParserオブジェクト。
+     * @return The word parsed from the dictionary file
+     *          辞書ファイルから分析した言葉。
+     * @throws IOException  This exception is thrown if reading file issue occurs
+     *                      ファイルを読む問題が起これば、この例外は投げられます。
+     * @throws XmlPullParserException   This exception is thrown if there are problems with parsing xml
+     * file.
+     *                                  XMLファイルを分析する問題が起これば、この例外は投げられます。
+     * この関数は辞書のファイルの中の言葉を読んでSQLiteに書きます。
      */
     private Kanji parseKanji(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, "character");
@@ -188,10 +197,12 @@ public class KanjiFileReader extends Thread {
     }
 
     /**
-     * @throws IOException            This exception is thrown if reading file issue occurs
-     * @throws XmlPullParserException This exception is thrown if there are problems with parsing xml
-     *                                file.
-     *                                この関数は辞書のファイルの中の漢字を読んでSQLiteに書きます。
+     * @throws IOException  This exception is thrown if reading file issue occurs
+     *                      ファイルを読む問題が起これば、この例外は投げられます。
+     * @throws XmlPullParserException   This exception is thrown if there are problems with parsing xml
+     *                                  file.
+     *                                  XMLファイルを分析する問題が起これば、この例外は投げられます。
+     * この関数は辞書のファイルの中の漢字を読んでSQLiteに書きます。
      */
     private void addKanjiToSQLite() throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "all");

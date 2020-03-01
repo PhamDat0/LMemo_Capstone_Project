@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * この関数はプログレスバーの進度を1パーセント足します。
+     */
     private void updateProgressBar() {
         ProgressBar pb = findViewById(R.id.LOAD_DATA_PROGRESS);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -38,8 +41,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * この関数は漢字と言葉のファイルを読むことをスレッドに入れ、そのスレッドを始め、プログレスバーも
+     * 進度を表します。
+     */
     private void loadDictionaryDatabase() {
-        //Start read file to SQLite
         final Thread dictionaryFileReader = new DictionaryFileReader(getApplicationContext());
         dictionaryFileReader.start();
         final Thread kanjiReader = new KanjiFileReader(getApplicationContext());
@@ -47,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         Thread progressBarUpdate = new Thread(new Runnable() {
             @Override
             public void run() {
+                //漢字と言葉のファイルを読み終わってからでなければ、プログレスバーを更新し続けます。
+                //終わったら、HomeActivityに転送します。
                 while (kanjiReader.isAlive() || dictionaryFileReader.isAlive()) {
                     try {
                         Thread.sleep(3000);
@@ -55,14 +63,11 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-//                Toast.makeText(getApplicationContext(), "Load dictionary data successfully.", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
         });
         progressBarUpdate.start();
-        //At the same time display a loading bar
-        //After done change the Preference
     }
 
 

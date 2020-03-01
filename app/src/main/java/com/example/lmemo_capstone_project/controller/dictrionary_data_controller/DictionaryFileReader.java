@@ -24,7 +24,9 @@ public class DictionaryFileReader extends Thread {
 
     /**
      * @param context The context to get dictionary file
-     *                This constructor initializes the context, the DAO for word and the XML parser
+     *                辞書ファイルを取るためのContextオブジェクト
+     * This constructor initializes the context, the DAO for word and the XML parser
+     * この構築子はContextとWordDAOとXML分析エンジンのオブジェクトを初期化子します。
      */
     public DictionaryFileReader(Context context) {
         this.context = context;
@@ -41,7 +43,8 @@ public class DictionaryFileReader extends Thread {
     /**
      * This method first deletes every record in the SQLite to avoid conflict.
      * Then it will add every word in the dictionary file to SQLite.
-     * この関数は最初にSQLiteから残っている言葉を削除します。それから、辞書のファイルの中の言葉を読んでSQLiteに書きます。
+     * この関数は最初にSQLiteから残っている言葉を削除します。それから、辞書のファイルの中の言葉を読んで
+     * SQLiteに書きます。
      */
     @Override
     public void run() {
@@ -81,9 +84,15 @@ public class DictionaryFileReader extends Thread {
 
     /**
      * @param parser The XMLPullParser using to parse the XML file.
+     *               これはXMLファイルを分析のためのXMLPullParserオブジェクト。
      * @return The word parsed from the dictionary file
-     * @throws IOException            This exception is thrown if reading file issue occurs
-     * @throws XmlPullParserException This exception is thrown if there are problems with parsing xml
+     *          辞書ファイルから分析した言葉。
+     * @throws IOException  This exception is thrown if reading file issue occurs
+     *                      ファイルを読む問題が起これば、この例外は投げられます。
+     * @throws XmlPullParserException   This exception is thrown if there are problems with parsing xml
+     * file.
+     *                                  XMLファイルを分析する問題が起これば、この例外は投げられます。
+     * この関数は辞書のファイルの中の言葉を読んでSQLiteに書きます。
      */
     private Word parseWord(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, null, "entry");
@@ -215,9 +224,11 @@ public class DictionaryFileReader extends Thread {
     }
 
     /**
-     * @throws IOException This exception is thrown if reading file issue occurs
-     * @throws XmlPullParserException This exception is thrown if there are problems with parsing xml
+     * @throws IOException  This exception is thrown if reading file issue occurs
+     *                      ファイルを読む問題が起これば、この例外は投げられます。
+     * @throws XmlPullParserException   This exception is thrown if there are problems with parsing xml
      * file.
+     *                                  XMLファイルを分析する問題が起これば、この例外は投げられます。
      * この関数は辞書のファイルの中の言葉を読んでSQLiteに書きます。
      */
     private void addAllWordsToSQLite() throws IOException, XmlPullParserException {

@@ -18,22 +18,13 @@ public class OnlineUserDAO {
         db = FirebaseFirestore.getInstance();
     }
 
+    /**
+     * @param user The object contains new user's information
+     *             ユーザーの新しい情報を持っているオブジェクトです。
+     *             この関数はユーザーの新しい情報をFirebaseにアップロードします。
+     *             変更可能情報は性別とディスプレイの名前です。
+     */
     public void updateUser(final User user) {
-//        db.collection("users").whereEqualTo("email", user.getEmail()).get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d("QUERY_FOR_DATA", document.getId() + " => " + document.getData());
-//                                return;
-//                            }
-//
-//                        } else {
-//                            Log.d("QUERY", "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
         DocumentReference userRef = db.collection("users").document(user.getUserID());
         userRef.update("displayName", user.getDisplayName(),
                 "isMale", user.isMale())

@@ -64,6 +64,7 @@ public class MyAccountFragment extends Fragment {
 
     /**
      * @return true if there is at least 1 Internet connection
+     *          インターネット接続できる場合はtrueを返します。
      * この関数はインターネットの接続を確認します。ある場合はtrueを返します。
      */
     private boolean hasAnInternetConnection() {
@@ -82,7 +83,8 @@ public class MyAccountFragment extends Fragment {
 
     /**
      * @param container The container contains every View Object in this fragment
-     *                  この関数はcontainerからユーザーの情報を取って、FirebaseとSQLiteに情報を更新します。
+     *                  ビューオブジェクトを持っているのコンテナオブジェクト
+     * この関数はcontainerからユーザーの情報を取って、FirebaseとSQLiteに情報を更新します。
      */
     private void updateUserInformation(View container) {
         User user = getUserInformationFromView(container);
@@ -92,6 +94,7 @@ public class MyAccountFragment extends Fragment {
 
     /**
      * @param container The container contains every View Object in this fragment
+     *                  ビューオブジェクトを持っているのコンテナオブジェクト
      * @return The user's information
      * この関数はcontainerからユーザーの情報を取ります。
      */
@@ -107,7 +110,8 @@ public class MyAccountFragment extends Fragment {
 
     /**
      * @param user The user's information
-     *             この関数はユーザーの情報をSQLiteに情報を更新します。
+     *             ユーザーの情報のオブジェクト
+     * この関数はユーザーの情報をSQLiteに情報を更新します。
      */
     private void updateUserToSQLite(User user) {
         UserDAO userDAO = LMemoDatabase.getInstance(getContext()).userDAO();
@@ -116,7 +120,8 @@ public class MyAccountFragment extends Fragment {
 
     /**
      * @param user The user's information
-     *             この関数はユーザーの情報をFirebaseに情報を更新します。
+     *             ユーザーの情報のオブジェクト
+     * この関数はユーザーの情報をFirebaseに情報を更新します。
      */
     private void updateUserToFirebase(User user) {
         OnlineUserDAO onlineUserDAO = new OnlineUserDAO();
@@ -125,7 +130,8 @@ public class MyAccountFragment extends Fragment {
 
     /**
      * @param container The container contains every View Object in this fragment
-     *                  この関数はユーザーの情報をSQLiteから読んで、ユーザーインターフェイス に書きます。
+     *                  ビューオブジェクトを持っているのコンテナオブジェクト
+     * この関数はユーザーの情報をSQLiteから読んで、ユーザーインターフェイス に書きます。
      */
     private void updateInformationToUI(View container) {
         LMemoDatabase lMemoDatabase = LMemoDatabase.getInstance(getContext());
