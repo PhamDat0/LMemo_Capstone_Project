@@ -16,7 +16,7 @@ public class User {
     private String userID = "";
 
     @ColumnInfo(name = "Gender")
-    private boolean male;
+    private boolean gender;
     @ColumnInfo(name = "Email")
     private String email;
     @ColumnInfo(name = "DisplayName")
@@ -27,11 +27,11 @@ public class User {
     private Date loginTime;
 
     @Ignore
-    public User(String userID, String email, String displayName, boolean gender, int contributionPoint, Date loginTime) {
+    public User(String userID, String email, String displayName, boolean isMale, int contributionPoint, Date loginTime) {
         this.userID = userID;
         this.email = email;
         this.displayName = displayName;
-        this.male = gender;
+        this.gender = gender;
         this.contributionPoint = contributionPoint;
         this.loginTime = loginTime;
     }
@@ -50,8 +50,8 @@ public class User {
 
     }
 
-    public boolean isMale() {
-        return male;
+    public boolean isGender() {
+        return gender;
     }
 
     public String getEmail() {
@@ -74,8 +74,8 @@ public class User {
         return contributionPoint;
     }
 
-    public void setMale(boolean male) {
-        this.male = male;
+    public void setGender(boolean isMale) {
+        this.gender = isMale;
     }
 
     public void setContributionPoint(int contributionPoint) {

@@ -27,7 +27,7 @@ public class OnlineUserDAO {
     public void updateUser(final User user) {
         DocumentReference userRef = db.collection("users").document(user.getUserID());
         userRef.update("displayName", user.getDisplayName(),
-                "isMale", user.isMale())
+                "isMale", user.isGender())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

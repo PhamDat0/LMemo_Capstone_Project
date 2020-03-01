@@ -150,7 +150,8 @@ public class MyAccountFragment extends Fragment {
         }
         ((EditText) container.findViewById(R.id.etEmail)).setText(user.getEmail());
         ((EditText) container.findViewById(R.id.etDisplayName)).setText(user.getDisplayName());
-        ((RadioButton) container.findViewById(user.isMale() ? R.id.rbMale : R.id.rbFemale)).setChecked(true);
+        Log.i("GENDER", "" + user.isGender());
+        ((RadioButton) container.findViewById(user.isGender() ? R.id.rbMale : R.id.rbFemale)).setChecked(true);
         ((TextView) container.findViewById(R.id.tvContributtionPoint)).setText("" + user.getContributionPoint());
         ((TextView) container.findViewById(R.id.tvReward)).setText("" + currentReward.getRewardName());
         ((TextView) container.findViewById(R.id.tvNextReward)).setText("" + nextReward.getRewardName());

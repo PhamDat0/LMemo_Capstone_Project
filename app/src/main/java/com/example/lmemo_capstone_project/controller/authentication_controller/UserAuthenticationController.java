@@ -114,8 +114,9 @@ public class UserAuthenticationController {
                 User user = documentSnapshot.toObject(User.class);
                 Date date = new Date();
                 user.setLoginTime(date);
+                user.setGender((Boolean) documentSnapshot.get("isMale"));
                 addUserToSQLite(user);
-                Log.w(TAG, "Logged in after add to sqlite with updated"+ user.getDisplayName()+ "at time "+ user.getLoginTime()+ " gender " + user.isMale());
+                Log.w(TAG, "Logged in after add to sqlite with updated" + user.getDisplayName() + "at time " + user.getLoginTime() + " gender " + user.isGender());
 
             }
         });
@@ -157,7 +158,7 @@ public class UserAuthenticationController {
         String name = currentUser.getDisplayName();
         user.setUserID(FID);
         user.setDisplayName(name);
-        user.setMale(true);
+        user.setGender(true);
         user.setContributionPoint(0);
         user.setEmail(email);
         user.setLoginTime(date);
@@ -173,7 +174,7 @@ public class UserAuthenticationController {
         String name = "GUEST";
         user.setUserID(FID);
         user.setDisplayName(name);
-        user.setMale(true);
+        user.setGender(true);
         user.setContributionPoint(0);
         user.setEmail(email);
         user.setLoginTime(date);
