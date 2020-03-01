@@ -55,8 +55,8 @@ public class KanjiListAdapter extends BaseAdapter {
         }
 
         holder.tvKanji.setText(listKanji.get(position).getKanji());
-        holder.tvKunyomi.setText(listKanji.get(position).getKunyomi());
-        holder.tvOnyomi.setText(listKanji.get(position).getOnyomi());
+        holder.tvKunyomi.setText(" "+listKanji.get(position).getKunyomi());
+        holder.tvOnyomi.setText(" "+listKanji.get(position).getOnyomi());
         return convertView;
     }
 

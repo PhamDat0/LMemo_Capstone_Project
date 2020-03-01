@@ -8,61 +8,60 @@
     <TextView
         android:id="@+id/tvKanji"
         android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_height="150dp"
         android:fontFamily="@font/kanji_stroke_order_font"
         android:textStyle="normal"
-        android:textSize="110sp"
+        android:textSize="120sp"
         android:gravity="center"
         android:textColor="#DA0F0F"
         android:layout_marginBottom="25dp"
         />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="150dp"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="75dp"
             android:orientation="horizontal">
             <TextView
-                android:layout_marginTop="10dp"
-                android:gravity="center"
                 android:text="訓:"
+                android:layout_marginTop="5dp"
                 android:textColor="#117C8A"
-                android:textSize="30sp"
-                android:layout_width="60dp"
-                android:layout_height="60dp"/>
-            <TextView
-                android:layout_marginTop="20dp"
-                android:id="@+id/tvKunyomi"
+                android:textSize="25sp"
                 android:layout_width="wrap_content"
+                android:layout_height="75dp"/>
+            <TextView
+                android:id="@+id/tvKunyomi"
+                android:autoSizeTextType="uniform"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
-                android:textSize="30sp"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="15sp"
                 android:gravity="center_vertical" />
         </LinearLayout>
         <LinearLayout
-
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="75dp"
             android:orientation="horizontal">
             <TextView
-                android:layout_marginTop="10dp"
-                android:gravity="center"
                 android:text="音:"
+                android:layout_marginTop="5dp"
                 android:textColor="#117C8A"
-                android:textSize="30sp"
-                android:layout_width="60dp"
-                android:layout_height="60dp"/>
-            <TextView
-                android:layout_marginTop="20dp"
-                android:id="@+id/tvOnyomi"
+                android:textSize="25sp"
                 android:layout_width="wrap_content"
+                android:layout_height="75dp"/>
+            <TextView
+                android:autoSizeTextType="uniform"
+                android:id="@+id/tvOnyomi"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
-                android:textSize="30sp"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="15sp"
                 android:gravity="center_vertical" />
         </LinearLayout>
     </LinearLayout>
