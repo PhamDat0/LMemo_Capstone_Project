@@ -133,7 +133,15 @@ public class MyAccountFragment extends Fragment {
         RewardDAO rewardDAO = lMemoDatabase.rewardDAO();
         User user = userDAO.getLocalUser()[0];
         Reward currentReward = rewardDAO.getBestReward(user.getContributionPoint())[0];
-        Reward nextReward = rewardDAO.getNextReward(user.getContributionPoint())[0];
+        Reward nextReward;
+        try {
+            nextReward = rewardDAO.getNextReward(user.getContributionPoint())[0];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            nextReward = new Reward();
+            nextReward.setRewardID(-1);
+            nextReward.setRewardName("Nothing more");
+            nextReward.setMinimumReachPoint(999999);
+        }
         ((EditText) container.findViewById(R.id.etEmail)).setText(user.getEmail());
         ((EditText) container.findViewById(R.id.etDisplayName)).setText(user.getDisplayName());
         ((RadioButton) container.findViewById(user.isMale() ? R.id.rbMale : R.id.rbFemale)).setChecked(true);
