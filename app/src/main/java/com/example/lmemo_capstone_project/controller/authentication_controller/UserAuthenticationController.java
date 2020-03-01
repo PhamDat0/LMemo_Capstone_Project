@@ -58,18 +58,6 @@ public class UserAuthenticationController {
                 });
         return listFUID;
     }
-    public boolean checkUserLogged(FirebaseUser user){
-        boolean isLogged = true;
-        if (user == null){
-            isLogged= false;
-        }
-        else{
-            isLogged= true;
-        }
-        return isLogged;
-    }
-
-
 
     private boolean checkUserExisted(String FID) {
         boolean isExisted = true;
