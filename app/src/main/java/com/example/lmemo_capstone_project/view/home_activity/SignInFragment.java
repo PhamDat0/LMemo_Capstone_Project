@@ -56,14 +56,11 @@ public class SignInFragment extends Fragment {
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "LoginActivity";
     private GoogleSignInClient mGoogleSignInClient;
-    private TextView mStatusTextView;
-    private TextView mDetailTextView;
     private FirebaseAuth mAuth;
     private CallbackManager mCallbackManager;
     private FirebaseFirestore db;
     private UserAuthenticationController controller;
     private View view;
-    private Activity a;
     LoginButton btnFaceLogin;
     public SignInFragment() {
         // Required empty public constructor
@@ -74,8 +71,6 @@ public class SignInFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_sign_in, container, false);
-        mStatusTextView = view.findViewById(R.id.status);
-        mDetailTextView = view.findViewById(R.id.detail);
         btnFaceLogin = view.findViewById(R.id.btnFaceLogin);
         setupOnClickListener();
         facebookCreateSignInOption();
@@ -131,13 +126,6 @@ public class SignInFragment extends Fragment {
 
             }
         });
-        Button btnLogOut = view.findViewById(R.id.btnLogOut);
-        btnLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LogOutFirebaseAndSQLite();
-            }
-        });
     }
     public void LogOutFirebaseAndSQLite(){
         googleCreateSignInOption();
@@ -149,21 +137,14 @@ public class SignInFragment extends Fragment {
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             //update UI if user login successful
-            mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
-            mStatusTextView.setText(getString(R.string.facebook_status_fmt, user.getDisplayName()));
-            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
             Toast.makeText(getActivity(), user.getEmail(), Toast.LENGTH_SHORT).show();
             view.findViewById(R.id.btnFaceLogin).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.btnGoogleLogin).setVisibility(View.INVISIBLE);
-            view.findViewById(R.id.btnLogOut).setVisibility(View.VISIBLE);
         } else {
             //update UI if user login fail or log out
-            mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
             Toast.makeText(getActivity(), "Logged out", Toast.LENGTH_SHORT).show();
             view.findViewById(R.id.btnFaceLogin).setVisibility(View.VISIBLE);
             view.findViewById(R.id.btnGoogleLogin).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.btnLogOut).setVisibility(View.VISIBLE);
         }
 
     }
