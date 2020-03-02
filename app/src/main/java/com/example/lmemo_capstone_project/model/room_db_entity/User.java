@@ -31,7 +31,7 @@ public class User {
         this.userID = userID;
         this.email = email;
         this.displayName = displayName;
-        this.gender = gender;
+        this.gender = isMale;
         this.contributionPoint = contributionPoint;
         this.loginTime = loginTime;
     }
