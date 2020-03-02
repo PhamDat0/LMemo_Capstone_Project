@@ -13,6 +13,7 @@ import com.example.lmemo_capstone_project.controller.SharedPreferencesController
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.DictionaryFileReader;
 import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.KanjiFileReader;
+import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 
 public class MainActivity extends AppCompatActivity {
 

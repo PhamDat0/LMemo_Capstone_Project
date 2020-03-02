@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.review_activity.WritingTestActivity">
+
+    <TextView
+        android:id="@+id/tvQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Question" />
+
+    <EditText
+        android:id="@+id/etAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Answer here"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/btAnswerCheck"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CheckAnswer" />
+</LinearLayout>

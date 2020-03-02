@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.KanjiListAdapter"></activity>
+        <activity android:name=".view.review_activity.WritingTestActivity"></activity>
+        <activity android:name=".view.review_activity.MultipleChoiceTestActivity" />
+        <activity android:name=".view.home_activity.KanjiListAdapter" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -35,10 +37,8 @@
             </intent-filter>
         </activity> <!-- android:theme="@style/AppTheme"> -->
         <activity
-            android:name=".view.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:name=".view.home_activity.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

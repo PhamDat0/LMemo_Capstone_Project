@@ -1,4 +1,4 @@
-package com.example.lmemo_capstone_project.view;
+package com.example.lmemo_capstone_project.view.home_activity;
 
 import android.os.Bundle;
 import android.util.Log;

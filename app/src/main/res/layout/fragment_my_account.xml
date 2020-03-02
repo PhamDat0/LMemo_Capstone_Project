@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/graylight"
     android:orientation="vertical"
-    tools:context=".view.MyAccountFragment">
+    tools:context=".view.home_activity.MyAccountFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

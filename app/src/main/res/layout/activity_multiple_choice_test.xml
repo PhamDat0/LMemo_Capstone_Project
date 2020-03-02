@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.review_activity.MultipleChoiceTestActivity">
+
+    <TextView
+        android:id="@+id/tvQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Meaning" />
+
+    <Button
+        android:id="@+id/btAnswer1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Answer 1" />
+
+    <Button
+        android:id="@+id/btAnswer2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Answer2" />
+
+    <Button
+        android:id="@+id/btAnswer3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Answer3" />
+
+    <Button
+        android:id="@+id/btAnswer4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Answer4" />
+
+</LinearLayout>

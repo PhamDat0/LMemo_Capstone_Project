@@ -1,13 +1,12 @@
-package com.example.lmemo_capstone_project.view;
+package com.example.lmemo_capstone_project.view.home_activity;
 
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 
@@ -15,10 +14,10 @@ import com.example.lmemo_capstone_project.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PrivacyFragment extends Fragment {
+public class TermsofUseFragment extends Fragment {
 
 
-    public PrivacyFragment() {
+    public TermsofUseFragment() {
         // Required empty public constructor
     }
 
@@ -26,7 +25,7 @@ public class PrivacyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_privacy, container, false);
+        View view = inflater.inflate(R.layout.fragment_termsof_use, container, false);
         return view;
     }
 
