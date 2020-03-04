@@ -70,6 +70,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".view.home_activity.AlarmNotificationReceiver"/>
+
     </application>
 
 </manifest>
