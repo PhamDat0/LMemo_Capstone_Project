@@ -1,8 +1,5 @@
 package com.example.lmemo_capstone_project.view.home_activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
@@ -21,7 +21,6 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FlashcardListAdapter extends BaseAdapter {
 
@@ -90,8 +89,8 @@ public class FlashcardListAdapter extends BaseAdapter {
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listFlashcard.remove(position);
                 delete(position);
+                listFlashcard.remove(position);
                 notifyDataSetChanged();
 //                refresh();
             }

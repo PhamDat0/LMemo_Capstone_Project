@@ -1,14 +1,13 @@
 package com.example.lmemo_capstone_project.view.home_activity;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
@@ -19,15 +18,8 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Word;
  */
 public class FlashcardInfoFragment extends Fragment {
 
-    private Word[] flashcardWord;
-
     public FlashcardInfoFragment() {
         // Required empty public constructor
-    }
-
-
-    public FlashcardInfoFragment(Word word) {
-//        flashcardWord =
     }
 
     @Override
