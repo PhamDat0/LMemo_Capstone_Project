@@ -183,9 +183,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             word = new Word(-1, "Not Found", "Not Found", "Not Found", "Not Found");
         }
 //        Log.d ("myApplication",  "id:"+ );
-
         return word;
-
     }
 
     private Word bestFit(Word[] words, String searchWord) {
@@ -197,7 +195,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 break;
             }
         }
-
         return result;
     }
 
@@ -243,6 +240,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 flashcard.setLastState(1);
                 flashcard.setKanaLength(word.getKana().length());
                 flashcardDAO.insertFlashcard(flashcard);
+            } else if (checkingID.length!=0 && checkingID[0].getLastState()==99){
+                flashcard.setFlashcardID(checkingID[0].getFlashcardID());
+                flashcard.setAccuracy(checkingID[0].getAccuracy());
+                flashcard.setSpeedPerCharacter(checkingID[0].getSpeedPerCharacter());
+                flashcard.setKanaLength(checkingID[0].getKanaLength());
+                flashcard.setLastState(1);
+                flashcardDAO.updateFlashcard(flashcard);
             }
         }
 //        Log.d ("myApplication",  "id:"+ flashcardDAO.getAllFlashcard().toString());

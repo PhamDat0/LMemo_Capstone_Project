@@ -34,8 +34,14 @@ public interface WordDAO {
     @Query("SELECT * From Word WHERE Kana LIKE :keyword OR Kanji LIKE :keyword OR Meaning LIKE :keyword")
     Word[] getSuggestion(String keyword);
 
+    @Query("SELECT * FROM Word WHERE Kana LIKE :keyword")
+    Word[] getAWords(String keyword);
+
     @Query("SELECT * FROM Word order by WordID asc")
     Word[] getAllWords();
+
+    @Query("SELECT WordID, Kana, Kanji, Meaning, PartOfSpeech FROM Word as W,Flashcard as F WHERE F.FlashcardID = W.WordID and F.LastState!=99")
+    Word[] getAllFlashcard();
 
     @Transaction
     @Query("SELECT * FROM Word")

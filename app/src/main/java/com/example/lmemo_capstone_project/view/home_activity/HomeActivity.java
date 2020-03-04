@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.lmemo_capstone_project.R;
@@ -76,6 +77,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         else {
             Log.w("HomeActivity", "Nothing found ");
         }
+
 
         DefaultFragment();
     }
@@ -187,6 +189,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         else if(id == R.id.myFlashcard){
             FlashCardFragment fragment = new FlashCardFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"flashCard");
             fragmentTransaction.commit();
         }
@@ -239,11 +242,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+        FragmentManager manager = getSupportFragmentManager();
         if(mDrawerLayout.isDrawerOpen(GravityCompat.START)){
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }
-        else{
-//            super.onBackPressed();
+        } else if(manager.getBackStackEntryCount() > 1 ) {
+            manager.popBackStack();//Pops one of the added fragments
         }
     }
 }
+
