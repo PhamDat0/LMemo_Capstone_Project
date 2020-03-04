@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,12 +20,15 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
+import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+    public static final int TEST_FLASHCARD_REQUEST_CODE = 100;
+
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
     private FirebaseAuth mAuth;
@@ -187,11 +192,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
         }
         else if(id == R.id.myFlashcard){
-            FlashCardFragment fragment = new FlashCardFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"flashCard");
-            fragmentTransaction.commit();
+            showFlashcardFragment();
         }
         else if(id == R.id.myNote){
             NotesFragment fragment = new NotesFragment();
@@ -240,6 +241,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    private void showFlashcardFragment() {
+        FlashCardFragment fragment = new FlashCardFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "flashCard");
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
     @Override
     public void onBackPressed() {
         FragmentManager manager = getSupportFragmentManager();
@@ -249,5 +258,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             manager.popBackStack();//Pops one of the added fragments
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case TEST_FLASHCARD_REQUEST_CODE:
+                Toast.makeText(getApplicationContext(), "Test complete", Toast.LENGTH_LONG).show();
+                showFlashcardFragment();
+                Flashcard[] allVisibleFlashcard = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getAllVisibleFlashcard();
+                for (Flashcard fc : allVisibleFlashcard) {
+                    Log.i("FC", "\n{\n\t" + fc.getFlashcardID() + "\n\t" + fc.getAccuracy() + "\n\t" + fc.getSpeedPerCharacter() + "\n\t" + fc.getLastState() + "\n}");
+                }
+                break;
+        }
+    }
+
 }
 

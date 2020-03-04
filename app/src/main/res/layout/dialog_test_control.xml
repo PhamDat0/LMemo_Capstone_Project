@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Number of question" />
+
+    <EditText
+        android:id="@+id/etNumberOfQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:digits="0123456789"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:maxLength="2" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test mode:" />
+
+    <RadioGroup
+        android:id="@+id/rgTestMode"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RadioButton
+            android:id="@+id/rbWriting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Writing" />
+
+        <RadioButton
+            android:id="@+id/rbMultipleChoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Multiple Choice" />
+
+        <Button
+            android:id="@+id/btStartTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start_test" />
+
+        <Button
+            android:id="@+id/btCancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel" />
+
+    </RadioGroup>
+
+</LinearLayout>
