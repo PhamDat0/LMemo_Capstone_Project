@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.review_activity.WritingTestActivity"></activity>
+        <activity android:name=".view.home_activity.FlashcardInfoActivity"></activity>
+        <activity android:name=".view.home_activity.FlashcardListAdapter" />
+        <activity android:name=".view.review_activity.WritingTestActivity" />
         <activity android:name=".view.review_activity.MultipleChoiceTestActivity" />
         <activity android:name=".view.home_activity.KanjiListAdapter" />
 

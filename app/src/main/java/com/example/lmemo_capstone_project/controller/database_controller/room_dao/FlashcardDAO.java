@@ -7,6 +7,7 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
+import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.example.lmemo_capstone_project.model.room_db_entity.relationship_classes.FlashcardWithSets;
 
 import java.util.List;
