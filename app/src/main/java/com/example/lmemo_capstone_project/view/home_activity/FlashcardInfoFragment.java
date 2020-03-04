@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
@@ -17,7 +18,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Word;
  * create an instance of this fragment.
  */
 public class FlashcardInfoFragment extends Fragment {
-
+    CardView cvClose;
     public FlashcardInfoFragment() {
         // Required empty public constructor
     }
@@ -28,7 +29,13 @@ public class FlashcardInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_flashcard_info, container, false);
         wordSearchResult(view);
-//        getActivity().onBackPressed();
+        cvClose = (CardView)view.findViewById(R.id.cvClose);
+        cvClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
         return view;
     }
 
