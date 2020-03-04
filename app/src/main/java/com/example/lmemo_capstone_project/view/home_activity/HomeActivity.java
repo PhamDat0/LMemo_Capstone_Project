@@ -266,10 +266,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case TEST_FLASHCARD_REQUEST_CODE:
                 Toast.makeText(getApplicationContext(), "Test complete", Toast.LENGTH_LONG).show();
                 showFlashcardFragment();
-                Flashcard[] allVisibleFlashcard = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getAllVisibleFlashcard();
-                for (Flashcard fc : allVisibleFlashcard) {
-                    Log.i("FC", "\n{\n\t" + fc.getFlashcardID() + "\n\t" + fc.getAccuracy() + "\n\t" + fc.getSpeedPerCharacter() + "\n\t" + fc.getLastState() + "\n}");
-                }
                 break;
         }
     }

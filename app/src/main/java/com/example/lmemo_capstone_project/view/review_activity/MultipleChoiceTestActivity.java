@@ -35,6 +35,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
     private static final int KANA_MEANING = 4;
     private static final int MEANING_KANA = 5;
     private static final int MEANING_KANJI = 6;
+    private static final double ACCURACY_CHANGE = 15;
     private int number_of_question;
     private List<Word> words;
     private List<Button> answerButton;
@@ -96,16 +97,21 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
     private void saveNewValueOfFlashcard(View v) {
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
         Flashcard flashcard = flashcardDAO.getFlashCardByID(currentWord.getWordID())[0];
-        flashcard.setSpeedPerCharacter(getSpeedPerCharacterBaseOnAnswer(v));
-        if (isRightAnswer(v)) {
-            double accuracy = flashcard.getAccuracy() + 5;
-            flashcard.setAccuracy(accuracy > 100 ? 100 : accuracy);
-        } else {
-            double accuracy = flashcard.getAccuracy() - 15;
-            flashcard.setAccuracy(accuracy < 0 ? 0 : accuracy);
-        }
+        flashcard.setSpeedPerCharacter(getSpeedPerCharacterBasedOnAnswer(flashcard, v));
+        flashcard.setAccuracy(getAccuracyBasedOnAnswer(flashcard, v));
         flashcardDAO.updateFlashcard(flashcard);
         Log.i("SAVE_VALUE", "Success");
+    }
+
+    private double getAccuracyBasedOnAnswer(Flashcard flashcard, View v) {
+        double accuracy;
+        if (isRightAnswer(v)) {
+            accuracy = flashcard.getAccuracy() + ACCURACY_CHANGE;
+            return accuracy>100?100:accuracy;
+        } else {
+            accuracy = flashcard.getAccuracy() - ACCURACY_CHANGE * 2;
+            return accuracy < 0 ? 0 : accuracy;
+        }
     }
 
     private boolean isRightAnswer(View v) {
@@ -116,7 +122,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                 || answer.equals(currentWord.getMeaning());
     }
 
-    private double getSpeedPerCharacterBaseOnAnswer(View v) {
+    private double getSpeedPerCharacterBasedOnAnswer(Flashcard flashcard, View v) {
         TextView tvQuestion = findViewById(R.id.tvMeaning);
         String question = tvQuestion.getText().toString();
         Date endTime = new Date();
@@ -124,22 +130,34 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         Button btAnswer = (Button) v;
         String answer = btAnswer.getText().toString();
         String[] partOfAnswer = answer.split("/");
+        String[] partOfQuestion = question.split("/");
+
+        int totalCharacter = 0;
+        totalCharacter+=calculateTotalCharacter(partOfQuestion);
+        totalCharacter+=calculateTotalCharacter(partOfAnswer);
+
+        return ((timeToAnswer / 1000 / totalCharacter) + flashcard.getSpeedPerCharacter())/2;
+    }
+
+    private int calculateTotalCharacter(String[] source) {
         int counter = 0;
-        int totalCharacter = getTotalCharacter(question);
-        for (String part : partOfAnswer) {
+        int totalCharacter = 0;
+        for (String part : source) {
             if (counter++ > 2)
                 break;
             totalCharacter += getTotalCharacter(part);
         }
-        return timeToAnswer / 1000 / totalCharacter;
+        return totalCharacter;
     }
 
     private int getTotalCharacter(String part) {
         int totalCharacter = 0;
-        if (part.trim().matches("[a-zA-Z]+")) {
-            totalCharacter += part.split("\\s+").length;
+        if (Character.isLetter(part.charAt(0)) || Character.isLetter(part.charAt(1)) || Character.isLetter(part.charAt(2))) {
+            int length = part.split("\\s+").length;
+            totalCharacter += length>4?4:length;
         } else {
             totalCharacter += part.trim().length();
+            Log.i("Check_Part", part);
         }
         return totalCharacter;
     }
@@ -193,6 +211,10 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
 
     private void startTest() {
         setVisibleMode(TEST);
+//        Flashcard[] allVisibleFlashcard = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getAllVisibleFlashcard();
+//        for (Flashcard fc : allVisibleFlashcard) {
+//            Log.i("FC", "\n{\n\t" + fc.getFlashcardID() + "\n\t" + fc.getAccuracy() + "\n\t" + fc.getSpeedPerCharacter() + "\n\t" + fc.getLastState() + "\n}");
+//        }
         Log.i("NUMBER_OF_QUIZ", words.size() + "");
         setupQuestion();
     }
@@ -201,6 +223,8 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         if (words.size() != 0) {
             startTime = new Date();
             currentWord = words.get(0);
+            Flashcard fc = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getFlashCardByID(currentWord.getWordID())[0];
+            Log.i("FC", "\n{\n\t" + fc.getFlashcardID() + "\n\t" + fc.getAccuracy() + "\n\t" + fc.getSpeedPerCharacter() + "\n\t" + fc.getLastState() + "\n}");
             words.remove(0);
             Random r = new Random();
             int mode = r.nextInt(6) + 1;

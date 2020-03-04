@@ -23,4 +23,6 @@
     <string name="number_of_questions">number_of_questions</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="kana_test_hint">KANA TEST: Enter the correct kana reading</string>
+    <string name="kanji_test_hint">KANJI TEST: Enter the correct Kanji</string>
 </resources>

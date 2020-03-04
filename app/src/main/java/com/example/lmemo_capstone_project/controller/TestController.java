@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Random;
 
 public class TestController {
-    List<Flashcard> allFlashcards;
-    List<List<Word>> listOfListFlashcard;
+    private List<Flashcard> allFlashcards;
+    private List<List<Word>> listOfListFlashcard;
     private WordDAO wordDAO;
     private FlashcardDAO flashcardDAO;
 
@@ -86,19 +86,19 @@ public class TestController {
     private void setupFeaturedFlashcard(List<Flashcard> featuredFlashcard) {
         Flashcard f1 = new Flashcard();
         f1.setKanaLength(7);
-        f1.setSpeedPerCharacter(10);
+        f1.setSpeedPerCharacter(4);
         f1.setAccuracy(0);
         f1.setLastState(1);
         featuredFlashcard.add(f1);
         Flashcard f2 = new Flashcard();
         f2.setKanaLength(7);
-        f2.setSpeedPerCharacter(6.67);
+        f2.setSpeedPerCharacter(2.67);
         f2.setAccuracy(33.33);
         f2.setLastState(2);
         featuredFlashcard.add(f2);
         Flashcard f3 = new Flashcard();
         f3.setKanaLength(7);
-        f3.setSpeedPerCharacter(3.33);
+        f3.setSpeedPerCharacter(1.33);
         f3.setAccuracy(66.67);
         f3.setLastState(3);
         featuredFlashcard.add(f3);
@@ -160,7 +160,7 @@ public class TestController {
     }
 
     private double calDistance(Flashcard f, Flashcard featuredCard) {
-        return Math.pow(f.getAccuracy() - featuredCard.getAccuracy(), 2)
+        return Math.pow(f.getAccuracy()/25 - featuredCard.getAccuracy()/25, 2)
                 + Math.pow(f.getLastState() - featuredCard.getLastState(), 2)
                 + Math.pow(f.getKanaLength() - featuredCard.getKanaLength(), 2)
                 + Math.pow(f.getSpeedPerCharacter() - featuredCard.getSpeedPerCharacter(), 2);

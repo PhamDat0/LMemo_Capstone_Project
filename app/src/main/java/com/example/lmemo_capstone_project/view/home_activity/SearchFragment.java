@@ -238,13 +238,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 flashcard.setAccuracy(0);
                 flashcard.setSpeedPerCharacter(10);
                 flashcard.setLastState(1);
-                flashcard.setKanaLength(word.getKana().length());
+                flashcard.setKanaLength(word.getKana().split("/")[0].length());
                 flashcardDAO.insertFlashcard(flashcard);
             } else if (checkingID.length!=0 && checkingID[0].getLastState()==99){
                 flashcard.setFlashcardID(checkingID[0].getFlashcardID());
                 flashcard.setAccuracy(checkingID[0].getAccuracy());
                 flashcard.setSpeedPerCharacter(checkingID[0].getSpeedPerCharacter());
-                flashcard.setKanaLength(checkingID[0].getKanaLength());
+                flashcard.setKanaLength(word.getKana().split("/")[0].length());
                 flashcard.setLastState(1);
                 flashcardDAO.updateFlashcard(flashcard);
             }
