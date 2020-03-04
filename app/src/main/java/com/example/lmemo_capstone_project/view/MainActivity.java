@@ -13,10 +13,11 @@ import com.example.lmemo_capstone_project.controller.SharedPreferencesController
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.DictionaryFileReader;
 import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.KanjiFileReader;
+import com.example.lmemo_capstone_project.controller.word_of_day_controller.WordOfTheDayController;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 
 public class MainActivity extends AppCompatActivity {
-
+    WordOfTheDayController wordOfTheDayController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,9 +28,16 @@ public class MainActivity extends AppCompatActivity {
         Log.i("SHARE_PRE", SharedPreferencesController.hasDictionaryData(getApplicationContext()) + "");
 
         loadDictionaryDatabase();
+        wordOfTheDayController = new WordOfTheDayController();
+        wordOfTheDayController.createNotificationChannel(this);
 
     }
+    @Override
+    public void onStart() {
 
+        super.onStart();
+        wordOfTheDayController.startAlarm(true,false,this);
+    }
     /**
      * この関数はプログレスバーの進度を1パーセント足します。
      */

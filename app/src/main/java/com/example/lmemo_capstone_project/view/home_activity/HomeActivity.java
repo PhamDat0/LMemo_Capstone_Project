@@ -1,5 +1,6 @@
 package com.example.lmemo_capstone_project.view.home_activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,9 +26,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
     private FirebaseAuth mAuth;
+    private int wordID=-1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        onNewIntent(getIntent());
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -41,8 +44,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         DefaultFragment();
         setRewardData();
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -55,7 +60,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 //            rewardDAO.insertReward(r);
 //        }
     }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle extras = intent.getExtras();
+        if(extras != null){
+            if(extras.containsKey("wordID"))
+            {
 
+                wordID = extras.getInt("wordID");
+                Log.w("HomeActivity", "Got Something: "+wordID+" blo bla: "+extras.getInt("wordID")+ " exists: "+extras.containsKey("wordID"));
+            }
+
+        }
+        else {
+            Log.w("HomeActivity", "Nothing found ");
+        }
+
+        DefaultFragment();
+    }
 
     //set item to reward table in database
     private void setRewardData() {
@@ -114,14 +137,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
     }
 
     //Default cho man hinh home la search
     public void DefaultFragment(){
+
         SearchFragment fragment = new SearchFragment();
+
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
         fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"searchHome");
         WordSearchingFragment wordFragment = new WordSearchingFragment();
+        if(wordID != -1){
+            Bundle bundle = new Bundle();
+            bundle.putInt("wordID",wordID);
+            fragment.setArguments(bundle);
+            Log.w("HomeActivity", "Run at HomeActivity"+ bundle.toString());
+        }
         fragmentTransaction.replace(R.id.searchFrameLayout,wordFragment,"SearchWord");
         fragmentTransaction.commit();
 

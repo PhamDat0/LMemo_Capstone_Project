@@ -20,6 +20,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.authentication_controller.UserAuthenticationController;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
+import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -160,6 +162,7 @@ public class SignInFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
                             controller.handlingLogin(user);
                             updateUI(user);
                             view.findViewById(R.id.btnFaceLogin).setVisibility(View.GONE);
@@ -181,7 +184,7 @@ public class SignInFragment extends Fragment {
         LoginButton loginButton = view.findViewById(R.id.btnFaceLogin);
         loginButton.setFragment(this);
         loginButton.setReadPermissions("email", "public_profile");
-        loginButton.setPermissions("email", "user_gender");
+        loginButton.setPermissions("email");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -282,6 +285,5 @@ public class SignInFragment extends Fragment {
                     }
                 });
     }
-
 
 }

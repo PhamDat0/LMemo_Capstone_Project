@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +14,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.review_activity.WritingTestActivity"></activity>
+        <receiver android:name=".controller.word_of_day_controller.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".controller.word_of_day_controller.WordOfDayReceiver"/>
+
+        <service
+            android:name=".controller.word_of_day_controller.WordService"
+            android:enabled="true"
+            android:exported="true">
+
+        </service>
+
+        <activity android:name=".view.review_activity.WritingTestActivity" />
         <activity android:name=".view.review_activity.MultipleChoiceTestActivity" />
         <activity android:name=".view.home_activity.KanjiListAdapter" />
 

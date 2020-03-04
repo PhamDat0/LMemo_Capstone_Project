@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +43,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private FlashcardDAO flashcardDAO = lMemoDatabase.flashcardDAO();
     private Bundle bundle = new Bundle();
     private Word word;
+    private Word dailyWord;
     private Flashcard flashcard;
-
+    private int wordID=-1;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -90,10 +92,23 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         //set on click cho 2 tab
         tabKanji.setOnClickListener(this);
         tabWord.setOnClickListener(this);
+        if(wordID != -1){
+            dailyWord = wordDAO.getOneWord(wordID);
+            fragmentDataTransfer(dailyWord);
+            wordID = -1;
+        }
 
         return view;
     }
+    @Override
+    public  void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
+        if (getArguments() != null) {
+            wordID = getArguments().getInt("wordID");
+            Log.w("Search Fragment","word id is"+wordID);
+        }
+    }
     //Suggestion word Function
     private void performSuggestion() {
 //        final String searchWord = edtSearch.getText().toString();
@@ -161,8 +176,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             return new Word(-2, "", "", "", "");
 //        Word word;
         try {
-            Word[] words = wordDAO.getWords(searchWord);
-            word = bestFit(words, searchWord);
+                Word[] words = wordDAO.getWords(searchWord);
+                word = bestFit(words, searchWord);
+
         } catch (ArrayIndexOutOfBoundsException e) {
             word = new Word(-1, "Not Found", "Not Found", "Not Found", "Not Found");
         }
@@ -272,10 +288,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             throw new WordNotFoundException("That word does not exist.");
         if (word.getWordID() == -2)
             throw new WordNotFoundException("You didn't enter anything.");
-        fragmentDataTransfer(word);
-        addToFlashCard();
-        edtSearch.dismissDropDown();
-        hideKeyboard(getActivity());
+            fragmentDataTransfer(word);
+            addToFlashCard();
+            edtSearch.dismissDropDown();
+            hideKeyboard(getActivity());
     }
 
     private class WordNotFoundException extends Exception {

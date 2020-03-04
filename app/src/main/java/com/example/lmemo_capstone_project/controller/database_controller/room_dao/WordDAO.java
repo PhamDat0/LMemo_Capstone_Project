@@ -22,6 +22,12 @@ public interface WordDAO {
     @Query("DELETE FROM Word")
     void deleteAllWords();
 
+    @Query("SELECT *  FROM Word w WHERE NOT EXISTS(SELECT * FROM Flashcard WHERE FlashcardID = w.WordID) ORDER BY random() LIMIT 1")
+    Word[] getDailyWord();
+
+    @Query("SELECT * From Word Where WordID = :WordID")
+    Word getOneWord(int WordID);
+
     @Query("SELECT * FROM Word WHERE Kana LIKE '%' || :keyword || '%' OR Kanji LIKE '%' || :keyword || '%' OR Meaning LIKE '%' || :keyword || '%' order by WordID asc")
     Word[] getWords(String keyword);
 
