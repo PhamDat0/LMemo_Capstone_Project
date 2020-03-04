@@ -9,8 +9,9 @@
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="350dp"
         android:layout_height="50dp"
+        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <AutoCompleteTextView
@@ -18,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="日本,Japan"
+            android:hint="    日本, Japan"
             android:imeOptions="actionSearch"
             android:singleLine="true" />
     </LinearLayout>
@@ -28,30 +29,25 @@
         android:orientation="horizontal">
         <Button
             android:id="@+id/tabWord"
+            android:background="@drawable/gradientbackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Word"
+            android:text="Word"
             />
         <Button
             android:id="@+id/tabKanji"
+            android:background="@drawable/reversegradient"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Kanji"
+            android:text="Kanji"
             />
     </LinearLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/searchFrameLayout">
-<!--        <TextView-->
-<!--            android:imeOptions="actionSearch"-->
-<!--            android:inputType="text"-->
-<!--            android:layout_width="200dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="Search được từ nào tạo lịch sử từ đó tại đây"-->
-<!--            />-->
     </FrameLayout>
 
 </LinearLayout>
