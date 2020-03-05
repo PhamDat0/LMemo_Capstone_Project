@@ -94,7 +94,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         tabWord.setOnClickListener(this);
         if(wordID != -1){
             dailyWord = wordDAO.getOneWord(wordID);
+            addFlashCardToSQLite(dailyWord);
             fragmentDataTransfer(dailyWord);
+
             wordID = -1;
         }
 
@@ -229,8 +231,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     //Add searched word to flashcard
     private void addToFlashCard() {
-        flashcard = new Flashcard();
+
         Word word = performSearch();
+        addFlashCardToSQLite(word);
+//        Log.d ("myApplication",  "id:"+ flashcardDAO.getAllFlashcard().toString());
+
+    }
+    private void addFlashCardToSQLite(Word word){
+        flashcard = new Flashcard();
         if (word.getWordID() != -1) {
             Flashcard[] checkingID = flashcardDAO.getFlashCardByID(word.getWordID());
             if (checkingID.length == 0) {
@@ -249,8 +257,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 flashcardDAO.updateFlashcard(flashcard);
             }
         }
-//        Log.d ("myApplication",  "id:"+ flashcardDAO.getAllFlashcard().toString());
-
     }
 
     //onclick listener for 2 tab word + kanji
