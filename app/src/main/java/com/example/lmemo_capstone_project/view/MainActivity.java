@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
 
         super.onStart();
-        wordOfTheDayController.startAlarm(true,false,this);
+        wordOfTheDayController.startAlarm(true,true,this);
     }
     /**
      * この関数はプログレスバーの進度を1パーセント足します。
