@@ -27,6 +27,14 @@ public class TestController {
         listOfListFlashcard.add(new ArrayList<Word>());
     }
 
+    /**
+     * @param numberOfQuestion 質問数
+     * @return 聞く言葉のリスト
+     * この関数はテストの準備します。
+     * 1. フラッシュカードをKMeanで分類します。
+     * 2. 質問数がゼロの場合はそれを１にします。
+     * 3. テストの質問リストを作ります。フラッシュカードのLastStateが高ければ高いほど選ばれる確率が低くなります。
+     */
     public List<Word> prepareTest(int numberOfQuestion) {
         restateFlashcard();
 
@@ -60,13 +68,18 @@ public class TestController {
                         result.add(getWordFrom(listOfListFlashcard.get(3)));
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-
+                    //この例外はそのステートにカードがないときに起こるので、何かする必要がない。
                 }
             }
         }
         return result;
     }
 
+    /**
+     * 1. 例の重心のリストを作ります。
+     * 2. フラッシュカードをKMeanで分類します。
+     * 3. フラッシュカードをLastStateに相当するリストに追加します。
+     */
     private void restateFlashcard() {
         List<Flashcard> featuredFlashcard = new ArrayList<>();
         setupFeaturedFlashcard(featuredFlashcard);
@@ -83,6 +96,10 @@ public class TestController {
         }
     }
 
+    /**
+     * @param featuredFlashcard 例の重心のリスト
+     *                          例の重心のリストを作ります。
+     */
     private void setupFeaturedFlashcard(List<Flashcard> featuredFlashcard) {
         Flashcard f1 = new Flashcard();
         f1.setKanaLength(7);
@@ -91,25 +108,32 @@ public class TestController {
         f1.setLastState(1);
         featuredFlashcard.add(f1);
         Flashcard f2 = new Flashcard();
-        f2.setKanaLength(7);
+        f2.setKanaLength(5);
         f2.setSpeedPerCharacter(2.67);
         f2.setAccuracy(33.33);
         f2.setLastState(2);
         featuredFlashcard.add(f2);
         Flashcard f3 = new Flashcard();
-        f3.setKanaLength(7);
+        f3.setKanaLength(3);
         f3.setSpeedPerCharacter(1.33);
         f3.setAccuracy(66.67);
         f3.setLastState(3);
         featuredFlashcard.add(f3);
         Flashcard f4 = new Flashcard();
-        f4.setKanaLength(7);
+        f4.setKanaLength(1);
         f4.setSpeedPerCharacter(0);
         f4.setAccuracy(100);
         f4.setLastState(4);
         featuredFlashcard.add(f4);
     }
 
+    /**
+     * @param words 同じステートであるフラッシュカードのリスト
+     * @return リストの中での無作為なフラッシュカード
+     * @throws ArrayIndexOutOfBoundsException リストの中にフラッシュカードがない。
+     * この関数は同じステートであるフラッシュカードのリストから無作為にフラッシュカードを１つを取り、
+     * そのフラッシュカードをリストから削除します。
+     */
     private Word getWordFrom(List<Word> words) throws ArrayIndexOutOfBoundsException {
         if (words.size() == 0)
             throw new ArrayIndexOutOfBoundsException();
@@ -120,8 +144,12 @@ public class TestController {
         return result;
     }
 
+    /**
+     * @param featuredFlashcard 例の重心のリスト
+     * @return ４つの同じステートであるフラッシュカードのリストを持っているリスト
+     * KMeanの実現
+     */
     private List<List<Flashcard>> calculate(List<Flashcard> featuredFlashcard) {
-        //f gom 4 flashcard
         List previousFeaturedCard;
         List<List<Flashcard>> classifiedFlashcard;
         do {
@@ -162,7 +190,7 @@ public class TestController {
     private double calDistance(Flashcard f, Flashcard featuredCard) {
         return Math.pow(f.getAccuracy()/25 - featuredCard.getAccuracy()/25, 2)
                 + Math.pow(f.getLastState() - featuredCard.getLastState(), 2)
-                + Math.pow(f.getKanaLength() - featuredCard.getKanaLength(), 2)
+                + Math.pow(f.getKanaLength() / 1.75 - featuredCard.getKanaLength() / 1.75, 2)
                 + Math.pow(f.getSpeedPerCharacter() - featuredCard.getSpeedPerCharacter(), 2);
     }
 
@@ -192,7 +220,7 @@ public class TestController {
         return result;
     }
 
-    public boolean compareTwoList(List<Flashcard> previousFeaturedCard, List<Flashcard> featuredFlashcard) {
+    private boolean compareTwoList(List<Flashcard> previousFeaturedCard, List<Flashcard> featuredFlashcard) {
         if (previousFeaturedCard.size() != featuredFlashcard.size()) {
             return false;
         }

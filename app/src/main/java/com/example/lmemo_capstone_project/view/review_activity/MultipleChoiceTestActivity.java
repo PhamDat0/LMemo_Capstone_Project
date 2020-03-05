@@ -64,11 +64,18 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         loadQuestion();
     }
 
+    /**
+     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     *          この関数はフラッシュカードの練習情報を更新し、言葉情報を表示します。
+     */
     private void answer(View v) {
         saveNewValueOfFlashcard(v);
         showResultDialog();
     }
 
+    /**
+     * この関数は質問のリストからの一つの質問を取り、UIを更新します。質問を取れなければ、テストを終わります。
+     */
     private void endCurrentQuestion() {
         if (!setupQuestion()) {
             setResult(HomeActivity.TEST_FLASHCARD_REQUEST_CODE);
@@ -76,6 +83,9 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * この関数は聞いている言葉の情報をダイアログに表示します。
+     */
     private void showResultDialog() {
         final Dialog container = new Dialog(MultipleChoiceTestActivity.this);
         container.setContentView(R.layout.fragment_word_searching);
@@ -84,6 +94,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
         ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning());
         ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(" * " + currentWord.getPartOfSpeech());
+        //ユーザーがこのダイアログを消したら、他の質問を始めます。
         container.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -94,6 +105,10 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         container.show();
     }
 
+    /**
+     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * この関数はユーザーが選んだボタンにより、練習情報をデータベースに更新します。
+     */
     private void saveNewValueOfFlashcard(View v) {
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
         Flashcard flashcard = flashcardDAO.getFlashCardByID(currentWord.getWordID())[0];
@@ -103,6 +118,12 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         Log.i("SAVE_VALUE", "Success");
     }
 
+    /**
+     * @param flashcard 聞いている言葉に相当するフラッシュカード
+     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @return フラッシュカードの精度
+     * この関数はユーザーの答えが正しいか確認し、新しい精度を返します。
+     */
     private double getAccuracyBasedOnAnswer(Flashcard flashcard, View v) {
         double accuracy;
         if (isRightAnswer(v)) {
@@ -114,6 +135,10 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @return ユーザーの答えは正しかったら、trueを返します。
+     */
     private boolean isRightAnswer(View v) {
         Button btAnswer = (Button) v;
         String answer = btAnswer.getText().toString();
@@ -122,27 +147,34 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                 || answer.equals(currentWord.getMeaning());
     }
 
+    /**
+     * @param flashcard 聞いている言葉に相当するフラッシュカード
+     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @return このフラッシュカードでは、1つの字を読む時間は何時間かを返します。
+     * ユーザーが選ぶための時間を割り出し、文字が何個あるを数えり、時間を文字数で割ります。
+     */
     private double getSpeedPerCharacterBasedOnAnswer(Flashcard flashcard, View v) {
-        TextView tvQuestion = findViewById(R.id.tvMeaning);
-        String question = tvQuestion.getText().toString();
-        Date endTime = new Date();
-        double timeToAnswer = endTime.getTime() - startTime.getTime();
-        Button btAnswer = (Button) v;
-        String answer = btAnswer.getText().toString();
-        String[] partOfAnswer = answer.split("/");
-        String[] partOfQuestion = question.split("/");
+        double timeToAnswer = new Date().getTime() - startTime.getTime();
+        String question = ((TextView) findViewById(R.id.tvMeaning)).getText().toString();
+        String answer = ((Button) v).getText().toString();
 
         int totalCharacter = 0;
-        totalCharacter+=calculateTotalCharacter(partOfQuestion);
-        totalCharacter+=calculateTotalCharacter(partOfAnswer);
+        totalCharacter += calculateTotalCharacter(question);
+        totalCharacter += calculateTotalCharacter(answer);
 
         return ((timeToAnswer / 1000 / totalCharacter) + flashcard.getSpeedPerCharacter())/2;
     }
 
-    private int calculateTotalCharacter(String[] source) {
+    /**
+     * @param source 文字を数える文字列
+     * @return 文字数
+     * ユーザーはあまりすべてを読まないので、２，３パートを数えるだけです。２，３パートに別れ、それぞれ数えます。
+     */
+    private int calculateTotalCharacter(String source) {
+        String[] partOfSource = source.split("/");
         int counter = 0;
         int totalCharacter = 0;
-        for (String part : source) {
+        for (String part : partOfSource) {
             if (counter++ > 2)
                 break;
             totalCharacter += getTotalCharacter(part);
@@ -150,6 +182,13 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         return totalCharacter;
     }
 
+    /**
+     * @param part 文字を数える文字列
+     * @return 文字数
+     * 英語の文字を読むための時間は日本の文字を読むための時間に比べて短いので、割り出し方は文字を数える文字列によリ違います。
+     * 英語なら、単語数を数えます。日本語なら、文字数を数える。
+     * 英語の言葉は長い説明の場合、４個だけ返します。
+     */
     private int getTotalCharacter(String part) {
         int totalCharacter = 0;
         if (Character.isLetter(part.charAt(0)) || Character.isLetter(part.charAt(1)) || Character.isLetter(part.charAt(2))) {
@@ -162,6 +201,10 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         return totalCharacter;
     }
 
+    /**
+     * この関数はUIをローディング画面にし、KMeansで分類しながらプログレスバーを更新します。KMeansで分類し
+     * たら、質問を選び、テストを始めます。
+     */
     private void loadQuestion() {
         setVisibleMode(LOADING);
         final Thread loadQuestionThread = new Thread(new Runnable() {
@@ -191,6 +234,10 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         updateProgressbarThread.start();
     }
 
+    /**
+     * @param mode UIの制度; LOADING or TEST
+     * 制度により、UIを変更します。
+     */
     private void setVisibleMode(int mode) {
         switch (mode) {
             case LOADING:
@@ -209,6 +256,9 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * テストの制度にUIを変更し、一つ目の質問を聞きます。
+     */
     private void startTest() {
         setVisibleMode(TEST);
 //        Flashcard[] allVisibleFlashcard = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getAllVisibleFlashcard();
@@ -219,6 +269,11 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         setupQuestion();
     }
 
+    /**
+     * @return 質問がなくなった場合はfalseを返します。
+     * この関数は質問のリストの言葉数を数え、ゼロならfalseを返します。他の場合は、読解速度を割り出すために
+     * 始める時間を保存します。それから、一つの言葉を選び、UIを更新し、その言葉をリストから削除し、trueを返します。
+     */
     private boolean setupQuestion() {
         if (words.size() != 0) {
             startTime = new Date();
@@ -228,7 +283,13 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
             words.remove(0);
             Random r = new Random();
             int mode = r.nextInt(6) + 1;
+            if (currentWord.getKanjiWriting() == null || currentWord.getKanjiWriting().length() == 0) {
+                mode = r.nextInt(2) == 0 ? KANA_MEANING : MEANING_KANA;
+            }
+            Log.i("KANJI_TEST", currentWord.getKanjiWriting() == null ? "null" : currentWord.getKanjiWriting());
             int position;
+            Word[] selection = LMemoDatabase.getInstance(getApplicationContext())
+                    .wordDAO().getRandomWord(currentWord.getWordID());
             switch (mode) {
                 case KANJI_KANA:
                     ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getKanjiWriting());
@@ -237,8 +298,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                         if (i == position) {
                             answerButton.get(i).setText(currentWord.getKana());
                         } else {
-                            answerButton.get(i).setText(LMemoDatabase.getInstance(getApplicationContext())
-                                    .wordDAO().getRandomWord(currentWord.getWordID())[0].getKana());
+                            answerButton.get(i).setText(selection[i].getKana());
                         }
                     }
                     break;
@@ -249,8 +309,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                         if (i == position) {
                             answerButton.get(i).setText(currentWord.getMeaning());
                         } else {
-                            answerButton.get(i).setText(LMemoDatabase.getInstance(getApplicationContext())
-                                    .wordDAO().getRandomWord(currentWord.getWordID())[0].getMeaning());
+                            answerButton.get(i).setText(selection[i].getMeaning());
                         }
                     }
                     break;
@@ -261,8 +320,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                         if (i == position) {
                             answerButton.get(i).setText(currentWord.getKanjiWriting());
                         } else {
-                            answerButton.get(i).setText(LMemoDatabase.getInstance(getApplicationContext())
-                                    .wordDAO().getRandomWord(currentWord.getWordID())[0].getKanjiWriting());
+                            answerButton.get(i).setText((selection[i].getKanjiWriting() == null || selection[i].getKanjiWriting().length() == 0) ? "No Kanji" : selection[i].getKanjiWriting());
                         }
                     }
                     break;
@@ -273,8 +331,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                         if (i == position) {
                             answerButton.get(i).setText(currentWord.getMeaning());
                         } else {
-                            answerButton.get(i).setText(LMemoDatabase.getInstance(getApplicationContext())
-                                    .wordDAO().getRandomWord(currentWord.getWordID())[0].getMeaning());
+                            answerButton.get(i).setText(selection[i].getMeaning());
                         }
                     }
                     break;
@@ -285,8 +342,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                         if (i == position) {
                             answerButton.get(i).setText(currentWord.getKana());
                         } else {
-                            answerButton.get(i).setText(LMemoDatabase.getInstance(getApplicationContext())
-                                    .wordDAO().getRandomWord(currentWord.getWordID())[0].getKana());
+                            answerButton.get(i).setText(selection[i].getKana());
                         }
                     }
                     break;
@@ -297,8 +353,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                         if (i == position) {
                             answerButton.get(i).setText(currentWord.getKanjiWriting());
                         } else {
-                            answerButton.get(i).setText(LMemoDatabase.getInstance(getApplicationContext())
-                                    .wordDAO().getRandomWord(currentWord.getWordID())[0].getKanjiWriting());
+                            answerButton.get(i).setText((selection[i].getKanjiWriting() == null || selection[i].getKanjiWriting().length() == 0) ? "No Kanji" : selection[i].getKanjiWriting());
                         }
                     }
                     break;

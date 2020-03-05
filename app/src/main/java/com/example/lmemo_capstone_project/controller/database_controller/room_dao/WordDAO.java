@@ -51,6 +51,6 @@ public interface WordDAO {
     Word[] getWordWithID(int flashcardID);
 
     @Query("SELECT WordID, Kana, Kanji, Meaning, PartOfSpeech FROM Word, Flashcard " +
-            "WHERE WordID=FlashcardID AND WordID <> :correctID ORDER BY random() LIMIT 1")
+            "WHERE WordID=FlashcardID AND WordID <> :correctID ORDER BY random() LIMIT 4")
     Word[] getRandomWord(int correctID);
 }

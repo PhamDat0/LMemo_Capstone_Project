@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.OvershootInterpolator;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -35,7 +34,6 @@ public class WritingTestActivity extends AppCompatActivity {
     private static final int TEST = 2;
     private static final int MEANING_KANJI = 1;
     private static final int MEANING_KANA = 2;
-    private static final double ACCURACY_CHANGE = 15;
     private int number_of_question;
     private List<Word> words;
     private Word currentWord;
@@ -47,7 +45,6 @@ public class WritingTestActivity extends AppCompatActivity {
     private OvershootInterpolator interpolator=new OvershootInterpolator();
     private int duration=300;
     private TextView txname;
-    private Boolean state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,11 +111,19 @@ public class WritingTestActivity extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     *          この関数はフラッシュカードの練習情報を更新し、言葉情報を表示します。
+     */
     private void answer(View v) {
         saveNewValueOfFlashcard(v);
         showResultDialog();
     }
 
+    /**
+     * この関数は質問のリストからの一つの質問を取り、UIを更新します。質問を取れなければ、テストを終わります。
+     */
     private void endCurrentQuestion() {
         ((EditText)findViewById(R.id.etAnswer)).setText("");
         if (!setupQuestion()) {
@@ -127,6 +132,9 @@ public class WritingTestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * この関数は聞いている言葉の情報をダイアログに表示します。
+     */
     private void showResultDialog() {
         final Dialog container = new Dialog(WritingTestActivity.this);
         container.setContentView(R.layout.fragment_word_searching);
@@ -145,6 +153,10 @@ public class WritingTestActivity extends AppCompatActivity {
         container.show();
     }
 
+    /**
+     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * この関数はユーザーが選んだボタンにより、練習情報をデータベースに更新します。
+     */
     private void saveNewValueOfFlashcard(View v) {
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
         Flashcard flashcard = flashcardDAO.getFlashCardByID(currentWord.getWordID())[0];
@@ -155,11 +167,20 @@ public class WritingTestActivity extends AppCompatActivity {
         Log.i("SAVE_VALUE", "Success");
     }
 
+    /**
+     * @param flashcard 聞いているフラッシュカード
+     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @return ユーザーがその答えで受けることができる最も高い精度
+     */
     private double getAccuracyBasedOnAnswer(Flashcard flashcard, View v) {
         double accuracy = calculateBestAccuracyForTheAnswer()*0.5 + flashcard.getAccuracy() * 0.5;
         return accuracy>100?100:accuracy;
     }
 
+    /**
+     * @return ユーザーがその答えで受けることができる最も高い精度
+     * この関数は正しい答えを取リ、ユーザーが入力した答えと比べます。
+     */
     private double calculateBestAccuracyForTheAnswer() {
         EditText etAnswer = findViewById(R.id.etAnswer);
         String[] correctAnswer = (etAnswer.getHint().toString()
@@ -168,6 +189,11 @@ public class WritingTestActivity extends AppCompatActivity {
         return calculateBestAccuracyForTheAnswer(answer, correctAnswer);
     }
 
+    /**
+     * @param answer ユーザーの答え
+     * @param correctAnswer 正しい答え
+     * @return ユーザーがその答えで受けることができる最も高い精度
+     */
     private double calculateBestAccuracyForTheAnswer(String[] answer, String[] correctAnswer) {
         double bestAccuracy = 0;
         for (String partOfAnswer : answer) {
@@ -180,6 +206,11 @@ public class WritingTestActivity extends AppCompatActivity {
         return bestAccuracy;
     }
 
+    /**
+     * @param a １つ目の文字列
+     * @param b ２つ目の文字列
+     * @return aとbは何パーセント同じか返します。
+     */
     double stringCompare(String a, String b) {
         if (a.equalsIgnoreCase(b)) //Same string, no iteration needed.
             return 100;
@@ -199,27 +230,35 @@ public class WritingTestActivity extends AppCompatActivity {
         return sameCharAtIndex / maxLen * 100;
     }
 
+    /**
+     * @param flashcard 聞いている言葉に相当するフラッシュカード
+     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @return このフラッシュカードでは、1つの字を読む時間は何時間かを返します。
+     * ユーザーが選ぶための時間を割り出し、文字が何個あるを数えり、時間を文字数で割ります。
+     */
     private double getSpeedPerCharacterBasedOnAnswer(Flashcard flashcard, View v) {
-        TextView tvQuestion = findViewById(R.id.tvMeaning);
-        String question = tvQuestion.getText().toString();
-        Date endTime = new Date();
-        double timeToAnswer = endTime.getTime() - startTime.getTime();
-        Log.i("TIME_TO_ANSWER", timeToAnswer+"");
+        String question = ((TextView) findViewById(R.id.tvMeaning)).getText().toString();
+        double timeToAnswer = new Date().getTime() - startTime.getTime();
         String answer = ((EditText) findViewById(R.id.etAnswer)).getText().toString();
-        String[] partOfAnswer = answer.split("/");
-        String[] partOfQuestion = question.split("/");
 
         int totalCharacter = 0;
-        totalCharacter += calculateTotalCharacter(partOfQuestion);
-        totalCharacter += partOfAnswer.length;
+        totalCharacter += calculateTotalCharacter(question);
+        totalCharacter += answer.length();
         Log.i("Total_Character", totalCharacter + "");
         return ((timeToAnswer / 1000 / totalCharacter)*0.5 + flashcard.getSpeedPerCharacter())*0.5;
     }
 
-    private int calculateTotalCharacter(String[] source) {
+    /**
+     * @param source 文字を数える文字列
+     * @return 文字数
+     * ユーザーはあまりすべてを読まないので、２，３パートを数えるだけです。２，３パートに別れ、それぞれ数えます。
+     * 入力速度を計るためにユーザーの答えをすべて数えます。
+     */
+    private int calculateTotalCharacter(String source) {
+        String[] partOfSource = source.split("/");
         int counter = 0;
         int totalCharacter = 0;
-        for (String part : source) {
+        for (String part : partOfSource) {
             if (counter++ > 2)
                 break;
             totalCharacter += getTotalCharacter(part);
@@ -227,6 +266,13 @@ public class WritingTestActivity extends AppCompatActivity {
         return totalCharacter;
     }
 
+    /**
+     * @param part 文字を数える文字列
+     * @return 文字数
+     * 英語の文字を読むための時間は日本の文字を読むための時間に比べて短いので、割り出し方は文字を数える文字列によリ違います。
+     * 英語なら、単語数を数えます。日本語なら、文字数を数える。
+     * 英語の言葉は長い説明の場合、４個だけ返します。
+     */
     private int getTotalCharacter(String part) {
         int totalCharacter = 0;
         if (Character.isLetter(part.charAt(0)) || Character.isLetter(part.charAt(1)) || Character.isLetter(part.charAt(2))) {
@@ -239,6 +285,10 @@ public class WritingTestActivity extends AppCompatActivity {
         return totalCharacter;
     }
 
+    /**
+     * この関数はUIをローディング画面にし、KMeansで分類しながらプログレスバーを更新します。KMeansで分類し
+     * たら、質問を選び、テストを始めます。
+     */
     private void loadQuestion() {
         setVisibleMode(LOADING);
         final Thread loadQuestionThread = new Thread(new Runnable() {
@@ -268,6 +318,10 @@ public class WritingTestActivity extends AppCompatActivity {
         updateProgressbarThread.start();
     }
 
+    /**
+     * @param mode UIの制度; LOADING or TEST
+     * 制度により、UIを変更します。
+     */
     private void setVisibleMode(int mode) {
         switch (mode) {
             case LOADING:
@@ -282,6 +336,9 @@ public class WritingTestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * テストの制度にUIを変更し、一つ目の質問を聞きます。
+     */
     private void startTest() {
         setVisibleMode(TEST);
         Flashcard[] allVisibleFlashcard = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getAllVisibleFlashcard();
@@ -292,6 +349,11 @@ public class WritingTestActivity extends AppCompatActivity {
         setupQuestion();
     }
 
+    /**
+     * @return 質問がなくなった場合はfalseを返します。
+     * この関数は質問のリストの言葉数を数え、ゼロならfalseを返します。他の場合は、入力速度を割り出すために
+     * 始める時間を保存します。それから、一つの言葉を選び、UIを更新し、その言葉をリストから削除し、trueを返します。
+     */
     private boolean setupQuestion() {
         if (words.size() != 0) {
             startTime = new Date();

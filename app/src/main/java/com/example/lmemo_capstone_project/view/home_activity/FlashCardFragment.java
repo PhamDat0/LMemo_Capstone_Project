@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -54,7 +55,11 @@ public class FlashCardFragment extends Fragment {
 //        flashcardAdapter.notifyDataSetChanged();
 //        getFragmentManager().beginTransaction()
 //                .add(R.id.FrameFlashcard,new FlashcardInfoFragment()).addToBackStack(null).commit();
-        view.findViewById(R.id.btReview).setOnClickListener(new View.OnClickListener() {
+        Button btReview = view.findViewById(R.id.btReview);
+        if (listFlashcard.size() == 0) {
+            btReview.setVisibility(View.INVISIBLE);
+        }
+        btReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (numberOfFlashcards() != 0) {
@@ -74,7 +79,11 @@ public class FlashCardFragment extends Fragment {
     private void getAllFlashcard() {
         WordDAO wordDAO = LMemoDatabase.getInstance(getContext()).wordDAO();
         Word[] allFlashcard = wordDAO.getAllFlashcard();
-        listFlashcard = new ArrayList<>(Arrays.asList(allFlashcard));
+        if (allFlashcard != null) {
+            listFlashcard = new ArrayList<>(Arrays.asList(allFlashcard));
+        } else {
+            listFlashcard = new ArrayList<>();
+        }
     }
 
     private int numberOfFlashcards() {
@@ -98,8 +107,8 @@ public class FlashCardFragment extends Fragment {
                 Intent intent = new Intent(getContext(), WritingTestActivity.class);
                 switch (testMode) {
                     case MULTIPLE_CHOICE:
-                        if (numberOfFlashcards() <= 1) {
-                            Toast.makeText(getContext(), "There are not enough flashcards to create a multiple-choice test.", Toast.LENGTH_LONG).show();
+                        if (numberOfFlashcards() <= 4) {
+                            Toast.makeText(getContext(), "There are not enough flashcards to create a multiple-choice test. Required at least 4.", Toast.LENGTH_LONG).show();
                         } else {
                             intent = new Intent(getContext(), MultipleChoiceTestActivity.class);
                         }
