@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
@@ -33,7 +35,10 @@ public class FlashcardInfoFragment extends Fragment {
         cvClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                FragmentManager manager = getFragmentManager();
+                if(manager.getBackStackEntryCount() > 1 ) {
+                    manager.popBackStack();//Pops one of the added fragments
+                }
             }
         });
         return view;

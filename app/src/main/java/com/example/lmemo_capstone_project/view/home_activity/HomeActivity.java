@@ -252,11 +252,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         FragmentManager manager = getSupportFragmentManager();
-        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else if(manager.getBackStackEntryCount() > 1 ) {
-            manager.popBackStack();//Pops one of the added fragments
         }
+            //        } else if(manager.getBackStackEntryCount() > 1 ) {
+//            manager.popBackStack();//Pops one of the added fragments
+//        }
     }
 
     @Override
