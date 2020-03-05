@@ -6,12 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.TestController;
@@ -36,6 +40,14 @@ public class WritingTestActivity extends AppCompatActivity {
     private List<Word> words;
     private Word currentWord;
     private Date startTime;
+    private LinearLayout belowLayout;
+    private CardView aboveLayout,btAnswerCheck;
+    private int height;
+    private boolean isFlipped=false;
+    private OvershootInterpolator interpolator=new OvershootInterpolator();
+    private int duration=300;
+    private TextView txname;
+    private Boolean state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +61,59 @@ public class WritingTestActivity extends AppCompatActivity {
                 answer(v);
             }
         });
+
+        belowLayout = findViewById(R.id.belowLayout);
+        aboveLayout = findViewById(R.id.aboveLayout);
+        btAnswerCheck = findViewById(R.id.btAnswerCheck);
+        txname = findViewById(R.id.txname);
+
+        aboveLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                //fetch height
+                height=(aboveLayout.getHeight())/2;
+            }
+        });
+
+        flipAnimation();
         loadQuestion();
     }
+    //Question and answer flip
+    private void flipAnimation(){
+        btAnswerCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                aboveLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(height).start();
+                belowLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(-1*height)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
 
+                                if(!isFlipped) {
+                                    aboveLayout.setTranslationZ(-50);
+                                    belowLayout.setTranslationZ(0);
+                                    answer(v);
+                                    txname.setText("Next");
+                                }
+                                else {
+                                    aboveLayout.setTranslationZ(0);
+                                    belowLayout.setTranslationZ(-50);
+                                    txname.setText("Check Answer");
+                                }
+
+                                aboveLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(0).start();
+                                belowLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(0).start();
+                                btAnswerCheck.animate().setInterpolator(interpolator).translationY(0).start();
+
+
+                                isFlipped=!isFlipped;
+                            }
+                        })
+                        .start();
+            }
+        });
+
+    }
     private void answer(View v) {
         saveNewValueOfFlashcard(v);
         showResultDialog();

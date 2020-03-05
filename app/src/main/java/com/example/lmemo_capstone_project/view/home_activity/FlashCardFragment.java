@@ -2,6 +2,8 @@ package com.example.lmemo_capstone_project.view.home_activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -115,6 +117,7 @@ public class FlashCardFragment extends Fragment {
             }
         });
         Log.i("Dialog", "Created");
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 }

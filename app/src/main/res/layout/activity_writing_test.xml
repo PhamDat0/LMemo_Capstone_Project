@@ -1,41 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:paddingStart="68dp"
+    android:paddingEnd="68dp"
+    android:background="#A8B2E4"
     tools:context=".view.review_activity.WritingTestActivity">
 
-    <TextView
-        android:id="@+id/tvMeaning"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/aboveLayout"
+        app:cardElevation="12dp"
+        app:cardCornerRadius="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Question" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="392dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvMeaning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Question"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/colorPrimary"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="15sp"/>
 
-    <EditText
-        android:id="@+id/etAnswer"
+            <EditText
+                android:id="@+id/etAnswer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="15sp"
+                android:hint="Answer kana reading here"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+    <LinearLayout
+        android:id="@+id/belowLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Answer kana reading here"
-        android:inputType="textPersonName" />
+        android:layout_height="392dp"
+        android:layout_margin="6dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvKana"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#DA0F0F"
+            />
+        <TextView
+            android:id="@+id/tvKanji"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            />
 
-    <Button
+        <TextView
+            android:id="@+id/tvPartOfSpeech"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="25dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#673AB7"
+            />
+
+        <TextView
+            android:id="@+id/tvMean"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="25dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/endblue"
+            />
+
+    </LinearLayout>
+    <androidx.cardview.widget.CardView
         android:id="@+id/btAnswerCheck"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CheckAnswer" />
+        android:layout_margin="4dp"
+        android:minWidth="40dp"
+        android:minHeight="40dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/aboveLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/aboveLayout">
+
+        <TextView
+            android:id="@+id/txname"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Check Answer"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </androidx.cardview.widget.CardView>
 
     <ProgressBar
         android:id="@+id/pbLoadQuestion"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/FrameFlashcard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btAnswerCheck" />
 
     <FrameLayout
         android:id="@+id/FrameFlashcard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="29dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pbLoadQuestion"></FrameLayout>
 
-    </FrameLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
