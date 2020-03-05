@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="@drawable/headback"
+    android:background="@drawable/headerbackground"
     android:padding="25dp">
-    <ImageView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:background="@drawable/dictionicon"
-        />
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@drawable/headerbackground">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="40dp"
+            android:minHeight="40dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="16dp">
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/headericon"/>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 </LinearLayout>

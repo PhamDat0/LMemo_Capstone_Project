@@ -1,26 +1,32 @@
 package com.example.lmemo_capstone_project.view.home_activity;
 
-
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ListAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
-import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.review_activity.MultipleChoiceTestActivity;
+import com.example.lmemo_capstone_project.view.review_activity.WritingTestActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -28,6 +34,8 @@ import java.util.List;
  */
 public class FlashCardFragment extends Fragment {
 
+    private static final int WRITING = 1;
+    private static final int MULTIPLE_CHOICE = 2;
     private ArrayList<Word> listFlashcard;
     private ListView flashcardListView;
 
@@ -47,7 +55,20 @@ public class FlashCardFragment extends Fragment {
 //        flashcardAdapter.notifyDataSetChanged();
 //        getFragmentManager().beginTransaction()
 //                .add(R.id.FrameFlashcard,new FlashcardInfoFragment()).addToBackStack(null).commit();
-
+        Button btReview = view.findViewById(R.id.btReview);
+        if (listFlashcard.size() == 0) {
+            btReview.setVisibility(View.INVISIBLE);
+        }
+        btReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (numberOfFlashcards() != 0) {
+                    createTestControlDialog();
+                } else {
+                    Toast.makeText(getContext(), "There are no flashcards.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         return view;
     }
 
@@ -58,7 +79,54 @@ public class FlashCardFragment extends Fragment {
     private void getAllFlashcard() {
         WordDAO wordDAO = LMemoDatabase.getInstance(getContext()).wordDAO();
         Word[] allFlashcard = wordDAO.getAllFlashcard();
-        listFlashcard = new ArrayList<>(Arrays.asList(allFlashcard));
+        if (allFlashcard != null) {
+            listFlashcard = new ArrayList<>(Arrays.asList(allFlashcard));
+        } else {
+            listFlashcard = new ArrayList<>();
+        }
+    }
+
+    private int numberOfFlashcards() {
+        return LMemoDatabase.getInstance(getContext()).flashcardDAO().getNumberOfFlashcards();
+    }
+
+    /**
+     * この関数はテストの設定のダイアログを作成します。
+     */
+    private void createTestControlDialog() {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_test_control);
+        dialog.setTitle("Test setting: ");
+        dialog.findViewById(R.id.btStartTest).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText etNumberOfQuestion = dialog.findViewById(R.id.etNumberOfQuestion);
+                int numberOfTest = Integer.parseInt(etNumberOfQuestion.getText().toString());
+                int checkedRadioButtonId = ((RadioGroup) dialog.findViewById(R.id.rgTestMode)).getCheckedRadioButtonId();
+                int testMode = ((RadioButton) dialog.findViewById(checkedRadioButtonId)).getText().toString().equals("Writing") ? WRITING : MULTIPLE_CHOICE;
+                Intent intent = new Intent(getContext(), WritingTestActivity.class);
+                switch (testMode) {
+                    case MULTIPLE_CHOICE:
+                        if (numberOfFlashcards() <= 4) {
+                            Toast.makeText(getContext(), "There are not enough flashcards to create a multiple-choice test. Required at least 4.", Toast.LENGTH_LONG).show();
+                        } else {
+                            intent = new Intent(getContext(), MultipleChoiceTestActivity.class);
+                        }
+                        break;
+                }
+                intent.putExtra(getString(R.string.number_of_questions), numberOfTest);
+                getActivity().startActivityForResult(intent, HomeActivity.TEST_FLASHCARD_REQUEST_CODE);
+                dialog.dismiss();
+            }
+        });
+        dialog.findViewById(R.id.btCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        Log.i("Dialog", "Created");
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
     }
 }
-

@@ -31,27 +31,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Word"
+            android:text="Word"
             />
         <Button
             android:id="@+id/tabKanji"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Kanji"
+            android:text="Kanji"
             />
     </LinearLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/searchFrameLayout">
-<!--        <TextView-->
-<!--            android:imeOptions="actionSearch"-->
-<!--            android:inputType="text"-->
-<!--            android:layout_width="200dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="Search được từ nào tạo lịch sử từ đó tại đây"-->
-<!--            />-->
     </FrameLayout>
 
 </LinearLayout>

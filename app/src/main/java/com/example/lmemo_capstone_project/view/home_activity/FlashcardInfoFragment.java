@@ -1,14 +1,16 @@
 package com.example.lmemo_capstone_project.view.home_activity;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
@@ -18,16 +20,9 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Word;
  * create an instance of this fragment.
  */
 public class FlashcardInfoFragment extends Fragment {
-
-    private Word[] flashcardWord;
-
+    CardView cvClose;
     public FlashcardInfoFragment() {
         // Required empty public constructor
-    }
-
-
-    public FlashcardInfoFragment(Word word) {
-//        flashcardWord =
     }
 
     @Override
@@ -36,7 +31,16 @@ public class FlashcardInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_flashcard_info, container, false);
         wordSearchResult(view);
-//        getActivity().onBackPressed();
+        cvClose = (CardView)view.findViewById(R.id.cvClose);
+        cvClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                if(manager.getBackStackEntryCount() > 1 ) {
+                    manager.popBackStack();//Pops one of the added fragments
+                }
+            }
+        });
         return view;
     }
 

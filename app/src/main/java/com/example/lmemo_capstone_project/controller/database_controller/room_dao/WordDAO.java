@@ -46,4 +46,11 @@ public interface WordDAO {
     @Transaction
     @Query("SELECT * FROM Word")
     List<WordWithNotes> getWordsWithNotes();
+
+    @Query("SELECT WordID, Kana, Kanji, Meaning, PartOfSpeech FROM Word WHERE WordID=:flashcardID")
+    Word[] getWordWithID(int flashcardID);
+
+    @Query("SELECT WordID, Kana, Kanji, Meaning, PartOfSpeech FROM Word, Flashcard " +
+            "WHERE WordID=FlashcardID AND WordID <> :correctID ORDER BY random() LIMIT 4")
+    Word[] getRandomWord(int correctID);
 }
