@@ -161,6 +161,7 @@ public class WritingTestActivity extends AppCompatActivity {
                 textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
             }
         });
+        textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
         ((TextView) container.findViewById(R.id.tvKana)).setText("[ " + currentWord.getKana() + " ]");
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
         ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning());
