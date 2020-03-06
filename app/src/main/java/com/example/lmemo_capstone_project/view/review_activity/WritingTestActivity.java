@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -26,6 +27,7 @@ import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class WritingTestActivity extends AppCompatActivity {
@@ -34,28 +36,39 @@ public class WritingTestActivity extends AppCompatActivity {
     private static final int TEST = 2;
     private static final int MEANING_KANJI = 1;
     private static final int MEANING_KANA = 2;
-    private int number_of_question;
+    private int numberOfQuestion;
     private List<Word> words;
     private Word currentWord;
     private Date startTime;
+
     private LinearLayout belowLayout;
-    private CardView aboveLayout,btAnswerCheck;
+    private CardView aboveLayout, btAnswerCheck;
     private int height;
-    private boolean isFlipped=false;
-    private OvershootInterpolator interpolator=new OvershootInterpolator();
-    private int duration=300;
+    private boolean isFlipped = false;
+    private OvershootInterpolator interpolator = new OvershootInterpolator();
+    private int duration = 300;
     private TextView txname;
+    private TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_writing_test);
         Intent intent = getIntent();
-        number_of_question = intent.getIntExtra(getString(R.string.number_of_questions), 0);
+        numberOfQuestion = intent.getIntExtra(getString(R.string.number_of_questions), 0);
         findViewById(R.id.btAnswerCheck).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 answer(v);
+            }
+        });
+
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.JAPAN);
+                }
             }
         });
 
@@ -68,31 +81,31 @@ public class WritingTestActivity extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 //fetch height
-                height=(aboveLayout.getHeight())/2;
+                height = (aboveLayout.getHeight()) / 2;
             }
         });
 
         flipAnimation();
         loadQuestion();
     }
+
     //Question and answer flip
-    private void flipAnimation(){
+    private void flipAnimation() {
         btAnswerCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 aboveLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(height).start();
-                belowLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(-1*height)
+                belowLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(-1 * height)
                         .withEndAction(new Runnable() {
                             @Override
                             public void run() {
 
-                                if(!isFlipped) {
+                                if (!isFlipped) {
                                     aboveLayout.setTranslationZ(-50);
                                     belowLayout.setTranslationZ(0);
                                     answer(v);
                                     txname.setText("Next");
-                                }
-                                else {
+                                } else {
                                     aboveLayout.setTranslationZ(0);
                                     belowLayout.setTranslationZ(-50);
                                     txname.setText("Check Answer");
@@ -103,7 +116,7 @@ public class WritingTestActivity extends AppCompatActivity {
                                 btAnswerCheck.animate().setInterpolator(interpolator).translationY(0).start();
 
 
-                                isFlipped=!isFlipped;
+                                isFlipped = !isFlipped;
                             }
                         })
                         .start();
@@ -125,7 +138,7 @@ public class WritingTestActivity extends AppCompatActivity {
      * この関数は質問のリストからの一つの質問を取り、UIを更新します。質問を取れなければ、テストを終わります。
      */
     private void endCurrentQuestion() {
-        ((EditText)findViewById(R.id.etAnswer)).setText("");
+        ((EditText) findViewById(R.id.etAnswer)).setText("");
         if (!setupQuestion()) {
             setResult(HomeActivity.TEST_FLASHCARD_REQUEST_CODE);
             finish();
@@ -139,6 +152,7 @@ public class WritingTestActivity extends AppCompatActivity {
         final Dialog container = new Dialog(WritingTestActivity.this);
         container.setContentView(R.layout.fragment_word_searching);
         container.setTitle("Word information:");
+        textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
         ((TextView) container.findViewById(R.id.tvKana)).setText("[ " + currentWord.getKana() + " ]");
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
         ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning());
@@ -155,7 +169,7 @@ public class WritingTestActivity extends AppCompatActivity {
 
     /**
      * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
-     * この関数はユーザーが選んだボタンにより、練習情報をデータベースに更新します。
+     *          この関数はユーザーが選んだボタンにより、練習情報をデータベースに更新します。
      */
     private void saveNewValueOfFlashcard(View v) {
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
@@ -169,12 +183,12 @@ public class WritingTestActivity extends AppCompatActivity {
 
     /**
      * @param flashcard 聞いているフラッシュカード
-     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @param v         ビューオブジェクト。ユーザーの答えを持っているボタン
      * @return ユーザーがその答えで受けることができる最も高い精度
      */
     private double getAccuracyBasedOnAnswer(Flashcard flashcard, View v) {
-        double accuracy = calculateBestAccuracyForTheAnswer()*0.5 + flashcard.getAccuracy() * 0.5;
-        return accuracy>100?100:accuracy;
+        double accuracy = calculateBestAccuracyForTheAnswer() * 0.5 + flashcard.getAccuracy() * 0.5;
+        return accuracy > 100 ? 100 : accuracy;
     }
 
     /**
@@ -186,15 +200,6 @@ public class WritingTestActivity extends AppCompatActivity {
         String[] correctAnswer = (etAnswer.getHint().toString()
                 .equals(getString(R.string.kana_test_hint)) ? currentWord.getKana() : currentWord.getKanjiWriting()).split("/");
         String[] answer = etAnswer.getText().toString().split("/");
-        return calculateBestAccuracyForTheAnswer(answer, correctAnswer);
-    }
-
-    /**
-     * @param answer ユーザーの答え
-     * @param correctAnswer 正しい答え
-     * @return ユーザーがその答えで受けることができる最も高い精度
-     */
-    private double calculateBestAccuracyForTheAnswer(String[] answer, String[] correctAnswer) {
         double bestAccuracy = 0;
         for (String partOfAnswer : answer) {
             for (String partOfCorrectAnswer : correctAnswer) {
@@ -232,7 +237,7 @@ public class WritingTestActivity extends AppCompatActivity {
 
     /**
      * @param flashcard 聞いている言葉に相当するフラッシュカード
-     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @param v         ビューオブジェクト。ユーザーの答えを持っているボタン
      * @return このフラッシュカードでは、1つの字を読む時間は何時間かを返します。
      * ユーザーが選ぶための時間を割り出し、文字が何個あるを数えり、時間を文字数で割ります。
      */
@@ -245,7 +250,7 @@ public class WritingTestActivity extends AppCompatActivity {
         totalCharacter += calculateTotalCharacter(question);
         totalCharacter += answer.length();
         Log.i("Total_Character", totalCharacter + "");
-        return ((timeToAnswer / 1000 / totalCharacter)*0.5 + flashcard.getSpeedPerCharacter())*0.5;
+        return ((timeToAnswer / 1000 / totalCharacter) * 0.5 + flashcard.getSpeedPerCharacter()) * 0.5;
     }
 
     /**
@@ -277,7 +282,7 @@ public class WritingTestActivity extends AppCompatActivity {
         int totalCharacter = 0;
         if (Character.isLetter(part.charAt(0)) || Character.isLetter(part.charAt(1)) || Character.isLetter(part.charAt(2))) {
             int length = part.split("\\s+").length;
-            totalCharacter += length>4?4:length;
+            totalCharacter += length > 4 ? 4 : length;
         } else {
             totalCharacter += part.trim().length();
             Log.i("Check_Part", part);
@@ -296,7 +301,7 @@ public class WritingTestActivity extends AppCompatActivity {
             public void run() {
                 LMemoDatabase database = LMemoDatabase.getInstance(getApplicationContext());
                 TestController testController = new TestController(database.wordDAO(), database.flashcardDAO());
-                words = testController.prepareTest(number_of_question);
+                words = testController.prepareTest(numberOfQuestion);
             }
         });
         loadQuestionThread.start();
@@ -320,7 +325,7 @@ public class WritingTestActivity extends AppCompatActivity {
 
     /**
      * @param mode UIの制度; LOADING or TEST
-     * 制度により、UIを変更します。
+     *             制度により、UIを変更します。
      */
     private void setVisibleMode(int mode) {
         switch (mode) {

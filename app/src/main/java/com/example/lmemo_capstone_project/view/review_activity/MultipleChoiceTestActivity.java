@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class MultipleChoiceTestActivity extends AppCompatActivity {
@@ -36,24 +38,33 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
     private static final int MEANING_KANA = 5;
     private static final int MEANING_KANJI = 6;
     private static final double ACCURACY_CHANGE = 15;
-    private int number_of_question;
+    private int numberOfQuestion;
     private List<Word> words;
-    private List<Button> answerButton;
+    private List<Button> answerButtons;
     private Word currentWord;
     private Date startTime;
+    private TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiple_choice_test);
         Intent intent = getIntent();
-        number_of_question = intent.getIntExtra(getString(R.string.number_of_questions), 0);
-        answerButton = new ArrayList<>();
-        answerButton.add((Button) findViewById(R.id.btAnswer1));
-        answerButton.add((Button) findViewById(R.id.btAnswer2));
-        answerButton.add((Button) findViewById(R.id.btAnswer3));
-        answerButton.add((Button) findViewById(R.id.btAnswer4));
-        for (Button b : answerButton) {
+        numberOfQuestion = intent.getIntExtra(getString(R.string.number_of_questions), 0);
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.JAPAN);
+                }
+            }
+        });
+        answerButtons = new ArrayList<>();
+        answerButtons.add((Button) findViewById(R.id.btAnswer1));
+        answerButtons.add((Button) findViewById(R.id.btAnswer2));
+        answerButtons.add((Button) findViewById(R.id.btAnswer3));
+        answerButtons.add((Button) findViewById(R.id.btAnswer4));
+        for (Button b : answerButtons) {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -90,6 +101,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         final Dialog container = new Dialog(MultipleChoiceTestActivity.this);
         container.setContentView(R.layout.fragment_word_searching);
         container.setTitle("Word information:");
+        textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
         ((TextView) container.findViewById(R.id.tvKana)).setText("[ " + currentWord.getKana() + " ]");
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
         ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning());
@@ -212,7 +224,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
             public void run() {
                 LMemoDatabase database = LMemoDatabase.getInstance(getApplicationContext());
                 TestController testController = new TestController(database.wordDAO(), database.flashcardDAO());
-                words = testController.prepareTest(number_of_question);
+                words = testController.prepareTest(numberOfQuestion);
             }
         });
         loadQuestionThread.start();
@@ -242,14 +254,14 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         switch (mode) {
             case LOADING:
                 findViewById(R.id.tvMeaning).setVisibility(View.INVISIBLE);
-                for (Button b : answerButton) {
+                for (Button b : answerButtons) {
                     b.setVisibility(View.INVISIBLE);
                 }
                 findViewById(R.id.pbLoadQuestion).setVisibility(View.VISIBLE);
                 break;
             case TEST:
                 findViewById(R.id.tvMeaning).setVisibility(View.VISIBLE);
-                for (Button b : answerButton) {
+                for (Button b : answerButtons) {
                     b.setVisibility(View.VISIBLE);
                 }
                 findViewById(R.id.pbLoadQuestion).setVisibility(View.INVISIBLE);
@@ -296,9 +308,9 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                     position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
                         if (i == position) {
-                            answerButton.get(i).setText(currentWord.getKana());
+                            answerButtons.get(i).setText(currentWord.getKana());
                         } else {
-                            answerButton.get(i).setText(selection[i].getKana());
+                            answerButtons.get(i).setText(selection[i].getKana());
                         }
                     }
                     break;
@@ -307,9 +319,9 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                     position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
                         if (i == position) {
-                            answerButton.get(i).setText(currentWord.getMeaning());
+                            answerButtons.get(i).setText(currentWord.getMeaning());
                         } else {
-                            answerButton.get(i).setText(selection[i].getMeaning());
+                            answerButtons.get(i).setText(selection[i].getMeaning());
                         }
                     }
                     break;
@@ -318,9 +330,9 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                     position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
                         if (i == position) {
-                            answerButton.get(i).setText(currentWord.getKanjiWriting());
+                            answerButtons.get(i).setText(currentWord.getKanjiWriting());
                         } else {
-                            answerButton.get(i).setText((selection[i].getKanjiWriting() == null || selection[i].getKanjiWriting().length() == 0) ? "No Kanji" : selection[i].getKanjiWriting());
+                            answerButtons.get(i).setText((selection[i].getKanjiWriting() == null || selection[i].getKanjiWriting().length() == 0) ? "No Kanji" : selection[i].getKanjiWriting());
                         }
                     }
                     break;
@@ -329,9 +341,9 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                     position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
                         if (i == position) {
-                            answerButton.get(i).setText(currentWord.getMeaning());
+                            answerButtons.get(i).setText(currentWord.getMeaning());
                         } else {
-                            answerButton.get(i).setText(selection[i].getMeaning());
+                            answerButtons.get(i).setText(selection[i].getMeaning());
                         }
                     }
                     break;
@@ -340,9 +352,9 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                     position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
                         if (i == position) {
-                            answerButton.get(i).setText(currentWord.getKana());
+                            answerButtons.get(i).setText(currentWord.getKana());
                         } else {
-                            answerButton.get(i).setText(selection[i].getKana());
+                            answerButtons.get(i).setText(selection[i].getKana());
                         }
                     }
                     break;
@@ -351,9 +363,9 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                     position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
                         if (i == position) {
-                            answerButton.get(i).setText(currentWord.getKanjiWriting());
+                            answerButtons.get(i).setText(currentWord.getKanjiWriting());
                         } else {
-                            answerButton.get(i).setText((selection[i].getKanjiWriting() == null || selection[i].getKanjiWriting().length() == 0) ? "No Kanji" : selection[i].getKanjiWriting());
+                            answerButtons.get(i).setText((selection[i].getKanjiWriting() == null || selection[i].getKanjiWriting().length() == 0) ? "No Kanji" : selection[i].getKanjiWriting());
                         }
                     }
                     break;
