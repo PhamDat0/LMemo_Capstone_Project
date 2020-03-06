@@ -54,6 +54,13 @@
             android:layout_height="wrap_content"
             android:textColor="@color/endblue"
              />
+
+        <Button
+            android:id="@+id/btPronunciation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="発音"
+            android:visibility="invisible" />
     </LinearLayout>
 
 

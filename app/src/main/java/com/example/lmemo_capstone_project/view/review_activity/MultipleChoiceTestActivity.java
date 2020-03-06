@@ -101,11 +101,18 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         final Dialog container = new Dialog(MultipleChoiceTestActivity.this);
         container.setContentView(R.layout.fragment_word_searching);
         container.setTitle("Word information:");
-        textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
         ((TextView) container.findViewById(R.id.tvKana)).setText("[ " + currentWord.getKana() + " ]");
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
         ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning());
         ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(" * " + currentWord.getPartOfSpeech());
+        Button btPronunciation = container.findViewById(R.id.btPronunciation);
+        btPronunciation.setVisibility(View.VISIBLE);
+        btPronunciation.findViewById(R.id.btPronunciation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
+            }
+        });
         //ユーザーがこのダイアログを消したら、他の質問を始めます。
         container.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
