@@ -92,14 +92,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         //set on click cho 2 tab
         tabKanji.setOnClickListener(this);
         tabWord.setOnClickListener(this);
-        if(wordID != -1){
-            dailyWord = wordDAO.getOneWord(wordID);
-            addFlashCardToSQLite(dailyWord);
-            fragmentDataTransfer(dailyWord);
-
-            wordID = -1;
-        }
-
+        getDailyWord();
         return view;
     }
     @Override
@@ -109,6 +102,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         if (getArguments() != null) {
             wordID = getArguments().getInt("wordID");
             Log.w("Search Fragment","word id is"+wordID);
+        }
+    }
+    private void getDailyWord(){
+        if(wordID != -1){
+            dailyWord = wordDAO.getOneWord(wordID);
+            addFlashCardToSQLite(dailyWord);
+            fragmentDataTransfer(dailyWord);
+            wordID = -1;
+
         }
     }
     //Suggestion word Function
