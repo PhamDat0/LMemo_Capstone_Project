@@ -121,8 +121,8 @@ public class DictionaryFileReader extends Thread {
         }
         return new Word(wordID, kana.length() >= 3 ? kana.toString().substring(3) : kana.toString(),
                 kanji.length() >= 3 ? kanji.toString().substring(3) : kanji.toString(),
-                sense.meaning.length() >= 3 ? sense.meaning.toString().substring(3) : sense.meaning,
-                sense.partOfSpeech.length() >= 3 ? sense.partOfSpeech.toString().substring(3) : sense.partOfSpeech);
+                sense.meaning.length() >= 3 ? sense.meaning.substring(3) : sense.meaning,
+                sense.partOfSpeech.length() >= 3 ? sense.partOfSpeech.substring(3) : sense.partOfSpeech);
     }
 
     private Sense readSense(XmlPullParser parser, Sense result) throws IOException, XmlPullParserException {
@@ -147,6 +147,8 @@ public class DictionaryFileReader extends Thread {
                 skip(parser);
             }
         }
+        result.meaning += "\n";
+        result.meaning = result.meaning.replace("\n / ", "\n");
         return result;
     }
 

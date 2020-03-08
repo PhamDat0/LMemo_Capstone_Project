@@ -37,6 +37,7 @@ public class WritingTestActivity extends AppCompatActivity {
     private static final int TEST = 2;
     private static final int MEANING_KANJI = 1;
     private static final int MEANING_KANA = 2;
+    private static final int MEANING_CHARACTER_LIMIT = 60;
     private int numberOfQuestion;
     private List<Word> words;
     private Word currentWord;
@@ -275,7 +276,7 @@ public class WritingTestActivity extends AppCompatActivity {
         for (String part : partOfSource) {
             if (counter++ > 2)
                 break;
-            totalCharacter += getTotalCharacter(part);
+            totalCharacter += getTotalCharacter(part.trim());
         }
         return totalCharacter;
     }
@@ -289,12 +290,14 @@ public class WritingTestActivity extends AppCompatActivity {
      */
     private int getTotalCharacter(String part) {
         int totalCharacter = 0;
-        if (Character.isLetter(part.charAt(0)) || Character.isLetter(part.charAt(1)) || Character.isLetter(part.charAt(2))) {
-            int length = part.split("\\s+").length;
-            totalCharacter += length > 4 ? 4 : length;
-        } else {
-            totalCharacter += part.trim().length();
-            Log.i("Check_Part", part);
+        if (part.length() != 0) {
+            if (Character.isLetter(part.charAt(0)) || Character.isLetter(part.charAt(1))) {
+                int length = part.split("\\s+").length;
+                totalCharacter += length > 4 ? 4 : length;
+            } else {
+                totalCharacter += part.trim().length();
+                Log.i("Check_Part", part);
+            }
         }
         return totalCharacter;
     }
