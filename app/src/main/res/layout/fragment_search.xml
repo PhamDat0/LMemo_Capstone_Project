@@ -41,10 +41,11 @@
             android:text="Kanji"
             />
     </LinearLayout>
+
     <FrameLayout
+        android:id="@+id/searchFrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/searchFrameLayout">
-    </FrameLayout>
+        android:layout_height="match_parent"></FrameLayout>
+
 
 </LinearLayout>

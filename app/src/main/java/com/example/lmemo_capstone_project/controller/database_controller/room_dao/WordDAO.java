@@ -50,7 +50,10 @@ public interface WordDAO {
     @Query("SELECT WordID, Kana, Kanji, Meaning, PartOfSpeech FROM Word WHERE WordID=:flashcardID")
     Word[] getWordWithID(int flashcardID);
 
-    @Query("SELECT WordID, Kana, Kanji, Meaning, PartOfSpeech FROM Word, Flashcard " +
-            "WHERE WordID=FlashcardID AND WordID <> :correctID ORDER BY random() LIMIT 4")
+    @Query("SELECT * FROM (SELECT * FROM (SELECT WordID, Kana, Kanji, Meaning, PartOfSpeech FROM Word, Flashcard " +
+            "WHERE WordID=FlashcardID AND WordID <> :correctID ORDER BY random() LIMIT 3) UNION ALL " +
+            "SELECT * FROM (SELECT WordID, Kana, Kanji, Meaning, PartOfSpeech FROM Word, Flashcard " +
+            "WHERE WordID=FlashcardID AND WordID = :correctID)) " +
+            "ORDER BY random() LIMIT 4")
     Word[] getRandomWord(int correctID);
 }

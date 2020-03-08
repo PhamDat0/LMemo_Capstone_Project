@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.note_controller.AddNoteController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
+import java.util.Locale;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +31,8 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 public class WordSearchingFragment extends Fragment {
     Dialog addNoteDialog;
     Button btnOpenTakeNoteDialog;
+
+    private TextToSpeech textToSpeech;
 
     public WordSearchingFragment() {
         // Required empty public constructor
@@ -38,16 +43,26 @@ public class WordSearchingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_word_searching, container, false);
         btnOpenTakeNoteDialog = view.findViewById(R.id.btnOpenTakeNoteDialog);
+        wordSearchResult(view);
+        addNoteDialog = new Dialog(this.getActivity());
+        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.JAPAN);
+                }
+            }
+        });
+
         btnOpenTakeNoteDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAddNoteDialog(v);
             }
-        });
-        wordSearchResult(view);
-        addNoteDialog = new Dialog(this.getActivity());
-        return view;
 
+
+    });
+        return view;
     }
 
     private  void showAddNoteDialog(View v){
@@ -64,12 +79,18 @@ public class WordSearchingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    addNoteController.getNoteFromUI(word.getWordID(),txtNoteContent.getText().toString(),isPublic.isChecked());
-                    Toast.makeText(getContext(), "Add note successful", Toast.LENGTH_LONG).show();
+                    if(!txtNoteContent.getText().toString().isEmpty()){
+                        addNoteController.getNoteFromUI(word.getWordID(),txtNoteContent.getText().toString(),isPublic.isChecked());
+                        Toast.makeText(getContext(), "Add note successful", Toast.LENGTH_LONG).show();
+                        addNoteDialog.dismiss();
+                    }
+                    else {
+                        txtNoteContent.setError("Please enter note");
+                    }
                 }catch (Exception e){
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-                addNoteDialog.dismiss();
+
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -87,15 +108,22 @@ public class WordSearchingFragment extends Fragment {
 //            for (String key: bundle.keySet()) {
 //                Log.d ("myApplication", key + " is a key in the bundle");
 //            }
-            Word word = getWord();
             btnOpenTakeNoteDialog.setVisibility(View.VISIBLE);
+
+            final Word word = (Word) bundle.getSerializable("result");
 //            Log.i("Object",container.findViewById(R.id.tvKana)==null?"null":"tvKana");
             ((TextView) container.findViewById(R.id.tvKana)).setText("[ "+ word.getKana()+" ]");
             ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + word.getKanjiWriting());
             ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . "+ word.getMeaning());
             ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(" * " + word.getPartOfSpeech());
-
-
+            Button btPronunciation = container.findViewById(R.id.btPronunciation);
+            btPronunciation.setVisibility(View.VISIBLE);
+            btPronunciation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    textToSpeech.speak(word.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
+                }
+            });
         } else {
             Log.d ("myApplication",  " no key in bundle");
             btnOpenTakeNoteDialog.setVisibility(View.INVISIBLE);

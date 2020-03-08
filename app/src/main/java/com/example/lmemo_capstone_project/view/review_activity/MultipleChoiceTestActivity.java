@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class MultipleChoiceTestActivity extends AppCompatActivity {
@@ -36,24 +38,34 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
     private static final int MEANING_KANA = 5;
     private static final int MEANING_KANJI = 6;
     private static final double ACCURACY_CHANGE = 15;
-    private int number_of_question;
+    private int numberOfQuestion;
     private List<Word> words;
-    private List<Button> answerButton;
+    private List<Button> answerButtons;
     private Word currentWord;
     private Date startTime;
+    private TextToSpeech textToSpeech;
+    private int MEANING_CHARACTER_LIMIT = 60;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiple_choice_test);
         Intent intent = getIntent();
-        number_of_question = intent.getIntExtra(getString(R.string.number_of_questions), 0);
-        answerButton = new ArrayList<>();
-        answerButton.add((Button) findViewById(R.id.btAnswer1));
-        answerButton.add((Button) findViewById(R.id.btAnswer2));
-        answerButton.add((Button) findViewById(R.id.btAnswer3));
-        answerButton.add((Button) findViewById(R.id.btAnswer4));
-        for (Button b : answerButton) {
+        numberOfQuestion = intent.getIntExtra(getString(R.string.number_of_questions), 0);
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.JAPAN);
+                }
+            }
+        });
+        answerButtons = new ArrayList<>();
+        answerButtons.add((Button) findViewById(R.id.btAnswer1));
+        answerButtons.add((Button) findViewById(R.id.btAnswer2));
+        answerButtons.add((Button) findViewById(R.id.btAnswer3));
+        answerButtons.add((Button) findViewById(R.id.btAnswer4));
+        for (Button b : answerButtons) {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -69,6 +81,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
      *          この関数はフラッシュカードの練習情報を更新し、言葉情報を表示します。
      */
     private void answer(View v) {
+        Log.i("USER_ANSWER", ((Button) v).getText().toString());
         saveNewValueOfFlashcard(v);
         showResultDialog();
     }
@@ -90,10 +103,19 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         final Dialog container = new Dialog(MultipleChoiceTestActivity.this);
         container.setContentView(R.layout.fragment_word_searching);
         container.setTitle("Word information:");
+        textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
         ((TextView) container.findViewById(R.id.tvKana)).setText("[ " + currentWord.getKana() + " ]");
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
         ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning());
         ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(" * " + currentWord.getPartOfSpeech());
+        Button btPronunciation = container.findViewById(R.id.btPronunciation);
+        btPronunciation.setVisibility(View.VISIBLE);
+        btPronunciation.findViewById(R.id.btPronunciation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
+            }
+        });
         //ユーザーがこのダイアログを消したら、他の質問を始めます。
         container.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -107,20 +129,21 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
 
     /**
      * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
-     * この関数はユーザーが選んだボタンにより、練習情報をデータベースに更新します。
+     *          この関数はユーザーが選んだボタンにより、練習情報をデータベースに更新します。
      */
     private void saveNewValueOfFlashcard(View v) {
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
         Flashcard flashcard = flashcardDAO.getFlashCardByID(currentWord.getWordID())[0];
         flashcard.setSpeedPerCharacter(getSpeedPerCharacterBasedOnAnswer(flashcard, v));
         flashcard.setAccuracy(getAccuracyBasedOnAnswer(flashcard, v));
+        Log.i("FC_AFTER", "\n{\n\t" + flashcard.getFlashcardID() + "\n\t" + flashcard.getAccuracy() + "\n\t" + flashcard.getSpeedPerCharacter() + "\n\t" + flashcard.getLastState() + "\n}");
         flashcardDAO.updateFlashcard(flashcard);
         Log.i("SAVE_VALUE", "Success");
     }
 
     /**
      * @param flashcard 聞いている言葉に相当するフラッシュカード
-     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @param v         ビューオブジェクト。ユーザーの答えを持っているボタン
      * @return フラッシュカードの精度
      * この関数はユーザーの答えが正しいか確認し、新しい精度を返します。
      */
@@ -128,7 +151,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         double accuracy;
         if (isRightAnswer(v)) {
             accuracy = flashcard.getAccuracy() + ACCURACY_CHANGE;
-            return accuracy>100?100:accuracy;
+            return accuracy > 100 ? 100 : accuracy;
         } else {
             accuracy = flashcard.getAccuracy() - ACCURACY_CHANGE * 2;
             return accuracy < 0 ? 0 : accuracy;
@@ -144,12 +167,12 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         String answer = btAnswer.getText().toString();
         return answer.equals(currentWord.getKana())
                 || answer.equals(currentWord.getKanjiWriting())
-                || answer.equals(currentWord.getMeaning());
+                || currentWord.getMeaning().contains(answer);
     }
 
     /**
      * @param flashcard 聞いている言葉に相当するフラッシュカード
-     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @param v         ビューオブジェクト。ユーザーの答えを持っているボタン
      * @return このフラッシュカードでは、1つの字を読む時間は何時間かを返します。
      * ユーザーが選ぶための時間を割り出し、文字が何個あるを数えり、時間を文字数で割ります。
      */
@@ -162,7 +185,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         totalCharacter += calculateTotalCharacter(question);
         totalCharacter += calculateTotalCharacter(answer);
 
-        return ((timeToAnswer / 1000 / totalCharacter) + flashcard.getSpeedPerCharacter())/2;
+        return ((timeToAnswer / 2000 / totalCharacter) + flashcard.getSpeedPerCharacter()) / 2;
     }
 
     /**
@@ -175,6 +198,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         int counter = 0;
         int totalCharacter = 0;
         for (String part : partOfSource) {
+            part = part.trim();
             if (counter++ > 2)
                 break;
             totalCharacter += getTotalCharacter(part);
@@ -191,12 +215,14 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
      */
     private int getTotalCharacter(String part) {
         int totalCharacter = 0;
-        if (Character.isLetter(part.charAt(0)) || Character.isLetter(part.charAt(1)) || Character.isLetter(part.charAt(2))) {
-            int length = part.split("\\s+").length;
-            totalCharacter += length>4?4:length;
-        } else {
-            totalCharacter += part.trim().length();
-            Log.i("Check_Part", part);
+        if (part.length() != 0) {
+            if (Character.isLetter(part.charAt(0)) || Character.isLetter(part.charAt(1))) {
+                int length = part.split("\\s+").length;
+                totalCharacter += length > 4 ? 4 : length;
+            } else {
+                totalCharacter += part.trim().length();
+                Log.i("Check_Part", part);
+            }
         }
         return totalCharacter;
     }
@@ -212,7 +238,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
             public void run() {
                 LMemoDatabase database = LMemoDatabase.getInstance(getApplicationContext());
                 TestController testController = new TestController(database.wordDAO(), database.flashcardDAO());
-                words = testController.prepareTest(number_of_question);
+                words = testController.prepareTest(numberOfQuestion);
             }
         });
         loadQuestionThread.start();
@@ -236,20 +262,20 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
 
     /**
      * @param mode UIの制度; LOADING or TEST
-     * 制度により、UIを変更します。
+     *             制度により、UIを変更します。
      */
     private void setVisibleMode(int mode) {
         switch (mode) {
             case LOADING:
                 findViewById(R.id.tvMeaning).setVisibility(View.INVISIBLE);
-                for (Button b : answerButton) {
+                for (Button b : answerButtons) {
                     b.setVisibility(View.INVISIBLE);
                 }
                 findViewById(R.id.pbLoadQuestion).setVisibility(View.VISIBLE);
                 break;
             case TEST:
                 findViewById(R.id.tvMeaning).setVisibility(View.VISIBLE);
-                for (Button b : answerButton) {
+                for (Button b : answerButtons) {
                     b.setVisibility(View.VISIBLE);
                 }
                 findViewById(R.id.pbLoadQuestion).setVisibility(View.INVISIBLE);
@@ -261,10 +287,10 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
      */
     private void startTest() {
         setVisibleMode(TEST);
-//        Flashcard[] allVisibleFlashcard = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getAllVisibleFlashcard();
-//        for (Flashcard fc : allVisibleFlashcard) {
-//            Log.i("FC", "\n{\n\t" + fc.getFlashcardID() + "\n\t" + fc.getAccuracy() + "\n\t" + fc.getSpeedPerCharacter() + "\n\t" + fc.getLastState() + "\n}");
-//        }
+        Flashcard[] allVisibleFlashcard = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getAllVisibleFlashcard();
+        for (Flashcard fc : allVisibleFlashcard) {
+            Log.i("FC", "\n{\n\t" + fc.getFlashcardID() + "\n\t" + fc.getAccuracy() + "\n\t" + fc.getSpeedPerCharacter() + "\n\t" + fc.getLastState() + "\n}");
+        }
         Log.i("NUMBER_OF_QUIZ", words.size() + "");
         setupQuestion();
     }
@@ -287,74 +313,43 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                 mode = r.nextInt(2) == 0 ? KANA_MEANING : MEANING_KANA;
             }
             Log.i("KANJI_TEST", currentWord.getKanjiWriting() == null ? "null" : currentWord.getKanjiWriting());
-            int position;
             Word[] selection = LMemoDatabase.getInstance(getApplicationContext())
                     .wordDAO().getRandomWord(currentWord.getWordID());
             switch (mode) {
                 case KANJI_KANA:
                     ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getKanjiWriting());
-                    position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
-                        if (i == position) {
-                            answerButton.get(i).setText(currentWord.getKana());
-                        } else {
-                            answerButton.get(i).setText(selection[i].getKana());
-                        }
+                        answerButtons.get(i).setText(selection[i].getKana());
                     }
                     break;
                 case KANJI_MEANING:
                     ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getKanjiWriting());
-                    position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
-                        if (i == position) {
-                            answerButton.get(i).setText(currentWord.getMeaning());
-                        } else {
-                            answerButton.get(i).setText(selection[i].getMeaning());
-                        }
+                        answerButtons.get(i).setText(selection[i].getMeaning());
                     }
                     break;
                 case KANA_KANJI:
                     ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getKana());
-                    position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
-                        if (i == position) {
-                            answerButton.get(i).setText(currentWord.getKanjiWriting());
-                        } else {
-                            answerButton.get(i).setText((selection[i].getKanjiWriting() == null || selection[i].getKanjiWriting().length() == 0) ? "No Kanji" : selection[i].getKanjiWriting());
-                        }
+                        answerButtons.get(i).setText((selection[i].getKanjiWriting() == null || selection[i].getKanjiWriting().length() == 0) ? "No Kanji" : selection[i].getKanjiWriting());
                     }
                     break;
                 case KANA_MEANING:
                     ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getKana());
-                    position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
-                        if (i == position) {
-                            answerButton.get(i).setText(currentWord.getMeaning());
-                        } else {
-                            answerButton.get(i).setText(selection[i].getMeaning());
-                        }
+                        answerButtons.get(i).setText(selection[i].getMeaning());
                     }
                     break;
                 case MEANING_KANA:
                     ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getMeaning());
-                    position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
-                        if (i == position) {
-                            answerButton.get(i).setText(currentWord.getKana());
-                        } else {
-                            answerButton.get(i).setText(selection[i].getKana());
-                        }
+                        answerButtons.get(i).setText(selection[i].getKana());
                     }
                     break;
                 case MEANING_KANJI:
                     ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getMeaning());
-                    position = r.nextInt(4);
                     for (int i = 0; i < 4; i++) {
-                        if (i == position) {
-                            answerButton.get(i).setText(currentWord.getKanjiWriting());
-                        } else {
-                            answerButton.get(i).setText((selection[i].getKanjiWriting() == null || selection[i].getKanjiWriting().length() == 0) ? "No Kanji" : selection[i].getKanjiWriting());
-                        }
+                        answerButtons.get(i).setText((selection[i].getKanjiWriting() == null || selection[i].getKanjiWriting().length() == 0) ? "No Kanji" : selection[i].getKanjiWriting());
                     }
                     break;
             }

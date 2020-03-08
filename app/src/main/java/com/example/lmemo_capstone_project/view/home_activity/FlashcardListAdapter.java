@@ -148,6 +148,9 @@ public class FlashcardListAdapter extends BaseAdapter {
 //                        Flashcard flashcard = flashcards[0];
         flashcard.setLastState(99);
         flashcardDAO.updateFlashcard(flashcard);
+        if (flashcardDAO.getAllVisibleFlashcard().length == 0) {
+            aContext.findViewById(R.id.btReview).setVisibility(View.INVISIBLE);
+        }
 //        listFlashcard.remove(listFlashcard.get(position));
     }
 

@@ -7,59 +7,70 @@
     android:background="#DFD8D8"
     android:orientation="vertical"
     tools:context=".view.home_activity.WordSearchingFragment">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="7dp"
-        android:background="@color/white"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/tvKana"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:textSize="30sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#DA0F0F"
-          />
-        <TextView
-            android:id="@+id/tvKanji"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="25dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="@color/colorPrimary"
-             />
 
-        <TextView
-            android:id="@+id/tvPartOfSpeech"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="25dp"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#673AB7"
-            />
 
-        <TextView
-            android:id="@+id/tvMeaning"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="25dp"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/endblue"
-             />
-        <Button
-            android:id="@+id/btnOpenTakeNoteDialog"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Take note here" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_margin="7dp"
+            android:background="@color/white"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/tvKana"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#DA0F0F"
+                android:textSize="30sp" />
 
+            <TextView
+                android:id="@+id/tvKanji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPartOfSpeech"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#673AB7"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvMeaning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/endblue"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btPronunciation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="発音"
+                android:visibility="invisible" />
+            <Button
+                android:id="@+id/btnOpenTakeNoteDialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Take note here" />
+        </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>

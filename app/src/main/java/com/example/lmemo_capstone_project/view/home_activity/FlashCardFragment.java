@@ -107,7 +107,7 @@ public class FlashCardFragment extends Fragment {
                 Intent intent = new Intent(getContext(), WritingTestActivity.class);
                 switch (testMode) {
                     case MULTIPLE_CHOICE:
-                        if (numberOfFlashcards() <= 4) {
+                        if (numberOfFlashcards() < 4) {
                             Toast.makeText(getContext(), "There are not enough flashcards to create a multiple-choice test. Required at least 4.", Toast.LENGTH_LONG).show();
                         } else {
                             intent = new Intent(getContext(), MultipleChoiceTestActivity.class);
