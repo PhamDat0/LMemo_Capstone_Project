@@ -53,7 +53,6 @@ public class WordSearchingFragment extends Fragment {
                 }
             }
         });
-
         btnOpenTakeNoteDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

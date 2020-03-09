@@ -38,6 +38,8 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
     private static final int MEANING_KANA = 5;
     private static final int MEANING_KANJI = 6;
     private static final double ACCURACY_CHANGE = 15;
+    private static final double SLOPE_LREGRESS = 1.691;
+    private static final double INTERCEPT_LREGRESS = 0.3510;
     private int numberOfQuestion;
     private List<Word> words;
     private List<Button> answerButtons;
@@ -106,7 +108,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
         ((TextView) container.findViewById(R.id.tvKana)).setText("[ " + currentWord.getKana() + " ]");
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
-        ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning());
+        ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning().replace("\n", "\n . "));
         ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(" * " + currentWord.getPartOfSpeech());
         Button btPronunciation = container.findViewById(R.id.btPronunciation);
         btPronunciation.setVisibility(View.VISIBLE);
@@ -184,8 +186,10 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         int totalCharacter = 0;
         totalCharacter += calculateTotalCharacter(question);
         totalCharacter += calculateTotalCharacter(answer);
-
-        return ((timeToAnswer / 2000 / totalCharacter) + flashcard.getSpeedPerCharacter()) / 2;
+        Log.i("TOTAL_CHARACTER", "" + totalCharacter);
+        double result = ((timeToAnswer / 1000 / totalCharacter) * SLOPE_LREGRESS + INTERCEPT_LREGRESS + flashcard.getSpeedPerCharacter()) / 2;
+        Log.i("SPEED_PER_CHAR", "" + ((timeToAnswer / 1000 / totalCharacter)) + "s");
+        return result;
     }
 
     /**
@@ -199,9 +203,18 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         int totalCharacter = 0;
         for (String part : partOfSource) {
             part = part.trim();
-            if (counter++ > 2)
+            if (isEnglishCharacter(part.charAt(0))) {
+                if (counter++ > 1)
+                    break;
+                if (part.contains("\n")) {
+                    part = part.substring(0, part.indexOf('\n')).trim();
+                }
+                totalCharacter += getTotalCharacter(part);
+            } else {
+                totalCharacter += getTotalCharacter(part);
                 break;
-            totalCharacter += getTotalCharacter(part);
+            }
+
         }
         return totalCharacter;
     }
@@ -212,19 +225,28 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
      * 英語の文字を読むための時間は日本の文字を読むための時間に比べて短いので、割り出し方は文字を数える文字列によリ違います。
      * 英語なら、単語数を数えます。日本語なら、文字数を数える。
      * 英語の言葉は長い説明の場合、４個だけ返します。
+     * 日本語の長い言葉もよくすべて読まないので、5個だけ返します。
      */
     private int getTotalCharacter(String part) {
         int totalCharacter = 0;
         if (part.length() != 0) {
-            if (Character.isLetter(part.charAt(0)) || Character.isLetter(part.charAt(1))) {
+            if (isEnglishCharacter(part.charAt(0))) {
                 int length = part.split("\\s+").length;
-                totalCharacter += length > 4 ? 4 : length;
+                totalCharacter += length > 2 ? 2 : length;
+                Log.i("Check_Part_LATIN", part + " " + part.charAt(0));
             } else {
                 totalCharacter += part.trim().length();
-                Log.i("Check_Part", part);
+                totalCharacter = totalCharacter > 5 ? 5 : totalCharacter;
+                Log.i("Check_Part_JAPAN", part + " " + part.charAt(0));
             }
         }
         return totalCharacter;
+    }
+
+    private boolean isEnglishCharacter(char c) {
+
+        return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+
     }
 
     /**

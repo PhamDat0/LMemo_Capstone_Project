@@ -48,6 +48,6 @@ public class SharedPreferencesControllerTest {
     public void setKanjiDataStateToFalse() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         SharedPreferencesController.setKanjiDataState(context, false);
-        assertFalse(SharedPreferencesController.hasDictionaryData(context));
+        assertFalse(SharedPreferencesController.hasKanjiData(context));
     }
 }
