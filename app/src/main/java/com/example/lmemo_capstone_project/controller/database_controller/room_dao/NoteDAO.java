@@ -14,7 +14,7 @@ import java.util.List;
 
 @Dao
 public interface NoteDAO {
-    @Insert
+    @Insert()
     void insertNote(Note note);
 
     @Update
@@ -29,6 +29,8 @@ public interface NoteDAO {
     @Query("SELECT * FROM Note WHERE PublicStatus = :publicStatus")
     Note[] loadNotesByStatus(boolean publicStatus);
 
+    @Query("select * from note order by noteid desc limit 1")
+    Note[] getLastNote();
     @Transaction
     @Query("SELECT * FROM Note")
     List<NoteWithWords> getNotesWithWords();

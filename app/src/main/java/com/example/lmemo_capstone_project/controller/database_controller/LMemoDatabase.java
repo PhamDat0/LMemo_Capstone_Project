@@ -11,6 +11,7 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.KanjiDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteOfWordDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.SetFlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
@@ -79,5 +80,6 @@ public abstract class LMemoDatabase extends RoomDatabase {
 
     public abstract WordDAO wordDAO();
 
+    public abstract NoteOfWordDAO noteOfWordDAO();
 }
 

@@ -30,6 +30,12 @@
                 android:visible="true"
                 />
             <item
+                android:id="@+id/settings"
+                android:title="Settings"
+                android:icon="@drawable/ic_settings"
+                android:visible="true"/>
+
+            <item
                 android:id="@+id/myFlashcard"
                 android:title="Flash Card"
                 android:icon="@drawable/ic_flashcard"
@@ -50,6 +56,7 @@
         </menu>
 
     </item>
+
     <item android:title="Connect">
         <menu>
             <item

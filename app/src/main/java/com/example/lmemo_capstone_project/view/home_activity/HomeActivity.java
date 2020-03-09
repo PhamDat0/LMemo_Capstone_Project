@@ -181,6 +181,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"signIn");
             fragmentTransaction.commit();
         }
+
         else if(id == R.id.createAcc){
 
         }
@@ -198,6 +199,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             NotesFragment fragment = new NotesFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"Notes");
+            fragmentTransaction.commit();
+        }
+        else if(id == R.id.settings){
+            SettingsFragment fragment = new SettingsFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"Settings");
             fragmentTransaction.commit();
         }
         else if(id == R.id.contact){
