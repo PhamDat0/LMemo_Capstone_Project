@@ -36,6 +36,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("Open_successful", "Error is really in DB");
         onNewIntent(getIntent());
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);

@@ -38,9 +38,9 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 public class SearchFragment extends Fragment implements View.OnClickListener {
     private Button tabWord, tabKanji;
     private AutoCompleteTextView edtSearch;
-    private LMemoDatabase lMemoDatabase = LMemoDatabase.getInstance(getContext());
-    private WordDAO wordDAO = lMemoDatabase.wordDAO();
-    private FlashcardDAO flashcardDAO = lMemoDatabase.flashcardDAO();
+    private LMemoDatabase lMemoDatabase;
+    private WordDAO wordDAO;
+    private FlashcardDAO flashcardDAO;
     private Bundle bundle = new Bundle();
     private Word word;
     private Word dailyWord;
@@ -55,7 +55,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-
+        lMemoDatabase = LMemoDatabase.getInstance(getContext());
+        wordDAO = lMemoDatabase.wordDAO();
+        flashcardDAO = lMemoDatabase.flashcardDAO();
         edtSearch = ((AutoCompleteTextView) view.findViewById(R.id.txtSearch));
         performSuggestion();
 
