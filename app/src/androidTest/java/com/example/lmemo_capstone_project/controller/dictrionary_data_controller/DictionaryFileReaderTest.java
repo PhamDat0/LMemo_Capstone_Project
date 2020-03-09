@@ -40,6 +40,6 @@ public class DictionaryFileReaderTest {
         assertEquals(word.getKana(), "おとうさん / おとっさん");
         assertEquals(word.getKanjiWriting(), "お父さん / 御父さん");
         assertEquals(word.getPartOfSpeech(), "noun (common) (futsuumeishi)");
-        assertEquals(word.getMeaning(), "father / dad / papa / pa / pop / daddy / dada");
+        assertEquals(word.getMeaning(), "father / dad / papa / pa / pop / daddy / dada\n");
     }
 }

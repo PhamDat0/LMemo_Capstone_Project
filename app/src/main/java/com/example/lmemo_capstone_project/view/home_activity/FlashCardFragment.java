@@ -101,22 +101,30 @@ public class FlashCardFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 EditText etNumberOfQuestion = dialog.findViewById(R.id.etNumberOfQuestion);
-                int numberOfTest = Integer.parseInt(etNumberOfQuestion.getText().toString());
-                int checkedRadioButtonId = ((RadioGroup) dialog.findViewById(R.id.rgTestMode)).getCheckedRadioButtonId();
-                int testMode = ((RadioButton) dialog.findViewById(checkedRadioButtonId)).getText().toString().equals("Writing") ? WRITING : MULTIPLE_CHOICE;
-                Intent intent = new Intent(getContext(), WritingTestActivity.class);
-                switch (testMode) {
-                    case MULTIPLE_CHOICE:
-                        if (numberOfFlashcards() < 4) {
-                            Toast.makeText(getContext(), "There are not enough flashcards to create a multiple-choice test. Required at least 4.", Toast.LENGTH_LONG).show();
-                        } else {
-                            intent = new Intent(getContext(), MultipleChoiceTestActivity.class);
+                if (etNumberOfQuestion.getText().toString().length() != 0) {
+                    int numberOfTest = Integer.parseInt(etNumberOfQuestion.getText().toString());
+                    if (numberOfTest == 0 || numberOfTest > numberOfFlashcards()) {
+                        etNumberOfQuestion.setError(numberOfTest == 0 ? "This must different than 0" : "Must smaller than " + (numberOfFlashcards() + 1));
+                    } else {
+                        int checkedRadioButtonId = ((RadioGroup) dialog.findViewById(R.id.rgTestMode)).getCheckedRadioButtonId();
+                        int testMode = ((RadioButton) dialog.findViewById(checkedRadioButtonId)).getText().toString().equals("Writing") ? WRITING : MULTIPLE_CHOICE;
+                        Intent intent = new Intent(getContext(), WritingTestActivity.class);
+                        switch (testMode) {
+                            case MULTIPLE_CHOICE:
+                                if (numberOfFlashcards() < 4) {
+                                    Toast.makeText(getContext(), "There are not enough flashcards to create a multiple-choice test. Required at least 4.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    intent = new Intent(getContext(), MultipleChoiceTestActivity.class);
+                                }
+                                break;
                         }
-                        break;
+                        intent.putExtra(getString(R.string.number_of_questions), numberOfTest);
+                        getActivity().startActivityForResult(intent, HomeActivity.TEST_FLASHCARD_REQUEST_CODE);
+                        dialog.dismiss();
+                    }
+                } else {
+                    etNumberOfQuestion.setError("This is required");
                 }
-                intent.putExtra(getString(R.string.number_of_questions), numberOfTest);
-                getActivity().startActivityForResult(intent, HomeActivity.TEST_FLASHCARD_REQUEST_CODE);
-                dialog.dismiss();
             }
         });
         dialog.findViewById(R.id.btCancel).setOnClickListener(new View.OnClickListener() {
