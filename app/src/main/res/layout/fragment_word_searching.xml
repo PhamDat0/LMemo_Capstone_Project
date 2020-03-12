@@ -12,6 +12,9 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
+<!--    <ScrollView-->
+<!--&gt;>>>>>> 334617ccff8e2affd8d87dadf4179046710db30c-->
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,15 +23,30 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvKana"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#DA0F0F"
-                android:textSize="30sp" />
-
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvKana"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="20dp"
+                    android:autoSizeMaxTextSize="24dp"
+                    android:textColor="#DA0F0F"
+                    android:textSize="24sp" />
+                <ImageButton
+                    android:id="@+id/btPronunciation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/ic_speaker"
+                    android:visibility="invisible" />
+            </LinearLayout>
             <TextView
                 android:id="@+id/tvKanji"
                 android:layout_width="wrap_content"
@@ -59,12 +77,13 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btPronunciation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="発音"
-                android:visibility="invisible" />
+<!--            <Button-->
+<!--<<<<<<< HEAD-->
+<!--                android:id="@+id/btPronunciation"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="発音"-->
+<!--                android:visibility="invisible" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -90,6 +109,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+<!--=======-->
+<!--                android:id="@+id/btnOpenTakeNoteDialog"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Take note here"-->
+<!--                android:visibility="gone" />-->
+<!--&gt;>>>>>> 334617ccff8e2affd8d87dadf4179046710db30c-->
         </LinearLayout>
 
     </FrameLayout>

@@ -2,6 +2,7 @@ package com.example.lmemo_capstone_project.controller;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.lmemo_capstone_project.R;
 
@@ -32,5 +33,6 @@ public class SharedPreferencesController {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(context.getString(R.string.kanji_state), hasData);
         editor.commit();
+        Log.i("TEST", hasKanjiData(context) + "");
     }
 }

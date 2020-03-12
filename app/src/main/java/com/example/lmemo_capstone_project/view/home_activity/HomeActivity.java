@@ -20,7 +20,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
-import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,9 +32,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     ActionBarDrawerToggle mDrawerToggle;
     private FirebaseAuth mAuth;
     private int wordID=-1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("Open_successful", "Error is really in DB");
         onNewIntent(getIntent());
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -82,9 +83,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         else {
             Log.w("HomeActivity", "Nothing found ");
         }
-
-
         DefaultFragment();
+        wordID = -1;
     }
 
     //set item to reward table in database

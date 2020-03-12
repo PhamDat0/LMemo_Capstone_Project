@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,7 +62,6 @@ public class WordSearchingFragment extends Fragment {
                 }
             }
         });
-
         btnOpenTakeNoteDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,7 +126,7 @@ public class WordSearchingFragment extends Fragment {
             ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + word.getKanjiWriting());
             ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + word.getMeaning().replace("\n", "\n . "));
             ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(" * " + word.getPartOfSpeech());
-            Button btPronunciation = container.findViewById(R.id.btPronunciation);
+            ImageButton btPronunciation = container.findViewById(R.id.btPronunciation);
             btPronunciation.setVisibility(View.VISIBLE);
             btPronunciation.setOnClickListener(new View.OnClickListener() {
                 @Override

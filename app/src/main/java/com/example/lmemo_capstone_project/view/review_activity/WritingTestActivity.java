@@ -165,7 +165,7 @@ public class WritingTestActivity extends AppCompatActivity {
         textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
         ((TextView) container.findViewById(R.id.tvKana)).setText("[ " + currentWord.getKana() + " ]");
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
-        ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning());
+        ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning().replace("\n", "\n . "));
         ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(" * " + currentWord.getPartOfSpeech());
         container.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -260,7 +260,9 @@ public class WritingTestActivity extends AppCompatActivity {
         totalCharacter += calculateTotalCharacter(question);
         totalCharacter += answer.length();
         Log.i("Total_Character", totalCharacter + "");
-        return ((timeToAnswer / 1000 / totalCharacter) * 0.5 + flashcard.getSpeedPerCharacter()) * 0.5;
+        double result = ((timeToAnswer / 1000 / totalCharacter) * 0.5 + flashcard.getSpeedPerCharacter()) * 0.5;
+        Log.i("SPEED_PER_CHAR", "" + (timeToAnswer / 1000 / totalCharacter) + "s");
+        return result;
     }
 
     /**
@@ -274,11 +276,24 @@ public class WritingTestActivity extends AppCompatActivity {
         int counter = 0;
         int totalCharacter = 0;
         for (String part : partOfSource) {
-            if (counter++ > 2)
+            part = part.trim();
+            if (isEnglishCharacter(part.charAt(0))) {
+                if (counter++ > 1)
+                    break;
+                totalCharacter += getTotalCharacter(part);
+            } else {
+                totalCharacter += getTotalCharacter(part);
                 break;
-            totalCharacter += getTotalCharacter(part.trim());
+            }
+
         }
         return totalCharacter;
+    }
+
+    private boolean isEnglishCharacter(char c) {
+
+        return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+
     }
 
     /**
@@ -291,12 +306,13 @@ public class WritingTestActivity extends AppCompatActivity {
     private int getTotalCharacter(String part) {
         int totalCharacter = 0;
         if (part.length() != 0) {
-            if (Character.isLetter(part.charAt(0)) || Character.isLetter(part.charAt(1))) {
+            if (isEnglishCharacter(part.charAt(0))) {
                 int length = part.split("\\s+").length;
-                totalCharacter += length > 4 ? 4 : length;
+                totalCharacter += length > 2 ? 2 : length;
+                Log.i("Check_Part_LATIN", part + " " + part.charAt(0));
             } else {
                 totalCharacter += part.trim().length();
-                Log.i("Check_Part", part);
+                Log.i("Check_Part_JAPAN", part + " " + part.charAt(0));
             }
         }
         return totalCharacter;

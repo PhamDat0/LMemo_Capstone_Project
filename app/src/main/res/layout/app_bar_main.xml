@@ -14,6 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:id="@+id/toolbar"
+        app:layout_collapseMode="pin"
+        app:layout_scrollFlags="scroll|enterAlways"
         android:background="@drawable/gradientbackground"
         app:popupTheme="@style/AppTheme.PopupOverLay"
         />
