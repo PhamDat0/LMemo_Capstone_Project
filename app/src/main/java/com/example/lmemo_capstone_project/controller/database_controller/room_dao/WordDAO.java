@@ -19,6 +19,9 @@ public interface WordDAO {
     @Update
     void updateWord(Word word);
 
+    @Query("SELECT WordID FROM Word")
+    Word[] getAllWordID();
+
     @Query("DELETE FROM Word")
     void deleteAllWords();
 

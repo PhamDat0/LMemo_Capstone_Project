@@ -9,7 +9,7 @@
     tools:context=".view.home_activity.WordSearchingFragment">
 
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
@@ -65,12 +65,33 @@
                 android:layout_height="wrap_content"
                 android:text="発音"
                 android:visibility="invisible" />
-            <Button
-                android:id="@+id/btnOpenTakeNoteDialog"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Take note here" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnOpenTakeNoteDialog"
+                    android:layout_width="292dp"
+                    android:layout_height="wrap_content"
+                    android:text="Take note here" />
+
+                <Button
+                    android:id="@+id/btnRefresh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Refresh" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/NoteListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
 
-    </ScrollView>
+    </FrameLayout>
+
 </LinearLayout>

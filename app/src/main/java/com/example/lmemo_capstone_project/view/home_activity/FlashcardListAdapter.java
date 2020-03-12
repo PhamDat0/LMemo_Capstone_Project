@@ -28,8 +28,6 @@ public class FlashcardListAdapter extends BaseAdapter {
     private ArrayList<Word> listFlashcard;
     private LayoutInflater layoutInflater;
     private FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(aContext).flashcardDAO();
-//    private int pos;
-
 
     public FlashcardListAdapter(Activity aContext, ArrayList<Word> listFlashcard) {
         this.aContext = aContext;
@@ -54,7 +52,6 @@ public class FlashcardListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-//        pos = position;
         if (convertView == null) {
             convertView = LayoutInflater.from(aContext).inflate(R.layout.activity_flashcard_list_adapter, null);
             holder = new ViewHolder();
@@ -65,11 +62,6 @@ public class FlashcardListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-//        Word w = listFlashcard.get(position);
-
-//        Flashcard[] flashcards = flashcardDAO.getAllFlashcard();
-//        int flashcardID = flashcards[0].getFlashcardID();
 
         holder.tvKanji.setText(listFlashcard.get(position).getKanjiWriting());
         holder.tvKanji.setOnClickListener(new View.OnClickListener() {
@@ -99,15 +91,6 @@ public class FlashcardListAdapter extends BaseAdapter {
         return convertView;
     }
 
-//    private void checkingAndRemoveFlashcard() {
-//        Flashcard flashcard = flashcardDAO.getFlashCardByID(listFlashcard.get().getWordID())[0];
-//        flashcard.setLastState(99);
-//        flashcardDAO.updateFlashcard(flashcard);
-//
-//        notifyDataSetChanged();
-//    }
-
-
 
     static class ViewHolder {
         TextView tvKanji;
@@ -115,35 +98,11 @@ public class FlashcardListAdapter extends BaseAdapter {
         ImageButton btnDelete;
     }
 
-
-
-//    private void alert(final int position) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(aContext);
-//        builder.setCancelable(true);
-//        builder.setTitle("Delete Flashcard");
-//        builder.setMessage("Are you sure?");
-//        builder.setPositiveButton("Confirm",
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Delete(position);
-//                    }
-//                });
-//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.cancel();
-//            }
-//        });
-//        AlertDialog dialog = builder.create();
-//        dialog.show();
-//    }
-
     /**
      *この関数フラッシュカードを削除します
      */
     private void delete(int position) {
-        Log.d("myapp", position + "" + " || " + listFlashcard.get(position).getWordID());
+//        Log.d("myapp", position + "" + " || " + listFlashcard.get(position).getWordID());
         Flashcard flashcard = flashcardDAO.getFlashCardByID(listFlashcard.get(position).getWordID())[0];
 //                        Flashcard flashcard = flashcards[0];
         flashcard.setLastState(99);
@@ -151,13 +110,7 @@ public class FlashcardListAdapter extends BaseAdapter {
         if (flashcardDAO.getAllVisibleFlashcard().length == 0) {
             aContext.findViewById(R.id.btReview).setVisibility(View.INVISIBLE);
         }
-//        listFlashcard.remove(listFlashcard.get(position));
     }
-
-//    public interface {
-//        void onItemSelected(String key, String Value);
-//    }s
-
 
     private void flashcardInfo(int position,View v) {
         AppCompatActivity activity = (AppCompatActivity) v.getContext();

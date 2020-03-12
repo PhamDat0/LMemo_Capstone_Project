@@ -114,17 +114,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
     }
     //Suggestion word Function
-    private void performSuggestion() {
-//        final String searchWord = edtSearch.getText().toString();
-//        String s = searchWord.replace("*", "%");
-//        s = s.replace("?", "_");
-//        if((!s.contains("%"))&&(!s.contains("_"))) {
-//            s += "%";
-//        }
-//        Log.i("STRING",s);
-//        final String[] kanji = wordDAO.getKanji(s);
-//        Log.i("Result_Length",kanji.length+"");
 
+
+    /**
+     * この関数は日本語の言葉でSQLiteデータベースを勧めます。
+     */
+    private void performSuggestion() {
         //set threshold for suggestion show up
         edtSearch.setThreshold(1);
 
@@ -174,6 +169,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
 
     //Perform Search desire word in database
+    /**
+     * この関数は言葉でSQLiteデータベースを検索します
+     */
     private Word performSearch() {
         String searchWord = edtSearch.getText().toString();
         if (searchWord.trim().length() == 0)
@@ -222,6 +220,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     }
 
     //Transfer data between fragment
+
+
+    /**
+     * @param word
+     * この関数は2つのフラグメントのデータを交換します。
+     */
     private void fragmentDataTransfer(Word word) {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         WordSearchingFragment wordFragment = new WordSearchingFragment();
@@ -231,14 +235,22 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         fragmentTransaction.commit();
     }
 
+    /**
+     *　この関数は言葉をフラッシュカードに追加する
+     */
     //Add searched word to flashcard
     private void addToFlashCard() {
 
         Word word = performSearch();
         addFlashCardToSQLite(word);
 //        Log.d ("myApplication",  "id:"+ flashcardDAO.getAllFlashcard().toString());
-
     }
+
+
+    /**
+     * @param word
+     * この関数はフラッシュカードをSQLiteに追加します
+     */
     private void addFlashCardToSQLite(Word word){
         flashcard = new Flashcard();
         if (word.getWordID() != -1) {

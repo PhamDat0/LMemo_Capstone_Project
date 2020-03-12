@@ -12,13 +12,17 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddNoteController {
@@ -27,6 +31,7 @@ public class AddNoteController {
     private NoteOfWordDAO noteOfWordDAO;
     private FirebaseFirestore db;
     private User user;
+
     public AddNoteController(Activity activity){
         db = FirebaseFirestore.getInstance();
         userDB = LMemoDatabase.getInstance(activity.getApplicationContext()).userDAO();
@@ -64,12 +69,8 @@ public class AddNoteController {
             else {
                 addNoteToCloudFireStore(note, wordID);
                 noteOfWordDAO.insertNoteOfWord(noteOfWord);
-
             }
         }
-
-
-
     }
     public void addNoteToSQLite(Note note){
         noteDB.insertNote(note);
@@ -87,7 +88,9 @@ public class AddNoteController {
             public void onSuccess(DocumentReference documentReference) {
                 Log.w("AddNoteActivity", "Add new note successful " + documentReference.getId());
                 note.setOnlineID(documentReference.getId());
-                db.collection("notes").document(documentReference.getId()).collection("words").document(""+wordID).set(addWordOfNote).addOnSuccessListener(new OnSuccessListener<Void>() {
+                db.collection("notes").document(documentReference.getId()).collection("words").
+                        document(""+wordID).set(addWordOfNote).
+                        addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.w("AddWordSuccessfull", "Add word to note successful");

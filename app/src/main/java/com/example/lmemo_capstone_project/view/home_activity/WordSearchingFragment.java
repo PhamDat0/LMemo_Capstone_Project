@@ -1,5 +1,6 @@
 package com.example.lmemo_capstone_project.view.home_activity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +21,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.note_controller.AddNoteController;
+import com.example.lmemo_capstone_project.controller.note_controller.GetPublicNoteController;
+import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
 import java.util.Locale;
@@ -29,8 +33,11 @@ import java.util.Locale;
  *
  */
 public class WordSearchingFragment extends Fragment {
-    Dialog addNoteDialog;
-    Button btnOpenTakeNoteDialog;
+    private Dialog addNoteDialog;
+    private Button btnOpenTakeNoteDialog;
+    private ListView noteListView;
+    private int wordID;
+    private Button btnRefresh;
 
     private TextToSpeech textToSpeech;
 
@@ -43,6 +50,7 @@ public class WordSearchingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_word_searching, container, false);
         btnOpenTakeNoteDialog = view.findViewById(R.id.btnOpenTakeNoteDialog);
+        btnRefresh = view.findViewById(R.id.btnRefresh);
         wordSearchResult(view);
         addNoteDialog = new Dialog(this.getActivity());
         textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
@@ -59,9 +67,8 @@ public class WordSearchingFragment extends Fragment {
             public void onClick(View v) {
                 showAddNoteDialog(v);
             }
-
-
     });
+        refreshNoteList();
         return view;
     }
 
@@ -102,6 +109,7 @@ public class WordSearchingFragment extends Fragment {
         addNoteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         addNoteDialog.show();
     }
+
     private void wordSearchResult(View container) {
         Bundle bundle = getArguments();
         if (bundle  != null) {
@@ -109,9 +117,11 @@ public class WordSearchingFragment extends Fragment {
 //                Log.d ("myApplication", key + " is a key in the bundle");
 //            }
             btnOpenTakeNoteDialog.setVisibility(View.VISIBLE);
+            btnRefresh.setVisibility(View.VISIBLE);
 
             final Word word = (Word) bundle.getSerializable("result");
 //            Log.i("Object",container.findViewById(R.id.tvKana)==null?"null":"tvKana");
+            wordID = word.getWordID();
             ((TextView) container.findViewById(R.id.tvKana)).setText("[ "+ word.getKana()+" ]");
             ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + word.getKanjiWriting());
             ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + word.getMeaning().replace("\n", "\n . "));
@@ -127,7 +137,9 @@ public class WordSearchingFragment extends Fragment {
         } else {
             Log.d ("myApplication",  " no key in bundle");
             btnOpenTakeNoteDialog.setVisibility(View.INVISIBLE);
+            btnRefresh.setVisibility(View.INVISIBLE);
         }
+        loadPublicNote(container);
     }
     private Word getWord(){
         Bundle bundle = getArguments();
@@ -135,4 +147,19 @@ public class WordSearchingFragment extends Fragment {
         return word;
     }
 
+    private void loadPublicNote(View view) {
+        noteListView = view.findViewById(R.id.NoteListView);
+        GetPublicNoteController getPublicNoteController = new GetPublicNoteController(getActivity());
+        getPublicNoteController.getAllNoteFromFirebase(noteListView,this.getActivity(),wordID);
+    }
+
+    private void refreshNoteList() {
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GetPublicNoteController getPublicNoteController = new GetPublicNoteController(getActivity());
+                getPublicNoteController.getAllNoteFromFirebase(noteListView,getActivity(),wordID);
+            }
+        });
+    }
 }

@@ -29,6 +29,9 @@ public interface NoteDAO {
     @Query("SELECT * FROM Note WHERE PublicStatus = :publicStatus")
     Note[] loadNotesByStatus(boolean publicStatus);
 
+//    @Query("SELECT DisplayName, NoteContent FROM Note N, User U, Word W WHERE N.UserID = U.UserID AND PublicStatus = 1")
+//    Note[] loadNotesAssociateToWord();
+
     @Query("select * from note order by noteid desc limit 1")
     Note[] getLastNote();
     @Transaction
