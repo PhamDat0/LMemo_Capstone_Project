@@ -79,17 +79,18 @@ public class AddNoteController {
 //        int[] x = new int[1];
 //        x[0] = wordID;
         addNote.put("wordID", Arrays.asList(wordID));
-        final Map<String, Object> addWordOfNote = new HashMap<>();
-        addWordOfNote.put("wordID", wordID);
         db.collection("notes").add(addNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.w("AddNoteActivity", "Add new note successful " + documentReference.getId());
                 note.setOnlineID(documentReference.getId());
+                noteDB.updateNote(note);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                note.setPublic(false);
+                noteDB.updateNote(note);
                 Log.w("AddNoteActivity", "Error writing document");
             }
         });
