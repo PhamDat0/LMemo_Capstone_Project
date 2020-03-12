@@ -59,6 +59,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         wordDAO = lMemoDatabase.wordDAO();
         flashcardDAO = lMemoDatabase.flashcardDAO();
         edtSearch = ((AutoCompleteTextView) view.findViewById(R.id.txtSearch));
+        edtSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtSearch.setText("");
+            }
+        });
         performSuggestion();
 
         //Make "Search" keyboard
@@ -262,13 +268,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 flashcard.setAccuracy(0);
                 flashcard.setSpeedPerCharacter(10);
                 flashcard.setLastState(1);
-                flashcard.setKanaLength(word.getKana().split("/")[0].length());
+                flashcard.setKanaLength(word.getKana().split("/")[0].trim().length());
                 flashcardDAO.insertFlashcard(flashcard);
             } else if (checkingID.length!=0 && checkingID[0].getLastState()==99){
                 flashcard.setFlashcardID(checkingID[0].getFlashcardID());
                 flashcard.setAccuracy(checkingID[0].getAccuracy());
                 flashcard.setSpeedPerCharacter(checkingID[0].getSpeedPerCharacter());
-                flashcard.setKanaLength(word.getKana().split("/")[0].length());
+                flashcard.setKanaLength(word.getKana().split("/")[0].trim().length());
                 flashcard.setLastState(1);
                 flashcardDAO.updateFlashcard(flashcard);
             }
@@ -314,10 +320,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             throw new WordNotFoundException("That word does not exist.");
         if (word.getWordID() == -2)
             throw new WordNotFoundException("You didn't enter anything.");
-            fragmentDataTransfer(word);
-            addToFlashCard();
-            edtSearch.dismissDropDown();
-            hideKeyboard(getActivity());
+        fragmentDataTransfer(word);
+        addToFlashCard();
+        edtSearch.dismissDropDown();
+        hideKeyboard(getActivity());
     }
 
     private class WordNotFoundException extends Exception {

@@ -14,9 +14,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lmemo_capstone_project.R;
-import com.example.lmemo_capstone_project.controller.TestController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
+import com.example.lmemo_capstone_project.controller.test_controller.TestController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
@@ -25,21 +26,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 public class MultipleChoiceTestActivity extends AppCompatActivity {
 
     private static final int LOADING = 1;
     private static final int TEST = 2;
-    private static final int KANJI_KANA = 1;
-    private static final int KANJI_MEANING = 2;
-    private static final int KANA_KANJI = 3;
-    private static final int KANA_MEANING = 4;
-    private static final int MEANING_KANA = 5;
-    private static final int MEANING_KANJI = 6;
-    private static final double ACCURACY_CHANGE = 15;
-    private static final double SLOPE_LREGRESS = 1.691;
-    private static final double INTERCEPT_LREGRESS = 0.3510;
+    public static final int KANJI_KANA = 1;
+    public static final int KANJI_MEANING = 2;
+    public static final int KANA_KANJI = 3;
+    public static final int KANA_MEANING = 4;
+    public static final int MEANING_KANA = 5;
+    public static final int MEANING_KANJI = 6;
     private int numberOfQuestion;
     private List<Word> words;
     private List<Button> answerButtons;
@@ -47,12 +44,16 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
     private Date startTime;
     private TextToSpeech textToSpeech;
     private int MEANING_CHARACTER_LIMIT = 60;
+    private TestController testController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiple_choice_test);
         Intent intent = getIntent();
+        WordDAO wordDAO = LMemoDatabase.getInstance(getApplicationContext()).wordDAO();
+        FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
+        testController = new TestController(wordDAO, flashcardDAO, TestController.MULTIPLE_CHOICE_MODE);
         numberOfQuestion = intent.getIntExtra(getString(R.string.number_of_questions), 0);
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -134,119 +135,8 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
      *          この関数はユーザーが選んだボタンにより、練習情報をデータベースに更新します。
      */
     private void saveNewValueOfFlashcard(View v) {
-        FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
-        Flashcard flashcard = flashcardDAO.getFlashCardByID(currentWord.getWordID())[0];
-        flashcard.setSpeedPerCharacter(getSpeedPerCharacterBasedOnAnswer(flashcard, v));
-        flashcard.setAccuracy(getAccuracyBasedOnAnswer(flashcard, v));
-        Log.i("FC_AFTER", "\n{\n\t" + flashcard.getFlashcardID() + "\n\t" + flashcard.getAccuracy() + "\n\t" + flashcard.getSpeedPerCharacter() + "\n\t" + flashcard.getLastState() + "\n}");
-        flashcardDAO.updateFlashcard(flashcard);
-        Log.i("SAVE_VALUE", "Success");
-    }
-
-    /**
-     * @param flashcard 聞いている言葉に相当するフラッシュカード
-     * @param v         ビューオブジェクト。ユーザーの答えを持っているボタン
-     * @return フラッシュカードの精度
-     * この関数はユーザーの答えが正しいか確認し、新しい精度を返します。
-     */
-    private double getAccuracyBasedOnAnswer(Flashcard flashcard, View v) {
-        double accuracy;
-        if (isRightAnswer(v)) {
-            accuracy = flashcard.getAccuracy() + ACCURACY_CHANGE;
-            return accuracy > 100 ? 100 : accuracy;
-        } else {
-            accuracy = flashcard.getAccuracy() - ACCURACY_CHANGE * 2;
-            return accuracy < 0 ? 0 : accuracy;
-        }
-    }
-
-    /**
-     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
-     * @return ユーザーの答えは正しかったら、trueを返します。
-     */
-    private boolean isRightAnswer(View v) {
-        Button btAnswer = (Button) v;
-        String answer = btAnswer.getText().toString();
-        return answer.equals(currentWord.getKana())
-                || answer.equals(currentWord.getKanjiWriting())
-                || currentWord.getMeaning().contains(answer);
-    }
-
-    /**
-     * @param flashcard 聞いている言葉に相当するフラッシュカード
-     * @param v         ビューオブジェクト。ユーザーの答えを持っているボタン
-     * @return このフラッシュカードでは、1つの字を読む時間は何時間かを返します。
-     * ユーザーが選ぶための時間を割り出し、文字が何個あるを数えり、時間を文字数で割ります。
-     */
-    private double getSpeedPerCharacterBasedOnAnswer(Flashcard flashcard, View v) {
-        double timeToAnswer = new Date().getTime() - startTime.getTime();
         String question = ((TextView) findViewById(R.id.tvMeaning)).getText().toString();
-        String answer = ((Button) v).getText().toString();
-
-        int totalCharacter = 0;
-        totalCharacter += calculateTotalCharacter(question);
-        totalCharacter += calculateTotalCharacter(answer);
-        Log.i("TOTAL_CHARACTER", "" + totalCharacter);
-        double result = ((timeToAnswer / 1000 / totalCharacter) * SLOPE_LREGRESS + INTERCEPT_LREGRESS + flashcard.getSpeedPerCharacter()) / 2;
-        Log.i("SPEED_PER_CHAR", "" + ((timeToAnswer / 1000 / totalCharacter)) + "s");
-        return result;
-    }
-
-    /**
-     * @param source 文字を数える文字列
-     * @return 文字数
-     * ユーザーはあまりすべてを読まないので、２，３パートを数えるだけです。２，３パートに別れ、それぞれ数えます。
-     */
-    private int calculateTotalCharacter(String source) {
-        String[] partOfSource = source.split("/");
-        int counter = 0;
-        int totalCharacter = 0;
-        for (String part : partOfSource) {
-            part = part.trim();
-            if (isEnglishCharacter(part.charAt(0))) {
-                if (counter++ > 1)
-                    break;
-                if (part.contains("\n")) {
-                    part = part.substring(0, part.indexOf('\n')).trim();
-                }
-                totalCharacter += getTotalCharacter(part);
-            } else {
-                totalCharacter += getTotalCharacter(part);
-                break;
-            }
-
-        }
-        return totalCharacter;
-    }
-
-    /**
-     * @param part 文字を数える文字列
-     * @return 文字数
-     * 英語の文字を読むための時間は日本の文字を読むための時間に比べて短いので、割り出し方は文字を数える文字列によリ違います。
-     * 英語なら、単語数を数えます。日本語なら、文字数を数える。
-     * 英語の言葉は長い説明の場合、４個だけ返します。
-     * 日本語の長い言葉もよくすべて読まないので、5個だけ返します。
-     */
-    private int getTotalCharacter(String part) {
-        int totalCharacter = 0;
-        if (part.length() != 0) {
-            if (isEnglishCharacter(part.charAt(0))) {
-                int length = part.split("\\s+").length;
-                totalCharacter += length > 2 ? 2 : length;
-                Log.i("Check_Part_LATIN", part + " " + part.charAt(0));
-            } else {
-                totalCharacter += part.trim().length();
-                totalCharacter = totalCharacter > 5 ? 5 : totalCharacter;
-                Log.i("Check_Part_JAPAN", part + " " + part.charAt(0));
-            }
-        }
-        return totalCharacter;
-    }
-
-    private boolean isEnglishCharacter(char c) {
-
-        return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
-
+        testController.updateFlashcard(v, currentWord, startTime, question);
     }
 
     /**
@@ -258,8 +148,6 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         final Thread loadQuestionThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                LMemoDatabase database = LMemoDatabase.getInstance(getApplicationContext());
-                TestController testController = new TestController(database.wordDAO(), database.flashcardDAO());
                 words = testController.prepareTest(numberOfQuestion);
             }
         });
@@ -329,14 +217,9 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
             Flashcard fc = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getFlashCardByID(currentWord.getWordID())[0];
             Log.i("FC", "\n{\n\t" + fc.getFlashcardID() + "\n\t" + fc.getAccuracy() + "\n\t" + fc.getSpeedPerCharacter() + "\n\t" + fc.getLastState() + "\n}");
             words.remove(0);
-            Random r = new Random();
-            int mode = r.nextInt(6) + 1;
-            if (currentWord.getKanjiWriting() == null || currentWord.getKanjiWriting().length() == 0) {
-                mode = r.nextInt(2) == 0 ? KANA_MEANING : MEANING_KANA;
-            }
+            int mode = testController.getRandomMode(currentWord);
             Log.i("KANJI_TEST", currentWord.getKanjiWriting() == null ? "null" : currentWord.getKanjiWriting());
-            Word[] selection = LMemoDatabase.getInstance(getApplicationContext())
-                    .wordDAO().getRandomWord(currentWord.getWordID());
+            Word[] selection = testController.getSelection(currentWord.getWordID());
             switch (mode) {
                 case KANJI_KANA:
                     ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getKanjiWriting());

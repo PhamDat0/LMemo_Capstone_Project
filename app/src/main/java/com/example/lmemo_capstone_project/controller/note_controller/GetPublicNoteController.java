@@ -5,32 +5,18 @@ import android.util.Log;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
-import com.example.lmemo_capstone_project.model.room_db_entity.Word;
-import com.example.lmemo_capstone_project.model.room_db_entity.relationship_classes.UserWithNotes;
 import com.example.lmemo_capstone_project.view.home_activity.NoteListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collector;
 
 public class GetPublicNoteController {
     private FirebaseFirestore db;
@@ -62,11 +48,11 @@ public class GetPublicNoteController {
 //            }
 //        });
 
-        int[] x = new int[1];
-        x[0] = wordID;
+//        final Map<String, Object> addWordOfNote = new HashMap<>();
+//        addWordOfNote.put("wordID", wordID+"");
         Log.d("myApp", ""+wordID);
 //        db.collectionGroup("words").whereEqualTo("wordID",wordID).
-        db.collection("notes").whereArrayContains("words", Arrays.asList(x)).
+        db.collection("notes").whereArrayContains("wordID", wordID).
 //                addSnapshotListener(new EventListener<QuerySnapshot>() {
 //                    @Override
 //                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -76,6 +62,7 @@ public class GetPublicNoteController {
                 get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Log.d("myApp", "Get here");
                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                         Log.d("myApp", documentSnapshot.getId() + " => " + documentSnapshot.getData());
 //                        db.collection("notes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

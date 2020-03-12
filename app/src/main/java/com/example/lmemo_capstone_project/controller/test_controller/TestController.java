@@ -1,4 +1,6 @@
-package com.example.lmemo_capstone_project.controller;
+package com.example.lmemo_capstone_project.controller.test_controller;
+
+import android.view.View;
 
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
@@ -7,16 +9,24 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 public class TestController {
+    public static final int MULTIPLE_CHOICE_MODE = 1;
+    public static final int WRITING_MODE = 2;
+    private static final int MEANING_KANJI = 6;
+    private AnswerHandleable answerHandler;
     private List<Flashcard> allFlashcards;
     private List<List<Word>> listOfListFlashcard;
     private WordDAO wordDAO;
     private FlashcardDAO flashcardDAO;
+    private Date startTime;
+    private String question;
+    private Word currentWord;
 
-    public TestController(WordDAO wordDAO, FlashcardDAO flashcardDAO) {
+    public TestController(WordDAO wordDAO, FlashcardDAO flashcardDAO, int handlerMode) {
         this.wordDAO = wordDAO;
         this.flashcardDAO = flashcardDAO;
         allFlashcards = Arrays.asList(flashcardDAO.getAllVisibleFlashcard());
@@ -25,6 +35,13 @@ public class TestController {
         listOfListFlashcard.add(new ArrayList<Word>());
         listOfListFlashcard.add(new ArrayList<Word>());
         listOfListFlashcard.add(new ArrayList<Word>());
+        switch (handlerMode) {
+            case MULTIPLE_CHOICE_MODE:
+                answerHandler = new MultipleChoiceAnswerHandler(wordDAO, flashcardDAO);
+                break;
+            case WRITING_MODE:
+                answerHandler = new WritingAnswerHandler(wordDAO, flashcardDAO);
+        }
     }
 
     /**
@@ -229,5 +246,25 @@ public class TestController {
                 return false;
         }
         return true;
+    }
+
+    public Word[] getSelection(int wordID) {
+        return wordDAO.getRandomWord(wordID);
+    }
+
+
+    public int getRandomMode(Word currentWord) {
+        return answerHandler.getRandomMode(currentWord);
+    }
+
+    /**
+     * @param btAnswer    答えを持っているボタン
+     * @param currentWord 正しい答えを持っているWordオブジェクト
+     * @param startTime   質問の始まる時間
+     * @param question    質問を持っている文字列
+     *                    この関数は答えに応じ、フラッシュカードのスタッツを更新します。
+     */
+    public void updateFlashcard(View btAnswer, Word currentWord, Date startTime, String question) {
+        answerHandler.updateFlashcard(btAnswer, currentWord, startTime, question);
     }
 }
