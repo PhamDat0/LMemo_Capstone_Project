@@ -46,7 +46,15 @@ public class NotesFragment extends Fragment{
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
 
+                    //Private note
+                    case 0:
+                        break;
+                    //Public note
+                    case 1:
+                        break;
+                }
             }
 
             @Override
