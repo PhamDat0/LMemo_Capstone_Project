@@ -151,7 +151,8 @@ public class WordSearchingFragment extends Fragment {
 
     private void loadPublicNote() {
         final GetPublicNoteController getPublicNoteController = new GetPublicNoteController(this);
-        getPublicNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
+//        getPublicNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
+
         final InternetCheckingController internetCheckingController = new InternetCheckingController();
         spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
