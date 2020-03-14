@@ -1,17 +1,13 @@
 package com.example.lmemo_capstone_project.controller.test_controller;
 
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
-import com.example.lmemo_capstone_project.view.review_activity.MultipleChoiceTestActivity;
 
 import java.util.Date;
-import java.util.Random;
 
 class MultipleChoiceAnswerHandler implements AnswerHandleable {
     private static final double SLOPE_LREGRESS = 1.691;
@@ -29,37 +25,27 @@ class MultipleChoiceAnswerHandler implements AnswerHandleable {
     }
 
     @Override
-    public void updateFlashcard(View answerContainer, Word currentWord, Date startTime, String question) {
+    public void updateFlashcard(String answer, Word currentWord, Date startTime, String question) {
         this.currentWord = currentWord;
         this.question = question;
         this.startTime = startTime;
         Flashcard flashcard = flashcardDAO.getFlashCardByID(currentWord.getWordID())[0];
-        flashcard.setSpeedPerCharacter(getSpeedPerCharacterBasedOnAnswer(flashcard, answerContainer));
-        flashcard.setAccuracy(getAccuracyBasedOnAnswer(flashcard, answerContainer));
+        flashcard.setSpeedPerCharacter(getSpeedPerCharacterBasedOnAnswer(flashcard, answer));
+        flashcard.setAccuracy(getAccuracyBasedOnAnswer(flashcard, answer));
         Log.i("FC_AFTER", "\n{\n\t" + flashcard.getFlashcardID() + "\n\t" + flashcard.getAccuracy() + "\n\t" + flashcard.getSpeedPerCharacter() + "\n\t" + flashcard.getLastState() + "\n}");
         flashcardDAO.updateFlashcard(flashcard);
         Log.i("SAVE_VALUE", "Success");
     }
 
-    @Override
-    public int getRandomMode(Word currentWord) {
-        Random r = new Random();
-        int mode = r.nextInt(6) + 1;
-        if (currentWord.getKanjiWriting() == null || currentWord.getKanjiWriting().length() == 0) {
-            mode = r.nextInt(2) == 0 ? MultipleChoiceTestActivity.KANA_MEANING : MultipleChoiceTestActivity.MEANING_KANA;
-        }
-        return mode;
-    }
-
     /**
      * @param flashcard 聞いている言葉に相当するフラッシュカード
-     * @param v         ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @param answer    ユーザーの答え
      * @return フラッシュカードの精度
      * この関数はユーザーの答えが正しいか確認し、新しい精度を返します。
      */
-    private double getAccuracyBasedOnAnswer(Flashcard flashcard, View v) {
+    private double getAccuracyBasedOnAnswer(Flashcard flashcard, String answer) {
         double accuracy;
-        if (isRightAnswer(v)) {
+        if (isRightAnswer(answer)) {
             accuracy = flashcard.getAccuracy() + ACCURACY_CHANGE;
             return accuracy > 100 ? 100 : accuracy;
         } else {
@@ -69,12 +55,10 @@ class MultipleChoiceAnswerHandler implements AnswerHandleable {
     }
 
     /**
-     * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @param answer ユーザーの答え
      * @return ユーザーの答えは正しかったら、trueを返します。
      */
-    private boolean isRightAnswer(View v) {
-        Button btAnswer = (Button) v;
-        String answer = btAnswer.getText().toString();
+    private boolean isRightAnswer(String answer) {
         return answer.equals(currentWord.getKana())
                 || answer.equals(currentWord.getKanjiWriting())
                 || currentWord.getMeaning().contains(answer);
@@ -82,13 +66,12 @@ class MultipleChoiceAnswerHandler implements AnswerHandleable {
 
     /**
      * @param flashcard 聞いている言葉に相当するフラッシュカード
-     * @param v         ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @param answer    ユーザーの答え
      * @return このフラッシュカードでは、1つの字を読む時間は何時間かを返します。
      * ユーザーが選ぶための時間を割り出し、文字が何個あるを数えり、時間を文字数で割ります。
      */
-    private double getSpeedPerCharacterBasedOnAnswer(Flashcard flashcard, View v) {
+    private double getSpeedPerCharacterBasedOnAnswer(Flashcard flashcard, String answer) {
         double timeToAnswer = new Date().getTime() - startTime.getTime();
-        String answer = ((Button) v).getText().toString();
         int totalCharacter = 0;
         totalCharacter += calculateTotalCharacter(question);
         totalCharacter += calculateTotalCharacter(answer);

@@ -1,11 +1,12 @@
 package com.example.lmemo_capstone_project.controller.test_controller;
 
-import android.view.View;
+import android.util.Log;
 
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.review_activity.MultipleChoiceTestActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,12 +77,16 @@ public class TestController {
                 int type = random.nextInt(100) + 1;
                 try {
                     if (type < 41) {
+                        Log.i("GROUP_1", listOfListFlashcard.get(0).size() + "");
                         result.add(getWordFrom(listOfListFlashcard.get(0)));
                     } else if (type < 71) {
+                        Log.i("GROUP_2", listOfListFlashcard.get(1).size() + "");
                         result.add(getWordFrom(listOfListFlashcard.get(1)));
                     } else if (type < 91) {
+                        Log.i("GROUP_3", listOfListFlashcard.get(2).size() + "");
                         result.add(getWordFrom(listOfListFlashcard.get(2)));
                     } else {
+                        Log.i("GROUP_4", listOfListFlashcard.get(3).size() + "");
                         result.add(getWordFrom(listOfListFlashcard.get(3)));
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
@@ -254,17 +259,22 @@ public class TestController {
 
 
     public int getRandomMode(Word currentWord) {
-        return answerHandler.getRandomMode(currentWord);
+        Random r = new Random();
+        int mode = r.nextInt(6) + 1;
+        if (currentWord.getKanjiWriting() == null || currentWord.getKanjiWriting().length() == 0) {
+            mode = r.nextInt(2) == 0 ? MultipleChoiceTestActivity.KANA_MEANING : MultipleChoiceTestActivity.MEANING_KANA;
+        }
+        return mode;
     }
 
     /**
-     * @param btAnswer    答えを持っているボタン
+     * @param answer      ユーザーの答え
      * @param currentWord 正しい答えを持っているWordオブジェクト
      * @param startTime   質問の始まる時間
      * @param question    質問を持っている文字列
-     *                    この関数は答えに応じ、フラッシュカードのスタッツを更新します。
+     * この関数は答えに応じ、フラッシュカードのスタッツを更新します。
      */
-    public void updateFlashcard(View btAnswer, Word currentWord, Date startTime, String question) {
-        answerHandler.updateFlashcard(btAnswer, currentWord, startTime, question);
+    public void updateFlashcard(String answer, Word currentWord, Date startTime, String question) {
+        answerHandler.updateFlashcard(answer, currentWord, startTime, question);
     }
 }

@@ -35,7 +35,6 @@
         </service>
 
         <activity android:name=".view.home_activity.FlashcardListAdapter" />
-        <activity android:name=".view.review_activity.RightAnswerActivity"></activity>
         <activity android:name=".view.review_activity.WritingTestActivity" />
         <activity android:name=".view.review_activity.MultipleChoiceTestActivity" />
         <activity android:name=".view.home_activity.KanjiListAdapter" />

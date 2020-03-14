@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/word_layout"
     android:layout_width="match_parent"
@@ -10,9 +9,10 @@
     tools:context=".view.home_activity.WordSearchingFragment">
 
 
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 <!--    <ScrollView-->
 <!--&gt;>>>>>> 334617ccff8e2affd8d87dadf4179046710db30c-->
 
@@ -119,6 +119,6 @@
 <!--&gt;>>>>>> 334617ccff8e2affd8d87dadf4179046710db30c-->
         </LinearLayout>
 
-    </FrameLayout>
+    </ScrollView>
 
 </LinearLayout>

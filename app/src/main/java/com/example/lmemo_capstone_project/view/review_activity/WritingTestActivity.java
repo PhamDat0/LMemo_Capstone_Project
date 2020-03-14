@@ -9,8 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.OvershootInterpolator;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -35,8 +35,6 @@ public class WritingTestActivity extends AppCompatActivity {
 
     private static final int LOADING = 1;
     private static final int TEST = 2;
-    public static final int MEANING_KANA = 1;
-    public static final int MEANING_KANJI = 2;
     private static final int MEANING_CHARACTER_LIMIT = 60;
     private int numberOfQuestion;
     private List<Word> words;
@@ -156,7 +154,7 @@ public class WritingTestActivity extends AppCompatActivity {
         final Dialog container = new Dialog(WritingTestActivity.this);
         container.setContentView(R.layout.fragment_word_searching);
         container.setTitle("Word information:");
-        Button btPronunciation = container.findViewById(R.id.btPronunciation);
+        ImageButton btPronunciation = container.findViewById(R.id.btPronunciation);
         btPronunciation.setVisibility(View.VISIBLE);
         btPronunciation.findViewById(R.id.btPronunciation).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,7 +183,8 @@ public class WritingTestActivity extends AppCompatActivity {
      */
     private void saveNewValueOfFlashcard(View v) {
         String question = ((TextView) findViewById(R.id.tvMeaning)).getText().toString();
-        testController.updateFlashcard(findViewById(R.id.etAnswer), currentWord, startTime, question);
+        String answer = ((EditText) findViewById(R.id.etAnswer)).getText().toString();
+        testController.updateFlashcard(answer, currentWord, startTime, question);
     }
 
 
@@ -264,17 +263,8 @@ public class WritingTestActivity extends AppCompatActivity {
             words.remove(0);
             Flashcard fc = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getFlashCardByID(currentWord.getWordID())[0];
             Log.i("FC", "\n{\n\t" + fc.getFlashcardID() + "\n\t" + fc.getAccuracy() + "\n\t" + fc.getSpeedPerCharacter() + "\n\t" + fc.getLastState() + "\n}");
-            int mode = testController.getRandomMode(currentWord);
-            switch (mode) {
-                case MEANING_KANA:
-                    ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getMeaning());
-                    ((EditText) findViewById(R.id.etAnswer)).setHint(R.string.kana_test_hint);
-                    break;
-                case MEANING_KANJI:
-                    ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getMeaning());
-                    ((EditText) findViewById(R.id.etAnswer)).setHint(R.string.kanji_test_hint);
-                    break;
-            }
+            ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getMeaning());
+            ((EditText) findViewById(R.id.etAnswer)).setHint(R.string.test_hint);
             return true;
         } else {
             return false;

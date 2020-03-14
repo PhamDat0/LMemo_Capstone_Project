@@ -88,8 +88,8 @@ public class GetPublicNoteController {
     private void getUserList() {
         listUser = new ArrayList<>();
         for (Note note : listNote) {
-            DocumentReference userRef = db.collection("users").
-                    document(note.getCreatorUserID());
+            String creatorUserID = note.getCreatorUserID();
+            DocumentReference userRef = db.collection("users").document(creatorUserID);
             userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {

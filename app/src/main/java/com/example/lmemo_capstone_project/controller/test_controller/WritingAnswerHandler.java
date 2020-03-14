@@ -1,23 +1,19 @@
 package com.example.lmemo_capstone_project.controller.test_controller;
 
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
-import com.example.lmemo_capstone_project.view.review_activity.WritingTestActivity;
 
 import java.util.Date;
-import java.util.Random;
 
 class WritingAnswerHandler implements AnswerHandleable {
     private final WordDAO wordDAO;
     private final FlashcardDAO flashcardDAO;
     private String question;
-    private EditText etAnswer;
+    private String answer;
     private Word currentWord;
     private Date startTime;
 
@@ -27,31 +23,24 @@ class WritingAnswerHandler implements AnswerHandleable {
     }
 
     @Override
-    public void updateFlashcard(View answerContainer, Word currentWord, Date startTime, String question) {
+    public void updateFlashcard(String answer, Word currentWord, Date startTime, String question) {
         this.question = question;
-        this.etAnswer = (EditText) answerContainer;
+        this.answer = answer;
         this.currentWord = currentWord;
         this.startTime = startTime;
         Flashcard flashcard = flashcardDAO.getFlashCardByID(currentWord.getWordID())[0];
-        flashcard.setSpeedPerCharacter(getSpeedPerCharacterBasedOnAnswer(flashcard, answerContainer));
-        flashcard.setAccuracy(getAccuracyBasedOnAnswer(flashcard, answerContainer));
+        flashcard.setSpeedPerCharacter(getSpeedPerCharacterBasedOnAnswer(flashcard, answer));
+        flashcard.setAccuracy(getAccuracyBasedOnAnswer(flashcard));
         flashcardDAO.updateFlashcard(flashcard);
         Log.i("FC", "\n{\n\t" + flashcard.getFlashcardID() + "\n\t" + flashcard.getAccuracy() + "\n\t" + flashcard.getSpeedPerCharacter() + "\n\t" + flashcard.getLastState() + "\n}");
         Log.i("SAVE_VALUE", "Success");
     }
 
-    @Override
-    public int getRandomMode(Word currentWord) {
-        Random r = new Random();
-        return currentWord.getKanjiWriting() == null || currentWord.getKanjiWriting().length() == 0 ? WritingTestActivity.MEANING_KANA : r.nextBoolean() ? WritingTestActivity.MEANING_KANA : WritingTestActivity.MEANING_KANJI;
-    }
-
     /**
      * @param flashcard 聞いているフラッシュカード
-     * @param v         ビューオブジェクト。ユーザーの答えを持っているボタン
      * @return ユーザーがその答えで受けることができる最も高い精度
      */
-    private double getAccuracyBasedOnAnswer(Flashcard flashcard, View v) {
+    private double getAccuracyBasedOnAnswer(Flashcard flashcard) {
         double accuracy = calculateBestAccuracyForTheAnswer() * 0.5 + flashcard.getAccuracy() * 0.5;
         return accuracy > 100 ? 100 : accuracy;
     }
@@ -61,11 +50,10 @@ class WritingAnswerHandler implements AnswerHandleable {
      * この関数は正しい答えを取リ、ユーザーが入力した答えと比べます。
      */
     private double calculateBestAccuracyForTheAnswer() {
-        String[] correctAnswer = (etAnswer.getHint().toString()
-                .equals("Enter the correct kana reading") ? currentWord.getKana() : currentWord.getKanjiWriting()).split("/");
-        String[] answer = etAnswer.getText().toString().split("/");
+        String[] correctAnswer = (currentWord.getKana() + " / " + currentWord.getKanjiWriting()).split("/");
+        String[] answerPart = answer.split("/");
         double bestAccuracy = 0;
-        for (String partOfAnswer : answer) {
+        for (String partOfAnswer : answerPart) {
             for (String partOfCorrectAnswer : correctAnswer) {
                 double compareResult = stringCompare(partOfAnswer.trim(), partOfCorrectAnswer.trim());
                 bestAccuracy = bestAccuracy > compareResult ? bestAccuracy : compareResult;
@@ -101,13 +89,12 @@ class WritingAnswerHandler implements AnswerHandleable {
 
     /**
      * @param flashcard 聞いている言葉に相当するフラッシュカード
-     * @param v         ビューオブジェクト。ユーザーの答えを持っているボタン
+     * @param answer    ユーザーの答え
      * @return このフラッシュカードでは、1つの字を読む時間は何時間かを返します。
-     * ユーザーが選ぶための時間を割り出し、文字が何個あるを数えり、時間を文字数で割ります。
+     * ユーザーが書くための時間を割り出し、文字が何個あるを数えり、時間を文字数で割ります。
      */
-    private double getSpeedPerCharacterBasedOnAnswer(Flashcard flashcard, View v) {
+    private double getSpeedPerCharacterBasedOnAnswer(Flashcard flashcard, String answer) {
         double timeToAnswer = new Date().getTime() - startTime.getTime();
-        String answer = etAnswer.getText().toString();
         int totalCharacter = 0;
         totalCharacter += calculateTotalCharacter(question);
         totalCharacter += answer.length();

@@ -8,6 +8,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -111,7 +112,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
         ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning().replace("\n", "\n . "));
         ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(" * " + currentWord.getPartOfSpeech());
-        Button btPronunciation = container.findViewById(R.id.btPronunciation);
+        ImageButton btPronunciation = container.findViewById(R.id.btPronunciation);
         btPronunciation.setVisibility(View.VISIBLE);
         btPronunciation.findViewById(R.id.btPronunciation).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +137,8 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
      */
     private void saveNewValueOfFlashcard(View v) {
         String question = ((TextView) findViewById(R.id.tvMeaning)).getText().toString();
-        testController.updateFlashcard(v, currentWord, startTime, question);
+        String answer = ((Button) v).getText().toString();
+        testController.updateFlashcard(answer, currentWord, startTime, question);
     }
 
     /**
@@ -197,11 +199,22 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
      */
     private void startTest() {
         setVisibleMode(TEST);
-        Flashcard[] allVisibleFlashcard = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getAllVisibleFlashcard();
-        for (Flashcard fc : allVisibleFlashcard) {
-            Log.i("FC", "\n{\n\t" + fc.getFlashcardID() + "\n\t" + fc.getAccuracy() + "\n\t" + fc.getSpeedPerCharacter() + "\n\t" + fc.getLastState() + "\n}");
-        }
-        Log.i("NUMBER_OF_QUIZ", words.size() + "");
+//        Flashcard[] allVisibleFlashcard = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getAllVisibleFlashcard();
+//        for (Flashcard fc : allVisibleFlashcard) {
+//            Log.i("FC", "\n{\n\t" + fc.getFlashcardID() + "\n\t" + fc.getAccuracy() + "\n\t" + fc.getSpeedPerCharacter() + "\n\t" + fc.getLastState() + "\n}");
+//        }
+//        Log.i("NUMBER_OF_QUIZ", words.size()+"");
+        int[] group = new int[4];
+        group[0] = 0;
+        group[1] = 0;
+        group[2] = 0;
+        group[3] = 0;
+        for (Word word : words)
+            group[LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO().getFlashCardByID(word.getWordID())[0].getLastState() - 1]++;
+        Log.i("PERCENT_1", group[0] / (double) words.size() * 100 + "");
+        Log.i("PERCENT_2", group[1] / (double) words.size() * 100 + "");
+        Log.i("PERCENT_3", group[2] / (double) words.size() * 100 + "");
+        Log.i("PERCENT_4", group[3] / (double) words.size() * 100 + "");
         setupQuestion();
     }
 
