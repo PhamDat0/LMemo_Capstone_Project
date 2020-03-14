@@ -6,18 +6,11 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
-import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
-import com.example.lmemo_capstone_project.model.room_db_entity.NoteUser;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
-import com.example.lmemo_capstone_project.model.room_db_entity.relationship_classes.UserWithNotes;
-import com.example.lmemo_capstone_project.view.home_activity.NoteListAdapter;
 import com.example.lmemo_capstone_project.view.home_activity.WordSearchingFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.common.collect.ArrayTable;
-import com.google.firebase.database.core.Tag;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,7 +20,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GetPublicNoteController {
