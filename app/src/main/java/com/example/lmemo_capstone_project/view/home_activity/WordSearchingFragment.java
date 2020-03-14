@@ -10,10 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,26 +24,28 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.note_controller.AddNoteController;
 import com.example.lmemo_capstone_project.controller.note_controller.GetPublicNoteController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
+import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
  * A simple {@link Fragment} subclass.
- *
  */
 public class WordSearchingFragment extends Fragment {
     private Dialog addNoteDialog;
     private Button btnOpenTakeNoteDialog;
     private ListView noteListView;
     private int wordID;
-    private Button btnRefresh;
-
     private TextToSpeech textToSpeech;
+    private Spinner spinnerSort;
 
     public WordSearchingFragment() {
         // Required empty public constructor
@@ -50,8 +55,9 @@ public class WordSearchingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_word_searching, container, false);
+        noteListView = view.findViewById(R.id.NoteListView);
         btnOpenTakeNoteDialog = view.findViewById(R.id.btnOpenTakeNoteDialog);
-        btnRefresh = view.findViewById(R.id.btnRefresh);
+        addListenerOnSpinnerItemSelection(view);
         wordSearchResult(view);
         addNoteDialog = new Dialog(this.getActivity());
         textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
@@ -67,12 +73,12 @@ public class WordSearchingFragment extends Fragment {
             public void onClick(View v) {
                 showAddNoteDialog(v);
             }
-    });
-        refreshNoteList();
+        });
+//        loadPublicNote();
         return view;
     }
 
-    private  void showAddNoteDialog(View v){
+    private void showAddNoteDialog(View v) {
         final AddNoteController addNoteController = new AddNoteController(this.getActivity());
         addNoteDialog.setContentView(R.layout.demo_popup_add_note);
         final EditText txtNoteContent = (EditText) addNoteDialog.findViewById(R.id.txtTakeNote);
@@ -86,15 +92,15 @@ public class WordSearchingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    if(!txtNoteContent.getText().toString().isEmpty()){
-                        addNoteController.getNoteFromUI(word.getWordID(),txtNoteContent.getText().toString(),isPublic.isChecked());
+                    if (!txtNoteContent.getText().toString().isEmpty()) {
+                        addNoteController.getNoteFromUI(word.getWordID(), txtNoteContent.getText().toString(), isPublic.isChecked());
                         Toast.makeText(getContext(), "Add note successful", Toast.LENGTH_LONG).show();
                         addNoteDialog.dismiss();
-                    }
-                    else {
+                        loadPublicNote();
+                    } else {
                         txtNoteContent.setError("Please enter note");
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
@@ -112,22 +118,17 @@ public class WordSearchingFragment extends Fragment {
 
     private void wordSearchResult(View container) {
         Bundle bundle = getArguments();
-        if (bundle  != null) {
-//            for (String key: bundle.keySet()) {
-//                Log.d ("myApplication", key + " is a key in the bundle");
-//            }
+        if (bundle != null) {
             btnOpenTakeNoteDialog.setVisibility(View.VISIBLE);
-            btnRefresh.setVisibility(View.VISIBLE);
-
             final Word word = (Word) bundle.getSerializable("result");
-//            Log.i("Object",container.findViewById(R.id.tvKana)==null?"null":"tvKana");
             wordID = word.getWordID();
-            ((TextView) container.findViewById(R.id.tvKana)).setText("[ "+ word.getKana()+" ]");
+            ((TextView) container.findViewById(R.id.tvKana)).setText("[ " + word.getKana() + " ]");
             ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + word.getKanjiWriting());
             ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + word.getMeaning().replace("\n", "\n . "));
             ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(" * " + word.getPartOfSpeech());
             ImageButton btPronunciation = container.findViewById(R.id.btPronunciation);
             btPronunciation.setVisibility(View.VISIBLE);
+            spinnerSort.setVisibility(View.VISIBLE);
             btPronunciation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -135,31 +136,60 @@ public class WordSearchingFragment extends Fragment {
                 }
             });
         } else {
-            Log.d ("myApplication",  " no key in bundle");
+            Log.d("myApplication", " no key in bundle");
             btnOpenTakeNoteDialog.setVisibility(View.INVISIBLE);
-            btnRefresh.setVisibility(View.INVISIBLE);
+            spinnerSort.setVisibility(View.INVISIBLE);
         }
-        loadPublicNote(container);
+        loadPublicNote();
     }
-    private Word getWord(){
+
+    private Word getWord() {
         Bundle bundle = getArguments();
         Word word = (Word) bundle.getSerializable("result");
         return word;
     }
 
-    private void loadPublicNote(View view) {
-        noteListView = view.findViewById(R.id.NoteListView);
-        GetPublicNoteController getPublicNoteController = new GetPublicNoteController(getActivity());
-        getPublicNoteController.getAllNoteFromFirebase(noteListView,this.getActivity(),wordID);
-    }
-
-    private void refreshNoteList() {
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
+    private void loadPublicNote() {
+        final GetPublicNoteController getPublicNoteController = new GetPublicNoteController(this);
+        getPublicNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
+        final InternetCheckingController internetCheckingController = new InternetCheckingController();
+        spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                GetPublicNoteController getPublicNoteController = new GetPublicNoteController(getActivity());
-                getPublicNoteController.getAllNoteFromFirebase(noteListView,getActivity(),wordID);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(0)) && internetCheckingController.isOnline(getContext())) {
+                    getPublicNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
+                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(1)) && internetCheckingController.isOnline(getContext())) {
+                    getPublicNoteController.getAllNoteDescendingFromFirebase(noteListView, getActivity(), wordID);
+                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(2)) && internetCheckingController.isOnline(getContext())) {
+                    //
+                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(3)) && internetCheckingController.isOnline(getContext())) {
+                    //
+                } else {
+                    Toast.makeText(getContext(), "No Internet connection [Offline Mode]", Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //callback
             }
         });
+    }
+
+    public void updateUI(ArrayList<Note> listNote, Map<String, User> listUserMap) {
+        Log.i("Note_And_User", listNote.get(0).getOnlineID() + " / " +
+                listUserMap.get(listNote.get(0).getCreatorUserID()).getUserID() + " ; ");
+        NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap);
+        noteListView.setAdapter(noteListAdapter);
+    }
+
+    public void addListenerOnSpinnerItemSelection(View v) {
+        spinnerSort = v.findViewById(R.id.spinnerSort);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.sort_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinnerSort.setAdapter(adapter);
     }
 }

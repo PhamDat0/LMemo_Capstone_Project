@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.controller.note_controller;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -12,11 +13,13 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.home_activity.FlashcardInfoFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,7 +41,6 @@ public class AddNoteController {
     }
 
     public void getNoteFromUI(int wordID, String noteContent, boolean noteStatus) {
-
         Log.w("Controller add note", user.getDisplayName());
         NoteOfWord noteOfWord = new NoteOfWord();
         Note note = new Note();
@@ -76,8 +78,6 @@ public class AddNoteController {
         addNote.put("translatedContent", note.getTranslatedContent());
         addNote.put("createdTime", note.getCreatedDate());
         addNote.put("userID", note.getCreatorUserID());
-//        int[] x = new int[1];
-//        x[0] = wordID;
         addNote.put("wordID", Arrays.asList(wordID));
         db.collection("notes").add(addNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

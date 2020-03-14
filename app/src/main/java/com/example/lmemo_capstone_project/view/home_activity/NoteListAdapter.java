@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.view.home_activity;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,26 +17,34 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
+import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
+import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.relationship_classes.UserWithNotes;
+import com.google.android.material.badge.BadgeDrawable;
 
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class NoteListAdapter extends BaseAdapter {
 
+    private final Map<String, User> listUserMap;
     private Activity aContext;
     private ArrayList<Note> listNote;
     private LayoutInflater layoutInflater;
-    private FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(aContext).flashcardDAO();
+    private RewardDAO rewardDAO = LMemoDatabase.getInstance(aContext).rewardDAO();
 //    private int pos;
 
 
-    public NoteListAdapter(Activity aContext, ArrayList<Note> listNote) {
+
+    public NoteListAdapter(Activity aContext, ArrayList<Note> listNote, Map<String, User> listUserMap) {
         this.aContext = aContext;
         this.listNote = listNote;
         layoutInflater = LayoutInflater.from(aContext);
+        this.listUserMap = listUserMap;
     }
     @Override
     public int getCount() {
@@ -65,12 +74,21 @@ public class NoteListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-        holder.tvUser.setText(listNote.get(position).getCreatorUserID());
+        User creator = listUserMap.get(listNote.get(position).getCreatorUserID());
+//        Log.d("Debug_gender",creator.isGender()+"");
+        if(creator.isGender()) {
+            holder.tvUser.setText(creator.getDisplayName());
+            holder.tvUser.setTextColor(Color.BLUE);
+        } else {
+            holder.tvUser.setText(creator.getDisplayName());
+            holder.tvUser.setTextColor(Color.MAGENTA);
+        }
 
         holder.tvNoteContent.setText(listNote.get(position).getNoteContent());
 
-//        holder.tvReward.setText(listNote.get(position));
+        RewardDAO rewardDAO = LMemoDatabase.getInstance(aContext).rewardDAO();
+        Reward reward = rewardDAO.getBestReward(creator.getContributionPoint()<1?1:creator.getContributionPoint())[0];
+        holder.tvReward.setText(reward.getRewardName());
 
         return convertView;
     }

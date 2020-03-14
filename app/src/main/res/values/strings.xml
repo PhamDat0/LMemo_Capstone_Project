@@ -21,6 +21,15 @@
     <string name="start_test">Start test</string>
     <string name="cancel">Cancel</string>
     <string name="number_of_questions">number_of_questions</string>
+    <string name="country_prompt">Choose a country</string>
+
+    <string-array name="sort_array">
+        <item>Chronological in ascending</item>
+        <item>Chronological in descending</item>
+        <item>Top upvotes in ascending</item>
+        <item>Top upvotes in descending</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="kana_test_hint">Enter the correct kana reading</string>
