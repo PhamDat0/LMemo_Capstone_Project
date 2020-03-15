@@ -41,7 +41,6 @@ public class UserAuthenticationController {
 
     private List<String> getAllDocumentID(final FirebaseUser currentUser) {
         // get all document id from cloud firestore
-        com.google.firebase.firestore.Query query = db.collection("users");
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
