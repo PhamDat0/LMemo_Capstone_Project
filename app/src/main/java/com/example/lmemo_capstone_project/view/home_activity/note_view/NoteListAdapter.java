@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
+import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
+import com.example.lmemo_capstone_project.controller.note_controller.EditAndDeleteNoteController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
@@ -97,8 +100,26 @@ public class NoteListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Note note = listNote.get(position);
+                EditAndDeleteNoteController editAndDeleteNoteController = new EditAndDeleteNoteController(aContext);
+                if (note.isPublic()) {
+                    InternetCheckingController internetCheckingController = new InternetCheckingController();
+                    if (internetCheckingController.isOnline(aContext)) {
+                        editAndDeleteNoteController.deleteNote(note);
+                        updateUI(position);
+                    } else {
+                        Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    editAndDeleteNoteController.deleteNote(note);
+                    updateUI(position);
+                }
             }
         });
+    }
+
+    private void updateUI(int position) {
+        listNote.remove(position);
+        this.notifyDataSetChanged();
     }
 
     private void setOwnerButtonVisible(ViewHolder holder, int mode) {

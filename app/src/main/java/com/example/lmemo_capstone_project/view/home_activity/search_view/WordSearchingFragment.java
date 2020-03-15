@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.CannotPerformFirebaseRequest;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.note_controller.AddNoteController;
 import com.example.lmemo_capstone_project.controller.note_controller.GetNoteController;
@@ -101,6 +102,8 @@ public class WordSearchingFragment extends Fragment {
                         txtNoteContent.setError("Please enter note");
                     }
                 } catch (Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                } catch (CannotPerformFirebaseRequest e) {
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
 

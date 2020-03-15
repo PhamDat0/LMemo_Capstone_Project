@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
+import com.example.lmemo_capstone_project.controller.note_controller.AddNoteController;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,11 +32,13 @@ public class UserAuthenticationController {
     private static final String TAG = "LoginActivity";
     private final FirebaseFirestore db;
     private UserDAO userDAO;
+    private AddNoteController addNoteController;
     private List<String> listFUID;
 
     public UserAuthenticationController(Activity activity) {
         db = FirebaseFirestore.getInstance();
         userDAO = LMemoDatabase.getInstance(activity.getApplicationContext()).userDAO();
+        addNoteController = new AddNoteController(activity);
         listFUID = new ArrayList<>();
     }
 
@@ -104,9 +107,13 @@ public class UserAuthenticationController {
                 user.setGender((Boolean) documentSnapshot.get("isMale"));
                 addUserToSQLite(user);
                 Log.w(TAG, "Logged in after add to sqlite with updated" + user.getDisplayName() + "at time " + user.getLoginTime() + " gender " + user.isGender());
-
+                getAllPublicNotes(user);
             }
         });
+    }
+
+    private void getAllPublicNotes(User user) {
+        addNoteController.downloadAllPublicNoteToSQL(user);
     }
 
     private void createNewUserOnCloudFireStore(FirebaseUser currentUser) {

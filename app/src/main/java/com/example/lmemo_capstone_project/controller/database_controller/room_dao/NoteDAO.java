@@ -37,4 +37,7 @@ public interface NoteDAO {
 
     @Query("SELECT * FROM Note WHERE PublicStatus = :mode AND UserID = :userID")
     Note[] getNotesOfUser(boolean mode, String userID);
+
+    @Query("SELECT * FROM Note WHERE OnlineID = :onlineID")
+    Note[] getNotesByOnlineID(String onlineID);
 }

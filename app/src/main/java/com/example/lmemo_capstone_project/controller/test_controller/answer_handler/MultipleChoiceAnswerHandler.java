@@ -1,4 +1,4 @@
-package com.example.lmemo_capstone_project.controller.test_controller;
+package com.example.lmemo_capstone_project.controller.test_controller.answer_handler;
 
 import android.util.Log;
 
@@ -9,7 +9,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
 import java.util.Date;
 
-class MultipleChoiceAnswerHandler implements AnswerHandleable {
+public class MultipleChoiceAnswerHandler implements AnswerHandleable {
     private static final double SLOPE_LREGRESS = 1.691;
     private static final double INTERCEPT_LREGRESS = 0.3510;
     private static final double ACCURACY_CHANGE = 15;

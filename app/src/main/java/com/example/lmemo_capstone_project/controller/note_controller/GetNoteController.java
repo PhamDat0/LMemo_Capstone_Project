@@ -12,6 +12,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.collect.Lists;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,7 +21,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,6 +136,6 @@ public class GetNoteController {
 
     public List<Note> getOfflineNote(boolean mode, String userID) {
         Note[] notesOfUser = noteDAO.getNotesOfUser(mode, userID);
-        return Arrays.asList(notesOfUser);
+        return Lists.newArrayList(notesOfUser);
     }
 }

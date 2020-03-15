@@ -16,9 +16,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.firebase_dao.OnlineUserDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
+import com.example.lmemo_capstone_project.controller.my_account_controller.MyAccountController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,6 +49,7 @@ public class MyAccountFragment extends Fragment {
             public void onClick(View v) {
                 if (hasAnInternetConnection()) {
                     updateUserInformation(view);
+                    Toast.makeText(getContext(), "Save successfully.", Toast.LENGTH_LONG).show();
                 } else {
                     notifyNoInternetConnections();
                 }
@@ -124,8 +125,8 @@ public class MyAccountFragment extends Fragment {
      * この関数はユーザーの情報をFirebaseに情報を更新します。
      */
     private void updateUserToFirebase(User user) {
-        OnlineUserDAO onlineUserDAO = new OnlineUserDAO();
-        onlineUserDAO.updateUser(user);
+        MyAccountController myAccountController = new MyAccountController();
+        myAccountController.updateUser(user);
     }
 
     /**
@@ -134,6 +135,18 @@ public class MyAccountFragment extends Fragment {
      * この関数はユーザーの情報をSQLiteから読んで、ユーザーインターフェイス に書きます。
      */
     private void updateInformationToUI(View container) {
+        LMemoDatabase lMemoDatabase = LMemoDatabase.getInstance(getContext());
+        UserDAO userDAO = lMemoDatabase.userDAO();
+        MyAccountController myAccountController = new MyAccountController();
+        User user = userDAO.getLocalUser()[0];
+        if (hasAnInternetConnection()) {
+            myAccountController.updateSQLWithOnlineInfoForViewInfo(user, userDAO, container, this);
+        } else {
+            updateUI(container);
+        }
+    }
+
+    public void updateUI(View container) {
         LMemoDatabase lMemoDatabase = LMemoDatabase.getInstance(getContext());
         UserDAO userDAO = lMemoDatabase.userDAO();
         RewardDAO rewardDAO = lMemoDatabase.rewardDAO();

@@ -1,4 +1,4 @@
-package com.example.lmemo_capstone_project.controller.test_controller;
+package com.example.lmemo_capstone_project.controller.test_controller.answer_handler;
 
 import android.util.Log;
 
@@ -9,7 +9,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
 import java.util.Date;
 
-class WritingAnswerHandler implements AnswerHandleable {
+public class WritingAnswerHandler implements AnswerHandleable {
     private final WordDAO wordDAO;
     private final FlashcardDAO flashcardDAO;
     private String question;
