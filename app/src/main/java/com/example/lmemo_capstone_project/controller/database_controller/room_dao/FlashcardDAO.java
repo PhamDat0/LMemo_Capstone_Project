@@ -29,6 +29,6 @@ public interface FlashcardDAO {
     @Query("Select * FROM Flashcard")
     List<FlashcardWithSets> getFlashcardsWithSets();
 
-    @Query("SELECT COUNT(*) FROM Flashcard")
-    int getNumberOfFlashcards();
+    @Query("SELECT COUNT(*) FROM Flashcard WHERE LastState <> 99")
+    int getNumberOfVisibleFlashcards();
 }

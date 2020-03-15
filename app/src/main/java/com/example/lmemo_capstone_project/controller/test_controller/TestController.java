@@ -17,15 +17,11 @@ import java.util.Random;
 public class TestController {
     public static final int MULTIPLE_CHOICE_MODE = 1;
     public static final int WRITING_MODE = 2;
-    private static final int MEANING_KANJI = 6;
     private AnswerHandleable answerHandler;
     private List<Flashcard> allFlashcards;
     private List<List<Word>> listOfListFlashcard;
     private WordDAO wordDAO;
     private FlashcardDAO flashcardDAO;
-    private Date startTime;
-    private String question;
-    private Word currentWord;
 
     public TestController(WordDAO wordDAO, FlashcardDAO flashcardDAO, int handlerMode) {
         this.wordDAO = wordDAO;
@@ -58,8 +54,8 @@ public class TestController {
 
         List<Word> result = new ArrayList<>();
 
-        if (numberOfQuestion == 0) {
-            numberOfQuestion++;
+        if (numberOfQuestion <= 0) {
+            numberOfQuestion = 1;
         }
 
         int size = 0;
@@ -74,15 +70,15 @@ public class TestController {
         } else {
             Random random = new Random();
             while (result.size() < numberOfQuestion) {
-                int type = random.nextInt(100) + 1;
+                int type = random.nextInt(25375) + 1;
                 try {
-                    if (type < 41) {
+                    if (type < 15626) {
                         Log.i("GROUP_1", listOfListFlashcard.get(0).size() + "");
                         result.add(getWordFrom(listOfListFlashcard.get(0)));
-                    } else if (type < 71) {
+                    } else if (type < 21876) {
                         Log.i("GROUP_2", listOfListFlashcard.get(1).size() + "");
                         result.add(getWordFrom(listOfListFlashcard.get(1)));
-                    } else if (type < 91) {
+                    } else if (type < 24375) {
                         Log.i("GROUP_3", listOfListFlashcard.get(2).size() + "");
                         result.add(getWordFrom(listOfListFlashcard.get(2)));
                     } else {
@@ -130,19 +126,19 @@ public class TestController {
         f1.setLastState(1);
         featuredFlashcard.add(f1);
         Flashcard f2 = new Flashcard();
-        f2.setKanaLength(5);
+        f2.setKanaLength(7);
         f2.setSpeedPerCharacter(2.83);
         f2.setAccuracy(33.33);
         f2.setLastState(2);
         featuredFlashcard.add(f2);
         Flashcard f3 = new Flashcard();
-        f3.setKanaLength(3);
+        f3.setKanaLength(7);
         f3.setSpeedPerCharacter(1.67);
         f3.setAccuracy(66.67);
         f3.setLastState(3);
         featuredFlashcard.add(f3);
         Flashcard f4 = new Flashcard();
-        f4.setKanaLength(1);
+        f4.setKanaLength(7);
         f4.setSpeedPerCharacter(0.5);
         f4.setAccuracy(100);
         f4.setLastState(4);
@@ -212,7 +208,7 @@ public class TestController {
     private double calDistance(Flashcard f, Flashcard featuredCard) {
         return Math.pow(f.getAccuracy()/25 - featuredCard.getAccuracy()/25, 2)
                 + Math.pow(f.getLastState() - featuredCard.getLastState(), 2)
-                + Math.pow(f.getKanaLength() / 1.75 - featuredCard.getKanaLength() / 1.75, 2)
+//                + Math.pow(f.getKanaLength() / 1.75 - featuredCard.getKanaLength() / 1.75, 2)
                 + Math.pow(f.getSpeedPerCharacter() - featuredCard.getSpeedPerCharacter(), 2);
     }
 
@@ -253,7 +249,7 @@ public class TestController {
         return true;
     }
 
-    public Word[] getSelection(int wordID) {
+    public Word[] getWordsForMultipleChoiceSelection(int wordID) {
         return wordDAO.getRandomWord(wordID);
     }
 

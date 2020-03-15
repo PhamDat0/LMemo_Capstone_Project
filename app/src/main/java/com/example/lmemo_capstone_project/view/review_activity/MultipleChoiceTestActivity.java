@@ -232,7 +232,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
             words.remove(0);
             int mode = testController.getRandomMode(currentWord);
             Log.i("KANJI_TEST", currentWord.getKanjiWriting() == null ? "null" : currentWord.getKanjiWriting());
-            Word[] selection = testController.getSelection(currentWord.getWordID());
+            Word[] selection = testController.getWordsForMultipleChoiceSelection(currentWord.getWordID());
             switch (mode) {
                 case KANJI_KANA:
                     ((TextView) findViewById(R.id.tvMeaning)).setText(currentWord.getKanjiWriting());

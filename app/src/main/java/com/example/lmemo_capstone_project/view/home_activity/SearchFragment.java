@@ -28,7 +28,8 @@ import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
-import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
+import com.example.lmemo_capstone_project.controller.search_controller.SearchController;
+import com.example.lmemo_capstone_project.controller.search_controller.WordNotFoundException;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
 
@@ -36,16 +37,12 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Word;
  * A simple {@link Fragment} subclass.
  */
 public class SearchFragment extends Fragment implements View.OnClickListener {
-    private Button tabWord, tabKanji;
     private AutoCompleteTextView edtSearch;
-    private LMemoDatabase lMemoDatabase;
     private WordDAO wordDAO;
-    private FlashcardDAO flashcardDAO;
     private Bundle bundle = new Bundle();
-    private Word word;
-    private Word dailyWord;
-    private Flashcard flashcard;
-    private int wordID=-1;
+    private int wordID = -1;
+    private SearchController searchController;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -55,10 +52,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-        lMemoDatabase = LMemoDatabase.getInstance(getContext());
+        LMemoDatabase lMemoDatabase = LMemoDatabase.getInstance(getContext());
         wordDAO = lMemoDatabase.wordDAO();
-        flashcardDAO = lMemoDatabase.flashcardDAO();
-        edtSearch = ((AutoCompleteTextView) view.findViewById(R.id.txtSearch));
+        FlashcardDAO flashcardDAO = lMemoDatabase.flashcardDAO();
+        searchController = new SearchController(wordDAO, flashcardDAO);
+        edtSearch = view.findViewById(R.id.txtSearch);
         edtSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,8 +92,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        tabKanji = (Button) view.findViewById(R.id.tabKanji);
-        tabWord = (Button) view.findViewById(R.id.tabWord);
+        Button tabKanji = view.findViewById(R.id.tabKanji);
+        Button tabWord = view.findViewById(R.id.tabWord);
 
         //set on click cho 2 tab
         tabKanji.setOnClickListener(this);
@@ -103,22 +101,23 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         getDailyWord();
         return view;
     }
+
     @Override
-    public  void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
             wordID = getArguments().getInt("wordID");
-            Log.w("Search Fragment","word id is"+wordID);
+            Log.w("Search Fragment", "word id is" + wordID);
         }
     }
-    private void getDailyWord(){
-        if(wordID != -1){
-            dailyWord = wordDAO.getOneWord(wordID);
-            addFlashCardToSQLite(dailyWord);
+
+    private void getDailyWord() {
+        if (wordID != -1) {
+            Word dailyWord = wordDAO.getOneWord(wordID);
+            searchController.addWordToFlashcard(dailyWord);
             fragmentDataTransfer(dailyWord);
             wordID = -1;
-
         }
     }
     //Suggestion word Function
@@ -130,10 +129,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private void performSuggestion() {
         //set threshold for suggestion show up
         edtSearch.setThreshold(1);
-
         String[] from = {"name"};
         int[] to = {android.R.id.text1};
-
         //create a simple cursorAdapter
         SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(getContext(),
                 android.R.layout.simple_dropdown_item_1line, null, from, to, 0);
@@ -142,32 +139,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         FilterQueryProvider provider = new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence constraint) {
-                String constrain = (String) constraint;
-                constrain = constrain.replace("*", "%");
-                constrain = constrain.replace("?", "_");
-                if ((!constrain.contains("%")) && (!constrain.contains("_"))) {
-                    constrain += "%";
-                }
-//                constrain = constrain.replace("*","%");
-//                constrain = constrain.replace("?","_");
-                constrain = constrain.toUpperCase();
-                if (constraint == null) {
-                    return null;
-                }
-
                 String[] columns = {SyncStateContract.Columns._ID, "name"};
                 MatrixCursor c = new MatrixCursor(columns);
-                try {
-                    //when a list item contains the user input, add that to the Matrix Cursor
-                    //this matrix cursor will be returned and the contents will be displayed
-                    Word[] kanji = wordDAO.getSuggestion(constrain);
-                    for (int i = 0; i < kanji.length; i++) {
-                        c.newRow().add(i).add(kanji[i].getKanjiWriting().length() == 0 ? kanji[i].getKana() : kanji[i].getKanjiWriting());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return c;
+                return searchController.insertSuggestion(constraint, c);
             }
         };
         //use the filter query provider on the cursor adapter
@@ -175,64 +149,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         edtSearch.setAdapter(cursorAdapter);
     }
 
-
-    //Perform Search desire word in database
     /**
-     * この関数は言葉でSQLiteデータベースを検索します
-     */
-    private Word performSearch() {
-        String searchWord = edtSearch.getText().toString();
-        if (searchWord.trim().length() == 0)
-            return new Word(-2, "", "", "", "");
-//        Word word;
-        try {
-                Word[] words = wordDAO.getWords(searchWord);
-                word = bestFit(words, searchWord);
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            word = new Word(-1, "Not Found", "Not Found", "Not Found", "Not Found");
-        }
-//        Log.d ("myApplication",  "id:"+ );
-        return word;
-    }
-
-    private Word bestFit(Word[] words, String searchWord) {
-        Word result = words[0];
-
-        for (Word word : words) {
-            if (checkForBestFit(word, searchWord)) {
-                result = word;
-                break;
-            }
-        }
-        return result;
-    }
-
-    private boolean checkForBestFit(Word word, String searchWord) {
-        String[] kanjiWritings = word.getKanjiWriting().split("/");
-        String[] kanaWritings = word.getKana().split("/");
-        String[] meanings = word.getMeaning().split("/");
-        for (String kanjiWriting : kanjiWritings) {
-            if (searchWord.equals(kanjiWriting.trim()))
-                return true;
-        }
-        for (String kanaWriting : kanaWritings) {
-            if (searchWord.equals(kanaWriting.trim()))
-                return true;
-        }
-        for (String meaning : meanings) {
-            if (searchWord.equals(meaning.trim()))
-                return true;
-        }
-        return false;
-    }
-
-    //Transfer data between fragment
-
-
-    /**
-     * @param word
-     * この関数は2つのフラグメントのデータを交換します。
+     * @param word この関数は2つのフラグメントのデータを交換します。
      */
     private void fragmentDataTransfer(Word word) {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -243,50 +161,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         fragmentTransaction.commit();
     }
 
-    /**
-     *　この関数は言葉をフラッシュカードに追加する
-     */
-    //Add searched word to flashcard
-    private void addToFlashCard() {
-
-        Word word = performSearch();
-        addFlashCardToSQLite(word);
-//        Log.d ("myApplication",  "id:"+ flashcardDAO.getAllFlashcard().toString());
-    }
-
-
-    /**
-     * @param word
-     * この関数はフラッシュカードをSQLiteに追加します
-     */
-    private void addFlashCardToSQLite(Word word){
-        flashcard = new Flashcard();
-        if (word.getWordID() != -1) {
-            Flashcard[] checkingID = flashcardDAO.getFlashCardByID(word.getWordID());
-            if (checkingID.length == 0) {
-                flashcard.setFlashcardID(word.getWordID());
-                flashcard.setAccuracy(0);
-                flashcard.setSpeedPerCharacter(10);
-                flashcard.setLastState(1);
-                flashcard.setKanaLength(word.getKana().split("/")[0].trim().length());
-                flashcardDAO.insertFlashcard(flashcard);
-            } else if (checkingID.length!=0 && checkingID[0].getLastState()==99){
-                flashcard.setFlashcardID(checkingID[0].getFlashcardID());
-                flashcard.setAccuracy(checkingID[0].getAccuracy());
-                flashcard.setSpeedPerCharacter(checkingID[0].getSpeedPerCharacter());
-                flashcard.setKanaLength(word.getKana().split("/")[0].trim().length());
-                flashcard.setLastState(1);
-                flashcardDAO.updateFlashcard(flashcard);
-            }
-        }
-    }
-
     //onclick listener for 2 tab word + kanji
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tabWord:
-//                performSearch();
                 try {
                     getSearchResult();
                 } catch (WordNotFoundException e) {
@@ -315,20 +194,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getSearchResult() throws WordNotFoundException {
-        Word word = performSearch();
-        if (word.getWordID() == -1)
-            throw new WordNotFoundException("That word does not exist.");
-        if (word.getWordID() == -2)
-            throw new WordNotFoundException("You didn't enter anything.");
+        String searchWord = edtSearch.getText().toString();
+        Word word = searchController.performSearch(searchWord);
+        searchController.addWordToFlashcard(word);
         fragmentDataTransfer(word);
-        addToFlashCard();
         edtSearch.dismissDropDown();
         hideKeyboard(getActivity());
-    }
-
-    private class WordNotFoundException extends Exception {
-        public WordNotFoundException(String s) {
-            super(s);
-        }
     }
 }

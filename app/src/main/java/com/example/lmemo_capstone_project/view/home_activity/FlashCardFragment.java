@@ -87,7 +87,7 @@ public class FlashCardFragment extends Fragment {
     }
 
     private int numberOfFlashcards() {
-        return LMemoDatabase.getInstance(getContext()).flashcardDAO().getNumberOfFlashcards();
+        return LMemoDatabase.getInstance(getContext()).flashcardDAO().getNumberOfVisibleFlashcards();
     }
 
     /**

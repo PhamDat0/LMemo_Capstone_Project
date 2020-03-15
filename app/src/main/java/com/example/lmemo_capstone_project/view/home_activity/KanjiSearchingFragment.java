@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.KanjiDAO;
+import com.example.lmemo_capstone_project.controller.search_controller.SearchController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Kanji;
 
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ import java.util.List;
  */
 public class KanjiSearchingFragment extends Fragment {
 
+    private List<Kanji> listKanji;
+    private ListView kanjiListView;
+
     public KanjiSearchingFragment() {
 
     }
@@ -30,9 +34,6 @@ public class KanjiSearchingFragment extends Fragment {
         listKanji = new ArrayList<>();
         getKanji(enteredWord);
     }
-
-    private List<Kanji> listKanji;
-    private ListView kanjiListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,14 +50,8 @@ public class KanjiSearchingFragment extends Fragment {
      *                    この関数は漢字を検索し、結果のリストに漢字の情報を追加します。
      */
     public void getKanji(String enteredWord) {
-        int count = 0;
         KanjiDAO kanjiDAO = LMemoDatabase.getInstance(getContext()).kanjiDAO();
-        for (int i = 0; i < enteredWord.length() && count < 5; i++) {
-            Kanji[] kanji = kanjiDAO.getKanji(enteredWord.charAt(i) + "");
-            if (kanji.length != 0) {
-                listKanji.add(kanji[0]);
-                count++;
-            }
-        }
+        SearchController searchController = new SearchController(kanjiDAO);
+        listKanji = searchController.searchForKanji(enteredWord);
     }
 }
