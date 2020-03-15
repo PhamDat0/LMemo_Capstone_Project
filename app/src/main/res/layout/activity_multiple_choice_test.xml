@@ -7,7 +7,7 @@
     android:paddingStart="68dp"
     android:paddingEnd="68dp"
     android:background="#A8B2E4"
-    tools:context=".view.review_activity.MultipleChoiceTestActivity">
+    tools:context=".view.home_activity.flashcard_view.review_activity.MultipleChoiceTestActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/aboveLayout"

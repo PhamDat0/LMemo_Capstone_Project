@@ -1,4 +1,4 @@
-package com.example.lmemo_capstone_project.view.home_activity;
+package com.example.lmemo_capstone_project.view.home_activity.note_view;
 
 import android.app.Activity;
 import android.graphics.Color;

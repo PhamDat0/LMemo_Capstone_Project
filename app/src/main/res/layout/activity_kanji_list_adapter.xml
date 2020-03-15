@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context=".view.home_activity.KanjiListAdapter">
+    tools:context=".view.home_activity.search_view.KanjiListAdapter">
     <TextView
         android:id="@+id/tvKanji"
         android:layout_width="120dp"

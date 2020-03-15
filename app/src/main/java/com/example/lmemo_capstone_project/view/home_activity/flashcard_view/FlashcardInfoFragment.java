@@ -1,4 +1,4 @@
-package com.example.lmemo_capstone_project.view.home_activity;
+package com.example.lmemo_capstone_project.view.home_activity.flashcard_view;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
-import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 

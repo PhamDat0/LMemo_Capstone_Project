@@ -1,6 +1,5 @@
-package com.example.lmemo_capstone_project.view.home_activity;
+package com.example.lmemo_capstone_project.view.home_activity.search_view;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,8 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -30,6 +29,7 @@ import com.example.lmemo_capstone_project.controller.note_controller.GetPublicNo
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.home_activity.note_view.NoteListAdapter;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -183,7 +183,7 @@ public class WordSearchingFragment extends Fragment {
         noteListView.setAdapter(noteListAdapter);
     }
 
-    public void addListenerOnSpinnerItemSelection(View v) {
+    private void addListenerOnSpinnerItemSelection(View v) {
         spinnerSort = v.findViewById(R.id.spinnerSort);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),

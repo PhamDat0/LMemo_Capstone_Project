@@ -1,4 +1,4 @@
-package com.example.lmemo_capstone_project.view.home_activity;
+package com.example.lmemo_capstone_project.view.home_activity.flashcard_view;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -22,8 +22,9 @@ import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
-import com.example.lmemo_capstone_project.view.review_activity.MultipleChoiceTestActivity;
-import com.example.lmemo_capstone_project.view.review_activity.WritingTestActivity;
+import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
+import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.review_activity.MultipleChoiceTestActivity;
+import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.review_activity.WritingTestActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

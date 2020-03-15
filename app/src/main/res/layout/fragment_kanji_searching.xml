@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#DFD8D8"
     android:orientation="vertical"
-    tools:context=".view.home_activity.KanjiSearchingFragment">
+    tools:context=".view.home_activity.search_view.KanjiSearchingFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

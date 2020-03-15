@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
-import com.example.lmemo_capstone_project.view.home_activity.WordSearchingFragment;
+import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;

@@ -1,29 +1,25 @@
-package com.example.lmemo_capstone_project.view.home_activity;
+package com.example.lmemo_capstone_project.view.home_activity.note_view;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.lmemo_capstone_project.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class SettingsFragment extends Fragment {
 
-    public SettingsFragment() {
+public class PrivateNoteTab extends Fragment {
+    public PrivateNoteTab() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        // Inflate the layout for this fragment
+        final View view = inflater.inflate(R.layout.fragment_private_note_tab, container, false);
         return view;
     }
 }

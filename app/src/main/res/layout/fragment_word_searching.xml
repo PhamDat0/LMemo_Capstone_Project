@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#DFD8D8"
     android:orientation="vertical"
-    tools:context=".view.home_activity.WordSearchingFragment">
+    tools:context=".view.home_activity.search_view.WordSearchingFragment">
 
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"

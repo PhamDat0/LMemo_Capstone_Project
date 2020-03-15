@@ -1,4 +1,4 @@
-package com.example.lmemo_capstone_project.view.home_activity;
+package com.example.lmemo_capstone_project.view.home_activity.constant_view;
 
 
 import android.os.Bundle;

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/loginbackground"
-    tools:context=".view.home_activity.SignInFragment">
+    tools:context=".view.home_activity.account_view.SignInFragment">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"

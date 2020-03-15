@@ -9,6 +9,8 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.view.home_activity.search_view.SearchFragment;
+import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
 
 import org.junit.Before;
 import org.junit.Rule;

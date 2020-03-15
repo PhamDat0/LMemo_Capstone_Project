@@ -1,7 +1,6 @@
 package com.example.lmemo_capstone_project.controller.note_controller;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,13 +12,11 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
-import com.example.lmemo_capstone_project.view.home_activity.FlashcardInfoFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;

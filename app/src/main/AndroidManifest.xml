@@ -34,10 +34,10 @@
 
         </service>
 
-        <activity android:name=".view.home_activity.FlashcardListAdapter" />
-        <activity android:name=".view.review_activity.WritingTestActivity" />
-        <activity android:name=".view.review_activity.MultipleChoiceTestActivity" />
-        <activity android:name=".view.home_activity.KanjiListAdapter" />
+        <activity android:name=".view.home_activity.flashcard_view.FlashcardListAdapter" />
+        <activity android:name=".view.home_activity.flashcard_view.review_activity.WritingTestActivity" />
+        <activity android:name=".view.home_activity.flashcard_view.review_activity.MultipleChoiceTestActivity" />
+        <activity android:name=".view.home_activity.search_view.KanjiListAdapter" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -71,7 +71,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".view.home_activity.AlarmNotificationReceiver"/>
+        <!--        <receiver android:name=".view.home_activity.AlarmNotificationReceiver"/>-->
 
     </application>
 

@@ -1,4 +1,4 @@
-package com.example.lmemo_capstone_project.view.review_activity;
+package com.example.lmemo_capstone_project.view.home_activity.flashcard_view.review_activity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
