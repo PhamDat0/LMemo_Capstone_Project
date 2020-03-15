@@ -25,7 +25,7 @@ import androidx.fragment.app.Fragment;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.note_controller.AddNoteController;
-import com.example.lmemo_capstone_project.controller.note_controller.GetPublicNoteController;
+import com.example.lmemo_capstone_project.controller.note_controller.GetNoteController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
@@ -150,7 +150,7 @@ public class WordSearchingFragment extends Fragment {
     }
 
     private void loadPublicNote() {
-        final GetPublicNoteController getPublicNoteController = new GetPublicNoteController(this);
+        final GetNoteController getNoteController = new GetNoteController(this);
 //        getPublicNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
 
         final InternetCheckingController internetCheckingController = new InternetCheckingController();
@@ -158,9 +158,9 @@ public class WordSearchingFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(0)) && internetCheckingController.isOnline(getContext())) {
-                    getPublicNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
+                    getNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
                 } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(1)) && internetCheckingController.isOnline(getContext())) {
-                    getPublicNoteController.getAllNoteDescendingFromFirebase(noteListView, getActivity(), wordID);
+                    getNoteController.getAllNoteDescendingFromFirebase(noteListView, getActivity(), wordID);
                 } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(2)) && internetCheckingController.isOnline(getContext())) {
                     //
                 } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(3)) && internetCheckingController.isOnline(getContext())) {

@@ -26,9 +26,6 @@ public interface NoteDAO {
     @Query("SELECT * FROM Note")
     Note[] loadAllNotes();
 
-    @Query("SELECT * FROM Note WHERE PublicStatus = :publicStatus")
-    Note[] loadNotesByStatus(boolean publicStatus);
-
 //    @Query("SELECT DisplayName, NoteContent FROM Note N, User U, Word W WHERE N.UserID = U.UserID AND PublicStatus = 1")
 //    Note[] loadNotesAssociateToWord();
 
@@ -37,4 +34,7 @@ public interface NoteDAO {
     @Transaction
     @Query("SELECT * FROM Note")
     List<NoteWithWords> getNotesWithWords();
+
+    @Query("SELECT * FROM Note WHERE PublicStatus = :mode AND UserID = :userID")
+    Note[] getNotesOfUser(boolean mode, String userID);
 }

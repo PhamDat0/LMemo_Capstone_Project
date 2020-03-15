@@ -6,6 +6,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
@@ -19,18 +20,27 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class GetPublicNoteController {
+public class GetNoteController {
+    public static final boolean GET_OFFLINE_NOTE_PRIVATE = false;
+    public static final boolean GET_OFFLINE_NOTE_PUBLIC = true;
+    private NoteDAO noteDAO;
     private FirebaseFirestore db;
     private WordSearchingFragment wordSearchingFragment;
     private ArrayList<Note> listNote;
     private ArrayList<User> listUser;
 
-    public GetPublicNoteController(WordSearchingFragment wordSearchingFragment) {
+    public GetNoteController(WordSearchingFragment wordSearchingFragment) {
         db = FirebaseFirestore.getInstance();
         this.wordSearchingFragment = wordSearchingFragment;
+    }
+
+    public GetNoteController(NoteDAO noteDAO) {
+        this.noteDAO = noteDAO;
     }
 
     /**
@@ -114,13 +124,18 @@ public class GetPublicNoteController {
     }
 
     private void compareTwoListSize() {
-        Log.d("compare_size", listNote.size()+" / "+ listUser.size());
-        if(listNote.size()==listUser.size()) {
-            Map<String,User> listUserMap = new HashMap<>();
-            for(User user: listUser) {
-                listUserMap.put(user.getUserID(),user);
+        Log.d("compare_size", listNote.size() + " / " + listUser.size());
+        if (listNote.size() == listUser.size()) {
+            Map<String, User> listUserMap = new HashMap<>();
+            for (User user : listUser) {
+                listUserMap.put(user.getUserID(), user);
             }
-            wordSearchingFragment.updateUI(listNote,listUserMap);
+            wordSearchingFragment.updateUI(listNote, listUserMap);
         }
+    }
+
+    public List<Note> getOfflineNote(boolean mode, String userID) {
+        Note[] notesOfUser = noteDAO.getNotesOfUser(mode, userID);
+        return Arrays.asList(notesOfUser);
     }
 }
