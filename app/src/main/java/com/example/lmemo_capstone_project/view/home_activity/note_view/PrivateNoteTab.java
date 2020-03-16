@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.view.home_activity.note_view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import java.util.Map;
 
 public class PrivateNoteTab extends Fragment {
 
+    private View view;
+
     public PrivateNoteTab() {
         // Required empty public constructor
     }
@@ -31,7 +34,19 @@ public class PrivateNoteTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_private_note_tab, container, false);
+        view = inflater.inflate(R.layout.fragment_private_note_tab, container, false);
+        loadNoteToUI();
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("RESUME", "Get here");
+        loadNoteToUI();
+    }
+
+    private void loadNoteToUI() {
         ListView noteListView = view.findViewById(R.id.noteViewer);
         NoteDAO noteDAO = LMemoDatabase.getInstance(getContext()).noteDAO();
         UserDAO userDAO = LMemoDatabase.getInstance(getContext()).userDAO();
@@ -48,6 +63,5 @@ public class PrivateNoteTab extends Fragment {
         listUserMap.put(user.getUserID(), user);
         NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap);
         noteListView.setAdapter(noteListAdapter);
-        return view;
     }
 }

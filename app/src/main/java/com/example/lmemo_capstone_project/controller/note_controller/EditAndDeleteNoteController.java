@@ -1,7 +1,6 @@
 package com.example.lmemo_capstone_project.controller.note_controller;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 
 public class EditAndDeleteNoteController {
-    private Context context;
     private WordDAO wordDAO;
     private NoteDAO noteDAO;
     private UserDAO userDAO;
@@ -43,7 +41,6 @@ public class EditAndDeleteNoteController {
     private List<String> listWordID;
 
     public EditAndDeleteNoteController(Activity activity) {
-        this.context = activity.getApplicationContext();
         db = FirebaseFirestore.getInstance();
         wordDAO = LMemoDatabase.getInstance(activity.getApplicationContext()).wordDAO();
         userDAO = LMemoDatabase.getInstance(activity.getApplicationContext()).userDAO();

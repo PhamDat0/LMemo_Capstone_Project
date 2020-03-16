@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.view.home_activity.search_view;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -17,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
@@ -25,7 +25,8 @@ import com.example.lmemo_capstone_project.controller.note_controller.GetNoteCont
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
-import com.example.lmemo_capstone_project.view.home_activity.note_view.CreateNoteDialog;
+import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
+import com.example.lmemo_capstone_project.view.home_activity.note_view.CreateNoteActivity;
 import com.example.lmemo_capstone_project.view.home_activity.note_view.NoteListAdapter;
 
 import java.util.ArrayList;
@@ -113,9 +114,13 @@ public class WordSearchingFragment extends Fragment {
 //        });
 //        addNoteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        addNoteDialog.show();
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        CreateNoteDialog editNameDialogFragment = CreateNoteDialog.newDialogForAdding(getWord());
-        editNameDialogFragment.show(fm, "Add note");
+//        FragmentManager fm = getActivity().getSupportFragmentManager();
+//        CreateNoteDialog editNameDialogFragment = CreateNoteDialog.newDialogForAdding(getWord());
+//        editNameDialogFragment.show(fm, "Add note");
+        Intent intent = new Intent(getActivity(), CreateNoteActivity.class);
+        intent.putExtra("mode", CreateNoteActivity.IN_ADDING_MODE);
+        intent.putExtra("word", getWord());
+        startActivityForResult(intent, HomeActivity.ADD_NOTE_REQUEST_CODE);
     }
 
     private void wordSearchResult(View container) {

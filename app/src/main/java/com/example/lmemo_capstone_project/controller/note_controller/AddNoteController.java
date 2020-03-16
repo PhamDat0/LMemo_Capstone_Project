@@ -73,10 +73,7 @@ public class AddNoteController {
 //        noteOfWord.setWordID(wordID);
         if (noteStatus == false) {
             addNoteToSQLite(note);
-            for (Word word : words) {
-                noteOfWord.setWordID(word.getWordID());
-                noteOfWordDAO.insertNoteOfWord(noteOfWord);
-            }
+            addNoteOfWordToSQL(words, noteOfWord);
         } else {
             if (!user.getUserID().equals("GUEST") && !user.getUserID().isEmpty()) {
                 if (InternetCheckingController.isOnline(context)) {
@@ -86,10 +83,7 @@ public class AddNoteController {
                     }
                     addNoteToSQLite(note);
                     addNoteToCloudFireStore(note, wordIDArray);
-                    for (Word word : words) {
-                        noteOfWord.setWordID(word.getWordID());
-                        noteOfWordDAO.insertNoteOfWord(noteOfWord);
-                    }
+                    addNoteOfWordToSQL(words, noteOfWord);
                 } else {
                     throw new CannotPerformFirebaseRequest("There is no internet.");
                 }
@@ -99,7 +93,14 @@ public class AddNoteController {
         }
     }
 
-    public void addNoteToSQLite(Note note){
+    private void addNoteOfWordToSQL(List<Word> words, NoteOfWord noteOfWord) {
+        for (Word word : words) {
+            noteOfWord.setWordID(word.getWordID());
+            noteOfWordDAO.insertNoteOfWord(noteOfWord);
+        }
+    }
+
+    private void addNoteToSQLite(Note note) {
         noteDB.insertNote(note);
     }
 
@@ -116,11 +117,13 @@ public class AddNoteController {
                 Log.w("AddNoteActivity", "Add new note successful " + documentReference.getId());
                 note.setOnlineID(documentReference.getId());
                 noteDB.updateNote(note);
+                Log.d("AddNoteActivity", "We get this far");
                 User user = LMemoDatabase.getInstance(context).userDAO().getLocalUser()[0];
                 user.setContributionPoint(user.getContributionPoint() + 1);
                 new MyAccountController().updateUser(user);
                 Log.d("AddNoteActivity", user.getContributionPoint() + "");
                 userDB.updateUser(user);
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

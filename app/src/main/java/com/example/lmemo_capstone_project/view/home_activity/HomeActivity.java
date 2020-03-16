@@ -36,13 +36,15 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final int TEST_FLASHCARD_REQUEST_CODE = 100;
+    public static final int ADD_NOTE_REQUEST_CODE = 101;
+    public static final int EDIT_NOTE_REQUEST_CODE = 102;
 
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
     private FirebaseAuth mAuth;
-    private int wordID=-1;
+    private int wordID = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         mDrawerLayout = findViewById(R.id.home_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.open,R.string.close);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open, R.string.close);
 
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
@@ -68,30 +70,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         mAuth = FirebaseAuth.getInstance();
-
-//        RewardDAO rewardDAO = LMemoDatabase.getInstance(getApplicationContext()).rewardDAO();
-//        for(int i=0;i<=5;i++) {
-//            Reward r = new Reward();
-//            r.setRewardID(i);
-//            r.setRewardName("Reward:" + i);
-//            r.setMinimumReachPoint(i*10);
-//            rewardDAO.insertReward(r);
-//        }
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        loadWord(intent);
+    }
+
+    private void loadWord(Intent intent) {
         Bundle extras = intent.getExtras();
-        if(extras != null){
-            if(extras.containsKey("wordID"))
-            {
+        if (extras != null) {
+            if (extras.containsKey("wordID")) {
 
                 wordID = extras.getInt("wordID");
-                Log.w("HomeActivity", "Got Something: "+wordID+" blo bla: "+extras.getInt("wordID")+ " exists: "+extras.containsKey("wordID"));
+                Log.w("HomeActivity", "Got Something: " + wordID + " blo bla: " + extras.getInt("wordID") + " exists: " + extras.containsKey("wordID"));
             }
 
-        }
-        else {
+        } else {
             Log.w("HomeActivity", "Nothing found ");
         }
         DefaultFragment();
@@ -105,11 +101,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Reward reward1 = new Reward();
         Reward reward2 = new Reward();
         Reward reward3 = new Reward();
-        Reward reward4= new Reward();
+        Reward reward4 = new Reward();
         Reward reward5 = new Reward();
         RewardDAO rewardDAO = lMemoDatabase.rewardDAO();
         Reward[] getRewards = rewardDAO.getRewards();
-        if(getRewards.length==0) {
+        if (getRewards.length == 0) {
             reward.setRewardName("User");
             reward.setMinimumReachPoint(0);
             rewardDAO.insertReward(reward);
@@ -140,14 +136,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             reward5.setRewardID(5);
             rewardDAO.insertReward(reward5);
         } else {
-            Log.d("myApp","Reward info:" +getRewards.length + getRewards[0].getRewardID() +" --" +
-                            getRewards[0].getRewardName()+"-"+getRewards[0].getMinimumReachPoint()
+            Log.d("myApp", "Reward info:" + getRewards.length + getRewards[0].getRewardID() + " --" +
+                    getRewards[0].getRewardName() + "-" + getRewards[0].getMinimumReachPoint()
                     + "---"
-                    + getRewards[1].getRewardName()+"-"+getRewards[1].getMinimumReachPoint() + "---"
-                    + getRewards[2].getRewardName()+"-"+getRewards[2].getMinimumReachPoint() + "---"
-                    + getRewards[3].getRewardName() +"-"+getRewards[3].getMinimumReachPoint() + "---"
-                    + getRewards[4].getRewardName()+"-"+getRewards[4].getMinimumReachPoint()
-                    + "---" + getRewards[5].getRewardName() +"-"+getRewards[5].getMinimumReachPoint() + "---");
+                    + getRewards[1].getRewardName() + "-" + getRewards[1].getMinimumReachPoint() + "---"
+                    + getRewards[2].getRewardName() + "-" + getRewards[2].getMinimumReachPoint() + "---"
+                    + getRewards[3].getRewardName() + "-" + getRewards[3].getMinimumReachPoint() + "---"
+                    + getRewards[4].getRewardName() + "-" + getRewards[4].getMinimumReachPoint()
+                    + "---" + getRewards[5].getRewardName() + "-" + getRewards[5].getMinimumReachPoint() + "---");
         }
     }
 
@@ -159,21 +155,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     //Default cho man hinh home la search
-    public void DefaultFragment(){
+    public void DefaultFragment() {
 
         SearchFragment fragment = new SearchFragment();
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-        fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"searchHome");
+        fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "searchHome");
         WordSearchingFragment wordFragment = new WordSearchingFragment();
-        if(wordID != -1){
+        if (wordID != -1) {
             Bundle bundle = new Bundle();
-            bundle.putInt("wordID",wordID);
+            bundle.putInt("wordID", wordID);
             fragment.setArguments(bundle);
-            Log.w("HomeActivity", "Run at HomeActivity"+ bundle.toString());
+            Log.w("HomeActivity", "Run at HomeActivity" + bundle.toString());
         }
-        fragmentTransaction.replace(R.id.searchFrameLayout,wordFragment,"SearchWord");
+        fragmentTransaction.replace(R.id.searchFrameLayout, wordFragment, "SearchWord");
         fragmentTransaction.commit();
 
     }
@@ -183,69 +179,54 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.Search_Home){
+        if (id == R.id.Search_Home) {
             DefaultFragment();
-        }
-        else if(id == R.id.login){
+        } else if (id == R.id.login) {
             SignInFragment fragment = new SignInFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"signIn");
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "signIn");
             fragmentTransaction.commit();
-        }
+        } else if (id == R.id.createAcc) {
 
-        else if(id == R.id.createAcc){
-
-        }
-        else if(id == R.id.myAccount){
+        } else if (id == R.id.myAccount) {
             Fragment fragment = LMemoDatabase.getInstance(getApplicationContext()).userDAO().
                     getLocalUser()[0].isGuest() ? new SignInFragment() : new MyAccountFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"myAccount");
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "myAccount");
             fragmentTransaction.commit();
-        }
-        else if(id == R.id.myFlashcard){
+        } else if (id == R.id.myFlashcard) {
             showFlashcardFragment();
-        }
-        else if(id == R.id.myNote){
-            NotesFragment fragment = new NotesFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"Notes");
-            fragmentTransaction.commit();
-        }
-        else if(id == R.id.settings){
+        } else if (id == R.id.myNote) {
+            showNoteFragment();
+        } else if (id == R.id.settings) {
             SettingsFragment fragment = new SettingsFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"Settings");
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "Settings");
             fragmentTransaction.commit();
-        }
-        else if(id == R.id.contact){
+        } else if (id == R.id.contact) {
             ContactUsFragment fragment = new ContactUsFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"Contact");
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "Contact");
             fragmentTransaction.commit();
-        }
-        else if(id == R.id.newInfo){
+        } else if (id == R.id.newInfo) {
             WhatsNewFragment fragment = new WhatsNewFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"whatNew");
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "whatNew");
             fragmentTransaction.commit();
-        }
-        else if(id == R.id.terms){
+        } else if (id == R.id.terms) {
             TermsofUseFragment fragment = new TermsofUseFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"termsOfUse");
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "termsOfUse");
             fragmentTransaction.commit();
-        }
-        else if(id == R.id.privacy){
+        } else if (id == R.id.privacy) {
             PrivacyFragment fragment = new PrivacyFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"privacy");
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "privacy");
             fragmentTransaction.commit();
-        }
-        else if(id == R.id.signOut){
+        } else if (id == R.id.signOut) {
             final SignInFragment fragment = new SignInFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout,fragment,"signIn");
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "signIn");
             fragmentTransaction.runOnCommit(new Runnable() {
                 @Override
                 public void run() {
@@ -270,10 +251,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         FragmentManager manager = getSupportFragmentManager();
-        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
-            //        } else if(manager.getBackStackEntryCount() > 1 ) {
+        //        } else if(manager.getBackStackEntryCount() > 1 ) {
 //            manager.popBackStack();//Pops one of the added fragments
 //        }
     }
@@ -286,7 +267,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(getApplicationContext(), "Test complete", Toast.LENGTH_LONG).show();
                 showFlashcardFragment();
                 break;
+            case ADD_NOTE_REQUEST_CODE:
+                loadWord(data);
+                break;
+            case EDIT_NOTE_REQUEST_CODE:
+                showNoteFragment();
+                break;
         }
+    }
+
+    private void showNoteFragment() {
+        NotesFragment fragment = new NotesFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "Notes");
+        fragmentTransaction.commit();
     }
 
 }

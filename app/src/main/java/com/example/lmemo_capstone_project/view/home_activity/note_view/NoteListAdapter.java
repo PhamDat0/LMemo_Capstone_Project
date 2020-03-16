@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.view.home_activity.note_view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
@@ -22,6 +22,7 @@ import com.example.lmemo_capstone_project.controller.note_controller.EditAndDele
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -139,9 +140,14 @@ public class NoteListAdapter extends BaseAdapter {
     }
 
     private void callForEditDialog(int position) {
-        FragmentManager fm = ((FragmentActivity) aContext).getSupportFragmentManager();
-        CreateNoteDialog editNameDialogFragment = CreateNoteDialog.newDialogForEditing(listNote.get(position));
-        editNameDialogFragment.show(fm, "Edit note");
+//        FragmentManager fm = ((FragmentActivity) aContext).getSupportFragmentManager();
+//        CreateNoteDialog editNameDialogFragment = CreateNoteDialog.newDialogForEditing(listNote.get(position));
+//        editNameDialogFragment.show(fm, "Edit note");
+        Intent intent = new Intent(aContext, CreateNoteActivity.class);
+        intent.putExtra("mode", CreateNoteActivity.IN_EDITING_MODE);
+        intent.putExtra("note", listNote.get(position));
+        Log.i("NOTE_ID", listNote.get(position).getOnlineID() == null ? "null" : listNote.get(position).getOnlineID());
+        aContext.startActivityForResult(intent, HomeActivity.EDIT_NOTE_REQUEST_CODE);
     }
 
     private void updateUI(int position) {

@@ -25,6 +25,8 @@ import java.util.Map;
  */
 public class PublicNoteTab extends Fragment {
 
+    View view;
+
     public PublicNoteTab() {
         // Required empty public constructor
     }
@@ -33,7 +35,12 @@ public class PublicNoteTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_public_note_tab, container, false);
+        view = inflater.inflate(R.layout.fragment_public_note_tab, container, false);
+        loadNoteToUI();
+        return view;
+    }
+
+    private void loadNoteToUI() {
         ListView noteListView = view.findViewById(R.id.noteViewer);
         NoteDAO noteDAO = LMemoDatabase.getInstance(getContext()).noteDAO();
         UserDAO userDAO = LMemoDatabase.getInstance(getContext()).userDAO();
@@ -50,6 +57,11 @@ public class PublicNoteTab extends Fragment {
         listUserMap.put(user.getUserID(), user);
         NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap);
         noteListView.setAdapter(noteListAdapter);
-        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadNoteToUI();
     }
 }

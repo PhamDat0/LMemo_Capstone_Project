@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
@@ -15,7 +16,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.common.collect.Lists;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -51,48 +54,75 @@ public class GetNoteController {
      */
     public void getAllNoteAscendingFromFirebase(final ListView listview, final Activity activity, int wordID) {
         db.collection("notes").whereArrayContains("wordID", wordID).
-                orderBy("createdTime", Query.Direction.ASCENDING).
-                get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                Log.d("myApp", "Get here");
-                listNote = new ArrayList<>();
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                        Log.d("myApp", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                        Note note = documentSnapshot.toObject(Note.class);
-                        Map<String, Object> noteMap = documentSnapshot.getData();
-                        note.setCreatorUserID((String) noteMap.get("userID"));
-                        listNote.add(note);
+                orderBy("createdTime", Query.Direction.ASCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        listNote = new ArrayList<>();
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Note note = documentSnapshot.toObject(Note.class);
+                            Map<String, Object> noteMap = documentSnapshot.getData();
+                            note.setCreatorUserID((String) noteMap.get("userID"));
+                            listNote.add(note);
+                        }
+                        getUserList();
                     }
-                    getUserList();
-                } else {
-                    Log.d("MyApp", "Error getting documents: ", task.getException());
-                }
-            }
-        });
+                });
+//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                Log.d("myApp", "Get here");
+//                listNote = new ArrayList<>();
+//                if (task.isSuccessful()) {
+//                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                        Log.d("myApp", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+//                        Note note = documentSnapshot.toObject(Note.class);
+//                        Map<String, Object> noteMap = documentSnapshot.getData();
+//                        note.setCreatorUserID((String) noteMap.get("userID"));
+//                        listNote.add(note);
+//                    }
+//                    getUserList();
+//                } else {
+//                    Log.d("MyApp", "Error getting documents: ", task.getException());
+//                }
+//            }
+//        });
     }
 
     public void getAllNoteDescendingFromFirebase(final ListView listview, final Activity activity, int wordID) {
         db.collection("notes").whereArrayContains("wordID", wordID).
-                orderBy("createdTime", Query.Direction.DESCENDING).
-                get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                listNote = new ArrayList<>();
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                        Note note = documentSnapshot.toObject(Note.class);
-                        Map<String, Object> noteMap = documentSnapshot.getData();
-                        note.setCreatorUserID((String) noteMap.get("userID"));
-                        listNote.add(note);
+                orderBy("createdTime", Query.Direction.DESCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        listNote = new ArrayList<>();
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Note note = documentSnapshot.toObject(Note.class);
+                            Map<String, Object> noteMap = documentSnapshot.getData();
+                            note.setCreatorUserID((String) noteMap.get("userID"));
+                            listNote.add(note);
+                        }
+                        getUserList();
                     }
-                    getUserList();
-                } else {
-                    Log.d("MyApp", "Error getting documents: ", task.getException());
-                }
-            }
-        });
+                });
+//
+//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                listNote = new ArrayList<>();
+//                if (task.isSuccessful()) {
+//                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+//                        Note note = documentSnapshot.toObject(Note.class);
+//                        Map<String, Object> noteMap = documentSnapshot.getData();
+//                        note.setCreatorUserID((String) noteMap.get("userID"));
+//                        listNote.add(note);
+//                    }
+//                    getUserList();
+//                } else {
+//                    Log.d("MyApp", "Error getting documents: ", task.getException());
+//                }
+//            }
+//        });
     }
 
     private void getUserList() {
