@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
@@ -82,8 +83,12 @@ public class AssociatedWordAdapter extends BaseAdapter {
     }
 
     private void deleteWordFromList(int position) {
-        listWord.remove(position);
-        notifyDataSetChanged();
+        if (listWord.size() > 1) {
+            listWord.remove(position);
+            notifyDataSetChanged();
+        } else {
+            Toast.makeText(aContext, "Cannot remove every association", Toast.LENGTH_LONG).show();
+        }
     }
 
     public List<Word> getListOfWord() {

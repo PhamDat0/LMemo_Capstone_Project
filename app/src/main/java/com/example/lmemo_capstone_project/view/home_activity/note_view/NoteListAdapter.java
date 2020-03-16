@@ -140,9 +140,6 @@ public class NoteListAdapter extends BaseAdapter {
     }
 
     private void callForEditDialog(int position) {
-//        FragmentManager fm = ((FragmentActivity) aContext).getSupportFragmentManager();
-//        CreateNoteDialog editNameDialogFragment = CreateNoteDialog.newDialogForEditing(listNote.get(position));
-//        editNameDialogFragment.show(fm, "Edit note");
         Intent intent = new Intent(aContext, CreateNoteActivity.class);
         intent.putExtra("mode", CreateNoteActivity.IN_EDITING_MODE);
         intent.putExtra("note", listNote.get(position));

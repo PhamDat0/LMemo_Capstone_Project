@@ -77,46 +77,6 @@ public class WordSearchingFragment extends Fragment {
     }
 
     private void showAddNoteDialog(View v) {
-//        final AddNoteController addNoteController = new AddNoteController(this.getActivity());
-//        addNoteDialog.setContentView(R.layout.demo_popup_add_note);
-//        final EditText txtNoteContent = (EditText) addNoteDialog.findViewById(R.id.txtTakeNote);
-//        TextView txtWord = (TextView) addNoteDialog.findViewById(R.id.txtWord);
-//        Button btnSave = (Button) addNoteDialog.findViewById(R.id.btnAddNote);
-//        Button btnCancel = (Button) addNoteDialog.findViewById(R.id.btnCancelAddNote);
-//        final Switch isPublic = (Switch) addNoteDialog.findViewById(R.id.isNotePublic);
-//        final Word word = getWord();
-//        txtWord.setText(word.getKana());
-//        btnSave.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try {
-//                    if (!txtNoteContent.getText().toString().isEmpty()) {
-//                        addNoteController.getNoteFromUI(word.getWordID(), txtNoteContent.getText().toString(), isPublic.isChecked());
-//                        Toast.makeText(getContext(), "Add note successful", Toast.LENGTH_LONG).show();
-//                        addNoteDialog.dismiss();
-//                        loadPublicNote();
-//                    } else {
-//                        txtNoteContent.setError("Please enter note");
-//                    }
-//                } catch (Exception e) {
-//                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//                } catch (CannotPerformFirebaseRequest e) {
-//                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//                }
-//
-//            }
-//        });
-//        btnCancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                addNoteDialog.dismiss();
-//            }
-//        });
-//        addNoteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        addNoteDialog.show();
-//        FragmentManager fm = getActivity().getSupportFragmentManager();
-//        CreateNoteDialog editNameDialogFragment = CreateNoteDialog.newDialogForAdding(getWord());
-//        editNameDialogFragment.show(fm, "Add note");
         Intent intent = new Intent(getActivity(), CreateNoteActivity.class);
         intent.putExtra("mode", CreateNoteActivity.IN_ADDING_MODE);
         intent.putExtra("word", getWord());
