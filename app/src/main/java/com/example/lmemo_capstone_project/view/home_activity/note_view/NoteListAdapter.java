@@ -11,6 +11,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
@@ -115,6 +118,30 @@ public class NoteListAdapter extends BaseAdapter {
                 }
             }
         });
+        holder.ibEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (aContext instanceof FragmentActivity) {
+                    if (listNote.get(position).isPublic()) {
+                        if (InternetCheckingController.isOnline(aContext)) {
+                            callForEditDialog(position);
+                        } else {
+                            Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        callForEditDialog(position);
+                    }
+                } else {
+                    throw new UnsupportedOperationException("This action is not supported");
+                }
+            }
+        });
+    }
+
+    private void callForEditDialog(int position) {
+        FragmentManager fm = ((FragmentActivity) aContext).getSupportFragmentManager();
+        CreateNoteDialog editNameDialogFragment = CreateNoteDialog.newDialogForEditing(listNote.get(position));
+        editNameDialogFragment.show(fm, "Edit note");
     }
 
     private void updateUI(int position) {

@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.controller.note_controller;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import com.example.lmemo_capstone_project.controller.my_account_controller.MyAcc
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EditAndDeleteNoteController {
+    private Context context;
     private WordDAO wordDAO;
     private NoteDAO noteDAO;
     private UserDAO userDAO;
@@ -40,6 +43,7 @@ public class EditAndDeleteNoteController {
     private List<String> listWordID;
 
     public EditAndDeleteNoteController(Activity activity) {
+        this.context = activity.getApplicationContext();
         db = FirebaseFirestore.getInstance();
         wordDAO = LMemoDatabase.getInstance(activity.getApplicationContext()).wordDAO();
         userDAO = LMemoDatabase.getInstance(activity.getApplicationContext()).userDAO();
@@ -49,11 +53,77 @@ public class EditAndDeleteNoteController {
         listWordID = new ArrayList<>();
     }
 
-    public void updateNoteOfWordInSQLite(Note note, String noteContent, boolean noteStatus, int wordID) {
-        Date date = new Date();
+    public void updateNote(Note note, String noteContent, boolean noteStatus, List<Word> words) {
+        if (note.isPublic()) {
+            if (!noteStatus) {
+                deleteNoteFromFB(note);
+            } else {
+                updateNoteOnFirebase(note, noteContent, noteStatus, words);
+            }
+        } else {
+            if (noteStatus) {
+                addNoteToFirebase(note, noteContent, noteStatus, words);
+            }
+        }
+        updateNoteInSQLite(note, noteContent, noteStatus, words);
+    }
+
+    private void addNoteToFirebase(final Note note, String noteContent, boolean noteStatus, List<Word> words) {
+        List<Integer> listWordID = new ArrayList<>();
+        for (Word word : words) {
+            listWordID.add(word.getWordID());
+        }
+        Map<String, Object> addNote = new HashMap<>();
+        addNote.put("noteContent", noteContent);
+        addNote.put("translatedContent", note.getTranslatedContent());
+        addNote.put("createdTime", note.getCreatedDate() == null ? new Date() : note.getCreatedDate());
+        addNote.put("userID", note.getCreatorUserID());
+        addNote.put("wordID", listWordID);
+        db.collection("notes").add(addNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.w("AddNoteActivity", "Add new note successful " + documentReference.getId());
+                note.setOnlineID(documentReference.getId());
+                updateUserContributionPoint(1);
+                noteDAO.updateNote(note);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                note.setPublic(false);
+                noteDAO.updateNote(note);
+                Log.w("AddNoteActivity", "Error writing document");
+            }
+        });
+    }
+
+    private void updateNoteOnFirebase(Note note, String noteContent, boolean noteStatus, List<Word> words) {
+        db.collection("notes").document(note.getOnlineID())
+                .update("noteContent", noteContent, "wordID", words)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("EditNoteController", "DocumentSnapshot was successfully updated!");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("EditNoteController", "DocumentSnapshot update fails!");
+            }
+        });
+    }
+
+    private void updateNoteInSQLite(Note note, String noteContent, boolean noteStatus, List<Word> words) {
+        noteOfWordDAO.deleteAllAssociationOfOneNote(note.getNoteID());
+        for (Word word : words) {
+            Log.i("INSERT_HAS_NO_DEFECTS", word.getWordID() + "");
+            NoteOfWord noteOfWord = new NoteOfWord();
+            noteOfWord.setNoteID(note.getNoteID());
+            noteOfWord.setWordID(word.getWordID());
+            noteOfWordDAO.insertNoteOfWord(noteOfWord);
+        }
         note.setNoteContent(noteContent);
         note.setTranslatedContent("");
-        note.setCreatedDate(date);
         note.setPublic(noteStatus);
         noteDAO.updateNote(note);
     }

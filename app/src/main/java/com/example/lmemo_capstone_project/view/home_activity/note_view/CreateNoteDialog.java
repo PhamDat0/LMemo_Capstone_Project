@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,9 @@ import com.example.lmemo_capstone_project.controller.database_controller.LMemoDa
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteOfWordDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
+import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.note_controller.AddNoteController;
+import com.example.lmemo_capstone_project.controller.note_controller.EditAndDeleteNoteController;
 import com.example.lmemo_capstone_project.controller.search_controller.SearchController;
 import com.example.lmemo_capstone_project.controller.search_controller.WordNotFoundException;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
@@ -103,19 +106,18 @@ public class CreateNoteDialog extends DialogFragment {
         btnAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if (!txtTakeNote.getText().toString().isEmpty()) {
-                        addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
-                        Toast.makeText(getContext(), "Add note successful", Toast.LENGTH_LONG).show();
-                        dismiss();
-                    } else {
-                        txtTakeNote.setError("Please enter note");
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                } catch (CannotPerformFirebaseRequest e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                switch (mode) {
+                    case IN_ADDING_MODE:
+                        addNoteHandle();
+                        break;
+                    case IN_EDITING_MODE:
+                        editNoteHandle();
+                        break;
+                    default:
+                        Toast.makeText(getContext(), "There's no such that mode", Toast.LENGTH_LONG).show();
                 }
+                dismiss();
+                associatedWordAdapter.notifyDataSetChanged();
             }
         });
         btnCancelAddNote.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +126,42 @@ public class CreateNoteDialog extends DialogFragment {
                 dismiss();
             }
         });
+    }
+
+    private void editNoteHandle() {
+        if (!txtTakeNote.getText().toString().isEmpty()) {
+            if (note.isPublic() || isNotePublic.isChecked()) {
+                if (InternetCheckingController.isOnline(getContext())) {
+                    performEditNote();
+                } else {
+                    Toast.makeText(getContext(), "There is no internet", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                performEditNote();
+            }
+        } else {
+            txtTakeNote.setError("Please enter note");
+        }
+    }
+
+    private void performEditNote() {
+        EditAndDeleteNoteController editAndDeleteNoteController = new EditAndDeleteNoteController(getActivity());
+        editAndDeleteNoteController.updateNote(note, txtTakeNote.getText().toString(), isNotePublic.isChecked(), associatedWordAdapter.getListOfWord());
+    }
+
+    private void addNoteHandle() {
+        try {
+            if (!txtTakeNote.getText().toString().isEmpty()) {
+                addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
+                Toast.makeText(getContext(), "Add note successful", Toast.LENGTH_LONG).show();
+            } else {
+                txtTakeNote.setError("Please enter note");
+            }
+        } catch (Exception e) {
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (CannotPerformFirebaseRequest e) {
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void setUpActionForEnterWord() {
@@ -231,6 +269,7 @@ public class CreateNoteDialog extends DialogFragment {
         NoteOfWord[] notesOfWord = noteOfWordDAO.getNoteOfWord(note.getNoteID());
         WordDAO wordDAO = LMemoDatabase.getInstance(getContext()).wordDAO();
         for (NoteOfWord noteOfWord : notesOfWord) {
+            Log.i("READ_HAS_NO_DEFECTS", noteOfWord.getWordID() + "");
             addToListView(wordDAO.getWordWithID(noteOfWord.getWordID())[0]);
         }
         isNotePublic.setChecked(note.isPublic());

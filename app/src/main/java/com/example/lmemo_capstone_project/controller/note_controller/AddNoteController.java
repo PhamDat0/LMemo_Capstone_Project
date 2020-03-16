@@ -46,7 +46,6 @@ public class AddNoteController {
         userDB = LMemoDatabase.getInstance(activity.getApplicationContext()).userDAO();
         noteDB = LMemoDatabase.getInstance(activity.getApplicationContext()).noteDAO();
         noteOfWordDAO = LMemoDatabase.getInstance(activity.getApplicationContext()).noteOfWordDAO();
-        User user;
         try {
             user = userDB.getLocalUser()[0];
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -56,7 +55,7 @@ public class AddNoteController {
     }
 
     public void getNoteFromUI(List<Word> words, String noteContent, boolean noteStatus) throws CannotPerformFirebaseRequest {
-        Log.w("Controller add note", user.getDisplayName());
+//        Log.w("Controller add note", user.getDisplayName());
         NoteOfWord noteOfWord = new NoteOfWord();
         Note note = new Note();
         Date date = new Date();

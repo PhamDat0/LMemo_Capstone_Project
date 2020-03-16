@@ -114,9 +114,7 @@ public class WordSearchingFragment extends Fragment {
 //        addNoteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        addNoteDialog.show();
         FragmentManager fm = getActivity().getSupportFragmentManager();
-
         CreateNoteDialog editNameDialogFragment = CreateNoteDialog.newDialogForAdding(getWord());
-
         editNameDialogFragment.show(fm, "Add note");
     }
 
