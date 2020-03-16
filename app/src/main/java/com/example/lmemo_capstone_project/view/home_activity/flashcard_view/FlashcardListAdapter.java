@@ -16,6 +16,7 @@ import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
+import com.example.lmemo_capstone_project.controller.flashcard_controller.FlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
@@ -27,6 +28,7 @@ public class FlashcardListAdapter extends BaseAdapter {
     private ArrayList<Word> listFlashcard;
     private LayoutInflater layoutInflater;
     private FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(aContext).flashcardDAO();
+    private FlashcardController flashcardController;
 
     public FlashcardListAdapter(Activity aContext, ArrayList<Word> listFlashcard) {
         this.aContext = aContext;
@@ -50,6 +52,7 @@ public class FlashcardListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        flashcardController = new FlashcardController(aContext,listFlashcard);
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(aContext).inflate(R.layout.activity_flashcard_list_adapter, null);
@@ -66,21 +69,21 @@ public class FlashcardListAdapter extends BaseAdapter {
         holder.tvKanji.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flashcardInfo(position,v);
+                flashcardController.flashcardInfo(position,v);
             }
         });
         holder.tvKana.setText(listFlashcard.get(position).getKana());
         holder.tvKana.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flashcardInfo(position,v);
+                flashcardController.flashcardInfo(position,v);
             }
         });
 //        holder.btnDelete.setTag(position);
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delete(position);
+                flashcardController.delete(position);
                 listFlashcard.remove(position);
                 notifyDataSetChanged();
 //                refresh();
@@ -96,36 +99,4 @@ public class FlashcardListAdapter extends BaseAdapter {
         TextView tvKana;
         ImageButton btnDelete;
     }
-
-    /**
-     *この関数フラッシュカードを削除します
-     */
-    private void delete(int position) {
-//        Log.d("myapp", position + "" + " || " + listFlashcard.get(position).getWordID());
-        Flashcard flashcard = flashcardDAO.getFlashCardByID(listFlashcard.get(position).getWordID())[0];
-//                        Flashcard flashcard = flashcards[0];
-        flashcard.setLastState(99);
-        flashcardDAO.updateFlashcard(flashcard);
-        if (flashcardDAO.getAllVisibleFlashcard().length == 0) {
-            aContext.findViewById(R.id.btReview).setVisibility(View.INVISIBLE);
-        }
-    }
-
-    private void flashcardInfo(int position,View v) {
-        AppCompatActivity activity = (AppCompatActivity) v.getContext();
-        FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
-        WordDAO wordDAO = LMemoDatabase.getInstance(aContext).wordDAO();
-        Word flashcardDetail = wordDAO.getAWords(listFlashcard.get(position).getKana())[0];
-        Bundle bundle = new Bundle();
-        FlashcardInfoFragment infoFragment = new FlashcardInfoFragment();
-        bundle.putSerializable("wordResult", flashcardDetail);
-        infoFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.FrameFlashcard, infoFragment, "flashcard");
-//        FragmentTransaction ft = getSupportFragmentManager.beginTransaction();
-//        ft.replace(R.id.content, fragment, backStateName);
-        fragmentTransaction.addToBackStack(null);
-//        ft.commit();
-        fragmentTransaction.commit();
-    }
-
 }

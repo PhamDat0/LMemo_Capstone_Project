@@ -9,7 +9,7 @@ public class InternetCheckingController {
      * CHECK WHETHER INTERNET CONNECTION IS AVAILABLE OR NOT
      * この関数はインタネットとモバイルデータをチェックします
      */
-    public boolean isOnline (Context context) {
+    public static boolean isOnline (Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);

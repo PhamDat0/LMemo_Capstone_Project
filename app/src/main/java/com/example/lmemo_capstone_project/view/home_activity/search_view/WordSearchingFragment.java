@@ -155,18 +155,16 @@ public class WordSearchingFragment extends Fragment {
     private void loadPublicNote() {
         final GetNoteController getNoteController = new GetNoteController(this);
 //        getPublicNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
-
-        final InternetCheckingController internetCheckingController = new InternetCheckingController();
         spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(0)) && internetCheckingController.isOnline(getContext())) {
+                if(spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(0)) && InternetCheckingController.isOnline(getContext())) {
                     getNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
-                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(1)) && internetCheckingController.isOnline(getContext())) {
+                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(1)) && InternetCheckingController.isOnline(getContext())) {
                     getNoteController.getAllNoteDescendingFromFirebase(noteListView, getActivity(), wordID);
-                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(2)) && internetCheckingController.isOnline(getContext())) {
+                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(2)) && InternetCheckingController.isOnline(getContext())) {
                     //
-                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(3)) && internetCheckingController.isOnline(getContext())) {
+                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(3)) && InternetCheckingController.isOnline(getContext())) {
                     //
                 } else {
                     Toast.makeText(getContext(), "No Internet connection [Offline Mode]", Toast.LENGTH_LONG).show();

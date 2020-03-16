@@ -1,0 +1,68 @@
+package com.example.lmemo_capstone_project.controller.flashcard_controller;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
+import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
+import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.FlashcardInfoFragment;
+
+import java.util.ArrayList;
+
+public class FlashcardController {
+
+    private Activity aContext;
+    private ArrayList<Word> listFlashcard;
+    private FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(aContext).flashcardDAO();
+
+    public FlashcardController(Activity aContext, ArrayList<Word> listFlashcard) {
+        this.aContext = aContext;
+        this.listFlashcard = listFlashcard;
+    }
+
+    /**
+     *この関数フラッシュカードを削除します
+     */
+    public void delete(int position) {
+//        Log.d("myapp", position + "" + " || " + listFlashcard.get(position).getWordID());
+        Flashcard flashcard = flashcardDAO.getFlashCardByID(listFlashcard.get(position).getWordID())[0];
+//                        Flashcard flashcard = flashcards[0];
+        flashcard.setLastState(99);
+        flashcardDAO.updateFlashcard(flashcard);
+        if (flashcardDAO.getAllVisibleFlashcard().length == 0) {
+            aContext.findViewById(R.id.btReview).setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    /**
+     * @param position
+     * @param v　
+     * この関数はフラッシュカードのインフォメイションを表示します。
+     */
+    public void flashcardInfo(int position, View v) {
+        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+        FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+        WordDAO wordDAO = LMemoDatabase.getInstance(aContext).wordDAO();
+        Word flashcardDetail = wordDAO.getAWords(listFlashcard.get(position).getKana())[0];
+        Bundle bundle = new Bundle();
+        FlashcardInfoFragment infoFragment = new FlashcardInfoFragment();
+        bundle.putSerializable("wordResult", flashcardDetail);
+        infoFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.FrameFlashcard, infoFragment, "flashcard");
+//        FragmentTransaction ft = getSupportFragmentManager.beginTransaction();
+//        ft.replace(R.id.content, fragment, backStateName);
+        fragmentTransaction.addToBackStack(null);
+//        ft.commit();
+        fragmentTransaction.commit();
+    }
+}
