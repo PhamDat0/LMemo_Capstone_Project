@@ -8,7 +8,8 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="3"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -20,7 +21,8 @@
 
             <TextView
                 android:id="@+id/tvUser"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10sp"
                 android:autoSizeMaxTextSize="15sp"
@@ -31,7 +33,8 @@
 
             <TextView
                 android:id="@+id/tvReward"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10sp"
                 android:autoSizeMaxTextSize="15sp"
@@ -49,13 +52,14 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <ImageButton
             android:id="@+id/ibDeleteNote"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_trash"
@@ -63,7 +67,7 @@
 
         <ImageButton
             android:id="@+id/ibEditNote"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@android:drawable/ic_menu_edit"

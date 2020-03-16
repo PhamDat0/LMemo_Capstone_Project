@@ -15,8 +15,8 @@ public interface NoteOfWordDAO {
     @Delete
     void deleteNoteOfWord(NoteOfWord noteOfWord);
 
-    @Query("Select * from NoteOfWord nw where nw.NoteID = :noteID and nw.WordID = :wordID")
-    NoteOfWord[] getNoteOfWord(int noteID, int wordID);
+    @Query("Select * from NoteOfWord nw where nw.NoteID = :noteID")
+    NoteOfWord[] getNoteOfWord(int noteID);
 
     @Query("DELETE from NoteOfWord where NoteID = :noteID")
     void deleteAllAssociationOfOneNote(int noteID);

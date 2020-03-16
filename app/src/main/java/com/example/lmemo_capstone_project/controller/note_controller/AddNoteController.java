@@ -11,10 +11,12 @@ import com.example.lmemo_capstone_project.controller.database_controller.LMemoDa
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteOfWordDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
+import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.my_account_controller.MyAccountController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,9 +26,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddNoteController {
@@ -43,10 +46,16 @@ public class AddNoteController {
         userDB = LMemoDatabase.getInstance(activity.getApplicationContext()).userDAO();
         noteDB = LMemoDatabase.getInstance(activity.getApplicationContext()).noteDAO();
         noteOfWordDAO = LMemoDatabase.getInstance(activity.getApplicationContext()).noteOfWordDAO();
-        user = userDB.getLocalUser()[0];
+        User user;
+        try {
+            user = userDB.getLocalUser()[0];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            user = new User();
+            user.setUserID("GUEST");
+        }
     }
 
-    public void getNoteFromUI(int wordID, String noteContent, boolean noteStatus) throws CannotPerformFirebaseRequest {
+    public void getNoteFromUI(List<Word> words, String noteContent, boolean noteStatus) throws CannotPerformFirebaseRequest {
         Log.w("Controller add note", user.getDisplayName());
         NoteOfWord noteOfWord = new NoteOfWord();
         Note note = new Note();
@@ -62,14 +71,29 @@ public class AddNoteController {
         note.setPublic(noteStatus);
         note.setTranslatedContent("");
         noteOfWord.setNoteID(noteID);
-        noteOfWord.setWordID(wordID);
+//        noteOfWord.setWordID(wordID);
         if (noteStatus == false) {
             addNoteToSQLite(note);
-            noteOfWordDAO.insertNoteOfWord(noteOfWord);
+            for (Word word : words) {
+                noteOfWord.setWordID(word.getWordID());
+                noteOfWordDAO.insertNoteOfWord(noteOfWord);
+            }
         } else {
             if (!user.getUserID().equals("GUEST") && !user.getUserID().isEmpty()) {
-                addNoteToCloudFireStore(note, wordID);
-                noteOfWordDAO.insertNoteOfWord(noteOfWord);
+                if (InternetCheckingController.isOnline(context)) {
+                    List<Integer> wordIDArray = new ArrayList<>();
+                    for (Word word : words) {
+                        wordIDArray.add(word.getWordID());
+                    }
+                    addNoteToSQLite(note);
+                    addNoteToCloudFireStore(note, wordIDArray);
+                    for (Word word : words) {
+                        noteOfWord.setWordID(word.getWordID());
+                        noteOfWordDAO.insertNoteOfWord(noteOfWord);
+                    }
+                } else {
+                    throw new CannotPerformFirebaseRequest("There is no internet.");
+                }
             } else {
                 throw new CannotPerformFirebaseRequest("You must log in first!");
             }
@@ -80,13 +104,13 @@ public class AddNoteController {
         noteDB.insertNote(note);
     }
 
-    private void addNoteToCloudFireStore(final Note note, final int wordID) {
+    private void addNoteToCloudFireStore(final Note note, final List<Integer> wordID) {
         Map<String, Object> addNote = new HashMap<>();
         addNote.put("noteContent", note.getNoteContent());
         addNote.put("translatedContent", note.getTranslatedContent());
         addNote.put("createdTime", note.getCreatedDate());
         addNote.put("userID", note.getCreatorUserID());
-        addNote.put("wordID", Arrays.asList(wordID));
+        addNote.put("wordID", wordID);
         db.collection("notes").add(addNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
@@ -107,7 +131,6 @@ public class AddNoteController {
                 Log.w("AddNoteActivity", "Error writing document");
             }
         });
-        addNoteToSQLite(note);
     }
 
     public void downloadAllPublicNoteToSQL(User user) {

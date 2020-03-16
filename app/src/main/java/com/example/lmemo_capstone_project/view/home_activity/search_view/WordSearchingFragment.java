@@ -1,8 +1,6 @@
 package com.example.lmemo_capstone_project.view.home_activity.search_view;
 
 import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -12,24 +10,22 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.lmemo_capstone_project.R;
-import com.example.lmemo_capstone_project.controller.CannotPerformFirebaseRequest;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
-import com.example.lmemo_capstone_project.controller.note_controller.AddNoteController;
 import com.example.lmemo_capstone_project.controller.note_controller.GetNoteController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.home_activity.note_view.CreateNoteDialog;
 import com.example.lmemo_capstone_project.view.home_activity.note_view.NoteListAdapter;
 
 import java.util.ArrayList;
@@ -80,43 +76,48 @@ public class WordSearchingFragment extends Fragment {
     }
 
     private void showAddNoteDialog(View v) {
-        final AddNoteController addNoteController = new AddNoteController(this.getActivity());
-        addNoteDialog.setContentView(R.layout.demo_popup_add_note);
-        final EditText txtNoteContent = (EditText) addNoteDialog.findViewById(R.id.txtTakeNote);
-        TextView txtWord = (TextView) addNoteDialog.findViewById(R.id.txtWord);
-        Button btnSave = (Button) addNoteDialog.findViewById(R.id.btnAddNote);
-        Button btnCancel = (Button) addNoteDialog.findViewById(R.id.btnCancelAddNote);
-        final Switch isPublic = (Switch) addNoteDialog.findViewById(R.id.isNotePublic);
-        final Word word = getWord();
-        txtWord.setText(word.getKana());
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    if (!txtNoteContent.getText().toString().isEmpty()) {
-                        addNoteController.getNoteFromUI(word.getWordID(), txtNoteContent.getText().toString(), isPublic.isChecked());
-                        Toast.makeText(getContext(), "Add note successful", Toast.LENGTH_LONG).show();
-                        addNoteDialog.dismiss();
-                        loadPublicNote();
-                    } else {
-                        txtNoteContent.setError("Please enter note");
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                } catch (CannotPerformFirebaseRequest e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+//        final AddNoteController addNoteController = new AddNoteController(this.getActivity());
+//        addNoteDialog.setContentView(R.layout.demo_popup_add_note);
+//        final EditText txtNoteContent = (EditText) addNoteDialog.findViewById(R.id.txtTakeNote);
+//        TextView txtWord = (TextView) addNoteDialog.findViewById(R.id.txtWord);
+//        Button btnSave = (Button) addNoteDialog.findViewById(R.id.btnAddNote);
+//        Button btnCancel = (Button) addNoteDialog.findViewById(R.id.btnCancelAddNote);
+//        final Switch isPublic = (Switch) addNoteDialog.findViewById(R.id.isNotePublic);
+//        final Word word = getWord();
+//        txtWord.setText(word.getKana());
+//        btnSave.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    if (!txtNoteContent.getText().toString().isEmpty()) {
+//                        addNoteController.getNoteFromUI(word.getWordID(), txtNoteContent.getText().toString(), isPublic.isChecked());
+//                        Toast.makeText(getContext(), "Add note successful", Toast.LENGTH_LONG).show();
+//                        addNoteDialog.dismiss();
+//                        loadPublicNote();
+//                    } else {
+//                        txtNoteContent.setError("Please enter note");
+//                    }
+//                } catch (Exception e) {
+//                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+//                } catch (CannotPerformFirebaseRequest e) {
+//                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+//                }
+//
+//            }
+//        });
+//        btnCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                addNoteDialog.dismiss();
+//            }
+//        });
+//        addNoteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        addNoteDialog.show();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
 
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addNoteDialog.dismiss();
-            }
-        });
-        addNoteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        addNoteDialog.show();
+        CreateNoteDialog editNameDialogFragment = CreateNoteDialog.newDialogForAdding(getWord());
+
+        editNameDialogFragment.show(fm, "Add note");
     }
 
     private void wordSearchResult(View container) {

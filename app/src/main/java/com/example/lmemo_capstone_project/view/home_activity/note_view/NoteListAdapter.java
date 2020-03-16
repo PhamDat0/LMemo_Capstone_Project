@@ -2,6 +2,7 @@ package com.example.lmemo_capstone_project.view.home_activity.note_view;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,15 +84,14 @@ public class NoteListAdapter extends BaseAdapter {
         holder.tvNoteContent.setText(listNote.get(position).getNoteContent());
         Reward reward = rewardDAO.getBestReward(creator.getContributionPoint() < 1 ? 1 : creator.getContributionPoint())[0];
         holder.tvReward.setText(reward.getRewardName());
-
         //ユーザーがノートを持っている場合には削除と更新できます。
         if (creator.getUserID().equalsIgnoreCase(currentUser.getUserID())) {
+            Log.d("CompareID", creator.getUserID() + " / " + currentUser.getUserID() + " / " + creator.getUserID().equalsIgnoreCase(currentUser.getUserID()));
             setOwnerButtonVisible(holder, View.VISIBLE);
             setActionOnclick(holder, position);
         } else {
             setOwnerButtonVisible(holder, View.INVISIBLE);
         }
-
         return convertView;
     }
 

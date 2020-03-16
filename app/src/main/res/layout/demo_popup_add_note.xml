@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="350dp"
-    android:layout_height="475dp"
-    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:orientation="vertical"
     android:background="@color/white"
-    >
+    android:orientation="vertical"
+    android:padding="5dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
+
+        <AutoCompleteTextView
             android:id="@+id/txtWord"
             android:layout_width="250dp"
             android:layout_height="50dp"
-            android:textStyle="bold"
             android:layout_gravity="center"
+            android:layout_weight="1"
+            android:hint="Word to associate with this note"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
             android:textColor="@color/darkGray"
+            android:textStyle="bold"
             tools:layout_editor_absoluteX="46dp"
             tools:layout_editor_absoluteY="31dp" />
 
 
         <EditText
             android:id="@+id/txtTakeNote"
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:layout_marginTop="20dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Enter note here" />
+            android:hint="Enter note here"
+            android:inputType="textPersonName" />
     </LinearLayout>
 
     <Button
@@ -53,5 +57,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Cancel" />
+
+    <ListView
+        android:id="@+id/listAssocitatedWord"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

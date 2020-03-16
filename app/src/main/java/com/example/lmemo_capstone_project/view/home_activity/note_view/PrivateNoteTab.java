@@ -36,7 +36,13 @@ public class PrivateNoteTab extends Fragment {
         NoteDAO noteDAO = LMemoDatabase.getInstance(getContext()).noteDAO();
         UserDAO userDAO = LMemoDatabase.getInstance(getContext()).userDAO();
         GetNoteController getNoteController = new GetNoteController(noteDAO);
-        User user = userDAO.getLocalUser()[0];
+        User user;
+        try {
+            user = userDAO.getLocalUser()[0];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            user = new User();
+            user.setUserID("GUEST");
+        }
         List<Note> listNote = getNoteController.getOfflineNote(GetNoteController.GET_OFFLINE_NOTE_PRIVATE, user.getUserID());
         Map<String, User> listUserMap = new HashMap<>();
         listUserMap.put(user.getUserID(), user);
