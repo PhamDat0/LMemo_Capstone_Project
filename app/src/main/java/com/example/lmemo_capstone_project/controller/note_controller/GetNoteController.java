@@ -63,6 +63,8 @@ public class GetNoteController {
                             Note note = documentSnapshot.toObject(Note.class);
                             Map<String, Object> noteMap = documentSnapshot.getData();
                             note.setCreatorUserID((String) noteMap.get("userID"));
+                            note.setPublic(true);
+                            note.setOnlineID(documentSnapshot.getId());
                             listNote.add(note);
                         }
                         getUserList();
@@ -100,6 +102,8 @@ public class GetNoteController {
                             Note note = documentSnapshot.toObject(Note.class);
                             Map<String, Object> noteMap = documentSnapshot.getData();
                             note.setCreatorUserID((String) noteMap.get("userID"));
+                            note.setPublic(true);
+                            note.setOnlineID(documentSnapshot.getId());
                             listNote.add(note);
                         }
                         getUserList();
