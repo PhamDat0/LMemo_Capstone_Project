@@ -71,14 +71,14 @@ public class FlashcardListAdapter extends BaseAdapter {
         holder.tvKanji.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flashcardController.flashcardInfo(position, v);
+                flashcardInfo(position, v);
             }
         });
         holder.tvKana.setText(listFlashcard.get(position).getKana());
         holder.tvKana.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flashcardController.flashcardInfo(position, v);
+                flashcardInfo(position, v);
             }
         });
 //        holder.btnDelete.setTag(position);
@@ -97,6 +97,28 @@ public class FlashcardListAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    /**
+     * @param position: これはフラッシュカードのポジションです。
+     * @param v　
+     * この関数はフラッシュカードのインフォメイションを表示します。
+     */
+    public void flashcardInfo(int position, View v) {
+        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+        FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+//        WordDAO wordDAO = LMemoDatabase.getInstance(aContext).wordDAO();
+//        Word flashcardDetail = wordDAO.getAWords(listFlashcard.get(position).getKana())[0];
+        Word flashcardDetail = flashcardController.flashcardInfo(position);
+        Bundle bundle = new Bundle();
+        FlashcardInfoFragment infoFragment = new FlashcardInfoFragment();
+        bundle.putSerializable("wordResult", flashcardDetail);
+        infoFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.FrameFlashcard, infoFragment, "flashcard");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+
 
     static class ViewHolder {
         TextView tvKanji;

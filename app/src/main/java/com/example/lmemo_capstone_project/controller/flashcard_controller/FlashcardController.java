@@ -41,20 +41,11 @@ public class FlashcardController {
 
     /**
      * @param position: これはフラッシュカードのポジションです。
-     * @param v　
      * この関数はフラッシュカードのインフォメイションを表示します。
      */
-    public void flashcardInfo(int position, View v) {
-        AppCompatActivity activity = (AppCompatActivity) v.getContext();
-        FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+    public Word flashcardInfo(int position) {
         WordDAO wordDAO = LMemoDatabase.getInstance(aContext).wordDAO();
         Word flashcardDetail = wordDAO.getAWords(listFlashcard.get(position).getKana())[0];
-        Bundle bundle = new Bundle();
-        FlashcardInfoFragment infoFragment = new FlashcardInfoFragment();
-        bundle.putSerializable("wordResult", flashcardDetail);
-        infoFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.FrameFlashcard, infoFragment, "flashcard");
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        return flashcardDetail;
     }
 }
