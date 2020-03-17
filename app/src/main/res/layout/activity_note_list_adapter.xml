@@ -10,12 +10,13 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="3"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@color/white"
             android:orientation="horizontal">
 
@@ -48,7 +49,53 @@
         <TextView
             android:id="@+id/tvNoteContent"
             android:layout_width="match_parent"
-            android:layout_height="61dp" />
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:scrollbars="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btUpvote"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="↑" />
+
+            <Button
+                android:id="@+id/btDownvote"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="↓" />
+
+            <Button
+                android:id="@+id/btViewComment"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="View Comment" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lvComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btAddComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Comment"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout

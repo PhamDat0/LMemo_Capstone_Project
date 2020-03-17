@@ -3,12 +3,15 @@ package com.example.lmemo_capstone_project.view.home_activity.note_view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +35,7 @@ public class NoteListAdapter extends BaseAdapter {
     private final Map<String, User> listUserMap;
     private Activity aContext;
     private List<Note> listNote;
-    private LayoutInflater layoutInflater;
+    //    private LayoutInflater layoutInflater;
     private RewardDAO rewardDAO;
 //    private int pos;
 
@@ -40,7 +43,7 @@ public class NoteListAdapter extends BaseAdapter {
     public NoteListAdapter(Activity aContext, List<Note> listNote, Map<String, User> listUserMap) {
         this.aContext = aContext;
         this.listNote = listNote;
-        layoutInflater = LayoutInflater.from(aContext);
+//        layoutInflater = LayoutInflater.from(aContext);
         this.listUserMap = listUserMap;
         rewardDAO = LMemoDatabase.getInstance(aContext).rewardDAO();
     }
@@ -66,12 +69,7 @@ public class NoteListAdapter extends BaseAdapter {
         User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
         if (convertView == null) {
             convertView = LayoutInflater.from(aContext).inflate(R.layout.activity_note_list_adapter, null);
-            holder = new ViewHolder();
-            holder.tvUser = convertView.findViewById(R.id.tvUser);
-            holder.tvReward = convertView.findViewById(R.id.tvReward);
-            holder.tvNoteContent = convertView.findViewById(R.id.tvNoteContent);
-            holder.ibDelete = convertView.findViewById(R.id.ibDeleteNote);
-            holder.ibEdit = convertView.findViewById(R.id.ibEditNote);
+            holder = getHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -97,6 +95,22 @@ public class NoteListAdapter extends BaseAdapter {
             setOwnerButtonVisible(holder, View.INVISIBLE);
         }
         return convertView;
+    }
+
+    private ViewHolder getHolder(View convertView) {
+        ViewHolder holder = new ViewHolder();
+        holder.tvUser = convertView.findViewById(R.id.tvUser);
+        holder.tvReward = convertView.findViewById(R.id.tvReward);
+        holder.tvNoteContent = convertView.findViewById(R.id.tvNoteContent);
+        holder.tvNoteContent.setMovementMethod(new ScrollingMovementMethod());
+        holder.ibDelete = convertView.findViewById(R.id.ibDeleteNote);
+        holder.ibEdit = convertView.findViewById(R.id.ibEditNote);
+        holder.btUpvote = convertView.findViewById(R.id.btUpvote);
+        holder.btDownvote = convertView.findViewById(R.id.btDownvote);
+        holder.btViewComment = convertView.findViewById(R.id.btViewComment);
+        holder.lvComments = convertView.findViewById(R.id.lvComments);
+        holder.btAddComment = convertView.findViewById(R.id.btAddComment);
+        return holder;
     }
 
     private void setActionOnclick(ViewHolder holder, final int position) {
@@ -163,5 +177,10 @@ public class NoteListAdapter extends BaseAdapter {
         TextView tvNoteContent;
         ImageButton ibDelete;
         ImageButton ibEdit;
+        Button btUpvote;
+        Button btDownvote;
+        Button btViewComment;
+        ListView lvComments;
+        Button btAddComment;
     }
 }
