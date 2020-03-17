@@ -7,6 +7,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
@@ -40,6 +41,7 @@ public class GetNoteController {
     public GetNoteController(WordSearchingFragment wordSearchingFragment) {
         db = FirebaseFirestore.getInstance();
         this.wordSearchingFragment = wordSearchingFragment;
+        noteDAO = LMemoDatabase.getInstance(wordSearchingFragment.getContext()).noteDAO();
     }
 
     public GetNoteController(NoteDAO noteDAO) {
@@ -60,11 +62,7 @@ public class GetNoteController {
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         listNote = new ArrayList<>();
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Note note = documentSnapshot.toObject(Note.class);
-                            Map<String, Object> noteMap = documentSnapshot.getData();
-                            note.setCreatorUserID((String) noteMap.get("userID"));
-                            note.setPublic(true);
-                            note.setOnlineID(documentSnapshot.getId());
+                            Note note = processSnapshot(documentSnapshot);
                             listNote.add(note);
                         }
                         getUserList();
@@ -91,6 +89,22 @@ public class GetNoteController {
 //        });
     }
 
+    private Note processSnapshot(QueryDocumentSnapshot documentSnapshot) {
+
+        Note note = documentSnapshot.toObject(Note.class);
+        Map<String, Object> noteMap = documentSnapshot.getData();
+        note.setCreatorUserID((String) noteMap.get("userID"));
+        note.setPublic(true);
+        note.setOnlineID(documentSnapshot.getId());
+        Note[] localNote = noteDAO.getNotesByOnlineID(note.getOnlineID());
+        if (localNote.length == 0) {
+            note.setNoteID(noteDAO.getLastNote()[0].getNoteID() + 1);
+        } else {
+            note.setNoteID(localNote[0].getNoteID());
+        }
+        return note;
+    }
+
     public void getAllNoteDescendingFromFirebase(final ListView listview, final Activity activity, int wordID) {
         db.collection("notes").whereArrayContains("wordID", wordID).
                 orderBy("createdTime", Query.Direction.DESCENDING)
@@ -99,11 +113,7 @@ public class GetNoteController {
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         listNote = new ArrayList<>();
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Note note = documentSnapshot.toObject(Note.class);
-                            Map<String, Object> noteMap = documentSnapshot.getData();
-                            note.setCreatorUserID((String) noteMap.get("userID"));
-                            note.setPublic(true);
-                            note.setOnlineID(documentSnapshot.getId());
+                            Note note = processSnapshot(documentSnapshot);
                             listNote.add(note);
                         }
                         getUserList();

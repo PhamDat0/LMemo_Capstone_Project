@@ -95,8 +95,12 @@ public class EditAndDeleteNoteController {
     }
 
     private void updateNoteOnFirebase(Note note, String noteContent, boolean noteStatus, List<Word> words) {
+        List<Integer> listWordID = new ArrayList<>();
+        for (Word word : words) {
+            listWordID.add(word.getWordID());
+        }
         db.collection("notes").document(note.getOnlineID())
-                .update("noteContent", noteContent, "wordID", words)
+                .update("noteContent", noteContent, "wordID", listWordID)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

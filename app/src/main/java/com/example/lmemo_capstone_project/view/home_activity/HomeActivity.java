@@ -271,7 +271,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 loadWord(data);
                 break;
             case EDIT_NOTE_REQUEST_CODE:
-                showNoteFragment();
                 break;
         }
     }

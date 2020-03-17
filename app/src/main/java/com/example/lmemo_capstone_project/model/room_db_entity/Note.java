@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Note implements Serializable {
@@ -21,7 +22,13 @@ public class Note implements Serializable {
     @ColumnInfo(name = "UserID") private String creatorUserID;
 
     @Ignore
-    private User creator;
+    private List<Word> wordList;
+
+    @Ignore
+    private List<String> upvoterList;
+
+    @Ignore
+    private List<String> downvoterList;
 
     public int getNoteID() {
         return noteID;
@@ -79,11 +86,27 @@ public class Note implements Serializable {
         this.creatorUserID = creatorUserID;
     }
 
-    public User getCreator() {
-        return creator;
+    public List<Word> getWordList() {
+        return wordList;
     }
 
-    public void setCreator(User creator) {
-        this.creator = creator;
+    public void setWordList(List<Word> wordList) {
+        this.wordList = wordList;
+    }
+
+    public List<String> getUpvoterList() {
+        return upvoterList;
+    }
+
+    public void setUpvoterList(List<String> upvoterList) {
+        this.upvoterList = upvoterList;
+    }
+
+    public List<String> getDownvoterList() {
+        return downvoterList;
+    }
+
+    public void setDownvoterList(List<String> downvoterList) {
+        this.downvoterList = downvoterList;
     }
 }
