@@ -29,8 +29,7 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteOfWordDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
-import com.example.lmemo_capstone_project.controller.note_controller.AddNoteController;
-import com.example.lmemo_capstone_project.controller.note_controller.EditAndDeleteNoteController;
+import com.example.lmemo_capstone_project.controller.note_controller.NoteController;
 import com.example.lmemo_capstone_project.controller.search_controller.SearchController;
 import com.example.lmemo_capstone_project.controller.search_controller.WordNotFoundException;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
@@ -58,7 +57,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     private SearchController searchController;
     private List<Word> listWord;
     private AssociatedWordAdapter associatedWordAdapter;
-    private AddNoteController addNoteController;
+    private NoteController addNoteController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,15 +119,22 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     private void performEditNote() {
-        EditAndDeleteNoteController editAndDeleteNoteController = new EditAndDeleteNoteController(this);
+        NoteController editAndDeleteNoteController = new NoteController(this);
         editAndDeleteNoteController.updateNote(note, txtTakeNote.getText().toString(), isNotePublic.isChecked(), associatedWordAdapter.getListOfWord());
     }
 
     private void addNoteHandle() {
         try {
             if (!txtTakeNote.getText().toString().isEmpty()) {
-                addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
-                Toast.makeText(getApplicationContext(), "Add note successful", Toast.LENGTH_LONG).show();
+                if (!isNotePublic.isChecked()) {
+                    addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
+                    Toast.makeText(getApplicationContext(), "Add note successful", Toast.LENGTH_LONG).show();
+                } else if (InternetCheckingController.isOnline(getApplicationContext())) {
+                    addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
+                    Toast.makeText(getApplicationContext(), "Add note successful", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
+                }
             } else {
                 txtTakeNote.setError("Please enter note");
             }
@@ -221,7 +227,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         WordDAO wordDAO = LMemoDatabase.getInstance(getApplicationContext()).wordDAO();
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
         searchController = new SearchController(wordDAO, flashcardDAO);
-        addNoteController = new AddNoteController(this);
+        addNoteController = new NoteController(this);
         mode = getIntent().getIntExtra("mode", IN_ADDING_MODE);
         switch (mode) {
             case IN_ADDING_MODE:
