@@ -84,6 +84,8 @@ public class NoteController {
         addNote.put("createdTime", note.getCreatedDate());
         addNote.put("userID", note.getCreatorUserID());
         addNote.put("wordID", wordID);
+        addNote.put("upvoter", note.getUpvoterList() == null ? new ArrayList<String>() : note.getUpvoterList());
+        addNote.put("downvoter", note.getDownvoterList() == null ? new ArrayList<String>() : note.getDownvoterList());
         db.collection("notes").add(addNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {

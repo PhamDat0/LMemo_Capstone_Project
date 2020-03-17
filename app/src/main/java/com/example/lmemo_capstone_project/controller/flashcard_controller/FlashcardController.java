@@ -1,9 +1,7 @@
 package com.example.lmemo_capstone_project.controller.flashcard_controller;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,15 +15,15 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.FlashcardInfoFragment;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class FlashcardController {
 
     private Context aContext;
-    private ArrayList<Word> listFlashcard;
+    private List<Word> listFlashcard;
     private FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(aContext).flashcardDAO();
 
-    public FlashcardController(Context aContext, ArrayList<Word> listFlashcard) {
+    public FlashcardController(Context aContext, List<Word> listFlashcard) {
         this.aContext = aContext;
         this.listFlashcard = listFlashcard;
     }
@@ -56,10 +54,7 @@ public class FlashcardController {
         bundle.putSerializable("wordResult", flashcardDetail);
         infoFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.FrameFlashcard, infoFragment, "flashcard");
-//        FragmentTransaction ft = getSupportFragmentManager.beginTransaction();
-//        ft.replace(R.id.content, fragment, backStateName);
         fragmentTransaction.addToBackStack(null);
-//        ft.commit();
         fragmentTransaction.commit();
     }
 }
