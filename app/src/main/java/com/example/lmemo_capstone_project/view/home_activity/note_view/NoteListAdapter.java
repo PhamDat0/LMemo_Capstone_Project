@@ -32,6 +32,8 @@ import java.util.Map;
 
 public class NoteListAdapter extends BaseAdapter {
 
+    private static final int UPVOTE = 1;
+    private static final int DOWNVOTE = 2;
     private final Map<String, User> listUserMap;
     private Activity aContext;
     private List<Note> listNote;
@@ -74,7 +76,8 @@ public class NoteListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        User creator = listUserMap.get(listNote.get(position).getCreatorUserID());
+        Note note = listNote.get(position);
+        User creator = listUserMap.get(note.getCreatorUserID());
 //        Log.d("Debug_gender",creator.isGender()+"");
         if (creator.isGender()) {
             holder.tvUser.setText(creator.getDisplayName());
@@ -83,9 +86,11 @@ public class NoteListAdapter extends BaseAdapter {
             holder.tvUser.setText(creator.getDisplayName());
             holder.tvUser.setTextColor(Color.MAGENTA);
         }
-        holder.tvNoteContent.setText(listNote.get(position).getNoteContent());
+        holder.tvNoteContent.setText(note.getNoteContent());
         Reward reward = rewardDAO.getBestReward(creator.getContributionPoint() < 1 ? 1 : creator.getContributionPoint())[0];
         holder.tvReward.setText(reward.getRewardName());
+        holder.btUpvote.setText(note.getUpvoterList() == null ? "0" : note.getUpvoterList().size() + "↑");
+        holder.btDownvote.setText(note.getDownvoterList() == null ? "0" : note.getDownvoterList().size() + "↓");
         //ユーザーがノートを持っている場合には削除と更新できます。
         if (creator.getUserID().equalsIgnoreCase(currentUser.getUserID())) {
             Log.d("CompareID", creator.getUserID() + " / " + currentUser.getUserID() + " / " + creator.getUserID().equalsIgnoreCase(currentUser.getUserID()));
@@ -151,6 +156,22 @@ public class NoteListAdapter extends BaseAdapter {
                 }
             }
         });
+        holder.btUpvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vote(UPVOTE, position);
+            }
+        });
+        holder.btDownvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vote(DOWNVOTE, position);
+            }
+        });
+    }
+
+    private void vote(int mode, int position) {
+
     }
 
     private void callForEditDialog(int position) {

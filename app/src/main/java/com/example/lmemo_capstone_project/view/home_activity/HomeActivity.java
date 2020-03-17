@@ -20,7 +20,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
+import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.home_activity.account_view.MyAccountFragment;
 import com.example.lmemo_capstone_project.view.home_activity.account_view.SignInFragment;
 import com.example.lmemo_capstone_project.view.home_activity.constant_view.ContactUsFragment;
@@ -35,6 +37,8 @@ import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSea
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final int TEST_FLASHCARD_REQUEST_CODE = 100;
@@ -144,6 +148,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     + getRewards[3].getRewardName() + "-" + getRewards[3].getMinimumReachPoint() + "---"
                     + getRewards[4].getRewardName() + "-" + getRewards[4].getMinimumReachPoint()
                     + "---" + getRewards[5].getRewardName() + "-" + getRewards[5].getMinimumReachPoint() + "---");
+        }
+
+        UserDAO userDAO = lMemoDatabase.userDAO();
+        if (userDAO.getLocalUser().length == 0) {
+            User user = new User();
+            user.setUserID("GUEST");
+            user.setEmail("GUEST");
+            user.setContributionPoint(0);
+            user.setDisplayName("GUEST");
+            user.setGender(true);
+            user.setLoginTime(new Date());
+            userDAO.insertUser(user);
         }
     }
 

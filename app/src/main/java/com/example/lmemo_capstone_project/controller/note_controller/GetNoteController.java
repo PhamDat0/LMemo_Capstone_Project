@@ -1,8 +1,6 @@
 package com.example.lmemo_capstone_project.controller.note_controller;
 
-import android.app.Activity;
 import android.util.Log;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +23,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +32,10 @@ import java.util.Map;
 public class GetNoteController {
     public static final boolean GET_OFFLINE_NOTE_PRIVATE = false;
     public static final boolean GET_OFFLINE_NOTE_PUBLIC = true;
+    public static final int TIME_DESC = 0;
+    public static final int TIME_ASC = 1;
+    public static final int UPVOTE_DESC = 2;
+    public static final int UPVOTE_ASC = 3;
     private NoteDAO noteDAO;
     private FirebaseFirestore db;
     private WordSearchingFragment wordSearchingFragment;
@@ -49,94 +53,64 @@ public class GetNoteController {
     }
 
     /**
-     * @param listview
-     * @param activity
-     * @param wordID   　これはノートのwordID
-     *                 この関数はファイアベースからノートを取ります
+     * @param wordID 検索する言葉のID
+     * @param sortMode 順序のモード
+     * この関数はファイアベースからノートを取ります
      */
-    public void getAllNoteAscendingFromFirebase(final ListView listview, final Activity activity, int wordID) {
+    public void getAllNotesFromFirebase(int wordID, final int sortMode) {
         db.collection("notes").whereArrayContains("wordID", wordID).
-                orderBy("createdTime", Query.Direction.ASCENDING)
+                orderBy("createdTime", sortMode == TIME_ASC ? Query.Direction.ASCENDING : Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         listNote = new ArrayList<>();
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Log.d("LIST_SIZE", documentSnapshot.getId());
                             Note note = processSnapshot(documentSnapshot);
                             listNote.add(note);
+                            Log.d("LIST_SIZE", listNote.size() + " in");
+                        }
+                        Log.d("LIST_SIZE", listNote.size() + " out");
+                        switch (sortMode) {
+                            case TIME_ASC:
+                            case TIME_DESC:
+                                break;
+                            default:
+                                Collections.sort(listNote, new Comparator<Note>() {
+                                    @Override
+                                    public int compare(Note o1, Note o2) {
+                                        int upvote1 = o1.getUpvoterList().size() - o1.getDownvoterList().size();
+                                        int upvote2 = o2.getUpvoterList().size() - o2.getDownvoterList().size();
+                                        int result = (upvote1 - upvote2) / Math.abs(upvote1 - upvote2);
+                                        result *= sortMode == UPVOTE_ASC ? 1 : -1;
+                                        return result;
+                                    }
+                                });
                         }
                         getUserList();
                     }
                 });
-//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                Log.d("myApp", "Get here");
-//                listNote = new ArrayList<>();
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                        Log.d("myApp", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-//                        Note note = documentSnapshot.toObject(Note.class);
-//                        Map<String, Object> noteMap = documentSnapshot.getData();
-//                        note.setCreatorUserID((String) noteMap.get("userID"));
-//                        listNote.add(note);
-//                    }
-//                    getUserList();
-//                } else {
-//                    Log.d("MyApp", "Error getting documents: ", task.getException());
-//                }
-//            }
-//        });
     }
 
     private Note processSnapshot(QueryDocumentSnapshot documentSnapshot) {
-
         Note note = documentSnapshot.toObject(Note.class);
         Map<String, Object> noteMap = documentSnapshot.getData();
         note.setCreatorUserID((String) noteMap.get("userID"));
         note.setPublic(true);
         note.setOnlineID(documentSnapshot.getId());
+        note.setUpvoterList((List<String>) noteMap.get("upvoter"));
+        note.setDownvoterList((List<String>) noteMap.get("downvoter"));
         Note[] localNote = noteDAO.getNotesByOnlineID(note.getOnlineID());
         if (localNote.length == 0) {
-            note.setNoteID(noteDAO.getLastNote()[0].getNoteID() + 1);
+            if (noteDAO.getLastNote().length != 0) {
+                note.setNoteID(noteDAO.getLastNote()[0].getNoteID() + 1);
+            } else {
+                note.setNoteID(1);
+            }
         } else {
             note.setNoteID(localNote[0].getNoteID());
         }
         return note;
-    }
-
-    public void getAllNoteDescendingFromFirebase(final ListView listview, final Activity activity, int wordID) {
-        db.collection("notes").whereArrayContains("wordID", wordID).
-                orderBy("createdTime", Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        listNote = new ArrayList<>();
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Note note = processSnapshot(documentSnapshot);
-                            listNote.add(note);
-                        }
-                        getUserList();
-                    }
-                });
-//
-//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                listNote = new ArrayList<>();
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-//                        Note note = documentSnapshot.toObject(Note.class);
-//                        Map<String, Object> noteMap = documentSnapshot.getData();
-//                        note.setCreatorUserID((String) noteMap.get("userID"));
-//                        listNote.add(note);
-//                    }
-//                    getUserList();
-//                } else {
-//                    Log.d("MyApp", "Error getting documents: ", task.getException());
-//                }
-//            }
-//        });
     }
 
     private void getUserList() {

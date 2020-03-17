@@ -186,6 +186,8 @@ public class NoteController {
         int noteID = 0;
         if (noteDAO.getLastNote().length != 0) {
             noteID = noteDAO.getLastNote()[0].getNoteID() + 1;
+        } else {
+            noteID = 1;
         }
         note.setNoteID(noteID);
         note.setCreatedDate(date);
@@ -239,6 +241,8 @@ public class NoteController {
                                     int noteID = 0;
                                     if (noteDAO.getLastNote().length != 0) {
                                         noteID = noteDAO.getLastNote()[0].getNoteID() + 1;
+                                    } else {
+                                        noteID = 1;
                                     }
                                     Note note = getNoteFromSnapshot(documentSnapshot, noteID);
                                     noteDAO.insertNote(note);

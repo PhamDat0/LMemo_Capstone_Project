@@ -123,13 +123,15 @@ public class WordSearchingFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(0)) && InternetCheckingController.isOnline(getContext())) {
-                    getNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
+//                    getNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
+                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.TIME_ASC);
                 } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(1)) && InternetCheckingController.isOnline(getContext())) {
-                    getNoteController.getAllNoteDescendingFromFirebase(noteListView, getActivity(), wordID);
+//                    getNoteController.getAllNoteDescendingFromFirebase(noteListView, getActivity(), wordID);
+                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.TIME_DESC);
                 } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(2)) && InternetCheckingController.isOnline(getContext())) {
-                    //
+                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.UPVOTE_ASC);
                 } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(3)) && InternetCheckingController.isOnline(getContext())) {
-                    //
+                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.UPVOTE_DESC);
                 } else {
                     Toast.makeText(getContext(), "No Internet connection [Offline Mode]", Toast.LENGTH_LONG).show();
                 }
