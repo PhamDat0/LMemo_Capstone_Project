@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.controller.flashcard_controller;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,32 +21,28 @@ import java.util.ArrayList;
 
 public class FlashcardController {
 
-    private Activity aContext;
+    private Context aContext;
     private ArrayList<Word> listFlashcard;
     private FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(aContext).flashcardDAO();
 
-    public FlashcardController(Activity aContext, ArrayList<Word> listFlashcard) {
+    public FlashcardController(Context aContext, ArrayList<Word> listFlashcard) {
         this.aContext = aContext;
         this.listFlashcard = listFlashcard;
     }
 
     /**
-     *この関数フラッシュカードを削除します
+     * @param position: これはフラッシュカードのポジションです。
+     *この関数フラッシュカードのポジションに基づいて削除します。
      */
     public void delete(int position) {
-//        Log.d("myapp", position + "" + " || " + listFlashcard.get(position).getWordID());
         Flashcard flashcard = flashcardDAO.getFlashCardByID(listFlashcard.get(position).getWordID())[0];
-//                        Flashcard flashcard = flashcards[0];
         flashcard.setLastState(99);
         flashcardDAO.updateFlashcard(flashcard);
-        if (flashcardDAO.getAllVisibleFlashcard().length == 0) {
-            aContext.findViewById(R.id.btReview).setVisibility(View.INVISIBLE);
-        }
     }
 
 
     /**
-     * @param position
+     * @param position: これはフラッシュカードのポジションです。
      * @param v　
      * この関数はフラッシュカードのインフォメイションを表示します。
      */

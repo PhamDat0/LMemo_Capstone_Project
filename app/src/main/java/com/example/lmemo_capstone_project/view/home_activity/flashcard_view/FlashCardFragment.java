@@ -39,6 +39,7 @@ public class FlashCardFragment extends Fragment {
     private static final int MULTIPLE_CHOICE = 2;
     private ArrayList<Word> listFlashcard;
     private ListView flashcardListView;
+    public Button btnReview;
 
     public FlashCardFragment() {
         // Required empty public constructor
@@ -49,6 +50,7 @@ public class FlashCardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_flash_card, container, false);
+        btnReview = view.findViewById(R.id.btReview);
         getAllFlashcard();
         flashcardListView = view.findViewById(R.id.flashcardListView);
         FlashcardListAdapter flashcardAdapter = new FlashcardListAdapter(getActivity(), listFlashcard);
@@ -56,11 +58,11 @@ public class FlashCardFragment extends Fragment {
 //        flashcardAdapter.notifyDataSetChanged();
 //        getFragmentManager().beginTransaction()
 //                .add(R.id.FrameFlashcard,new FlashcardInfoFragment()).addToBackStack(null).commit();
-        Button btReview = view.findViewById(R.id.btReview);
+
         if (listFlashcard.size() == 0) {
-            btReview.setVisibility(View.INVISIBLE);
+            btnReview.setVisibility(View.INVISIBLE);
         }
-        btReview.setOnClickListener(new View.OnClickListener() {
+        btnReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (numberOfFlashcards() != 0) {
