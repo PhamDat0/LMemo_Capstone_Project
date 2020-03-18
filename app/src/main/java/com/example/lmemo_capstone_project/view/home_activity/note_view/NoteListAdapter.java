@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.CannotPerformFirebaseRequest;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
@@ -91,11 +92,11 @@ public class NoteListAdapter extends BaseAdapter {
         holder.tvReward.setText(reward.getRewardName());
         holder.btUpvote.setText(note.getUpvoterList() == null ? "0" : note.getUpvoterList().size() + "↑");
         holder.btDownvote.setText(note.getDownvoterList() == null ? "0" : note.getDownvoterList().size() + "↓");
+        setActionOnclick(holder, position);
         //ユーザーがノートを持っている場合には削除と更新できます。
         if (creator.getUserID().equalsIgnoreCase(currentUser.getUserID())) {
             Log.d("CompareID", creator.getUserID() + " / " + currentUser.getUserID() + " / " + creator.getUserID().equalsIgnoreCase(currentUser.getUserID()));
             setOwnerButtonVisible(holder, View.VISIBLE);
-            setActionOnclick(holder, position);
         } else {
             setOwnerButtonVisible(holder, View.INVISIBLE);
         }
@@ -159,19 +160,47 @@ public class NoteListAdapter extends BaseAdapter {
         holder.btUpvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("Vote_success", "Onclick");
                 vote(UPVOTE, position);
             }
         });
         holder.btDownvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("Vote_success", "Onclick");
                 vote(DOWNVOTE, position);
             }
         });
     }
 
     private void vote(int mode, int position) {
-
+        if (InternetCheckingController.isOnline(aContext)) {
+            Log.i("Vote_success", "Has internet");
+            NoteController noteController = new NoteController(aContext);
+            Note note = listNote.get(position);
+            switch (mode) {
+                case UPVOTE:
+                    try {
+                        Log.i("Vote_success", "Start perform");
+                        noteController.upvote(note);
+                    } catch (CannotPerformFirebaseRequest cannotPerformFirebaseRequest) {
+                        Toast.makeText(aContext, cannotPerformFirebaseRequest.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case DOWNVOTE:
+                    try {
+                        Log.i("Vote_success", "Start perform");
+                        noteController.downvote(note);
+                    } catch (CannotPerformFirebaseRequest cannotPerformFirebaseRequest) {
+                        Toast.makeText(aContext, cannotPerformFirebaseRequest.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                default:
+                    throw new UnsupportedOperationException("There is no such mode");
+            }
+        } else {
+            Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callForEditDialog(int position) {

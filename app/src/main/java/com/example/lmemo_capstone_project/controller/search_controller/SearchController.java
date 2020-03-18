@@ -61,12 +61,12 @@ public class SearchController {
     public Word performSearch(String searchWord) throws WordNotFoundException {
         Word word;
         if (searchWord.trim().length() == 0)
-            throw new WordNotFoundException("That word does not exist.");
+            throw new WordNotFoundException("You didn't enter anything.");
         try {
             Word[] words = wordDAO.getWords(searchWord);
             word = bestFit(words, searchWord);
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new WordNotFoundException("You didn't enter anything.");
+            throw new WordNotFoundException("That word does not exist.");
         }
         return word;
     }

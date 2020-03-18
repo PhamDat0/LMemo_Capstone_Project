@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -34,6 +35,8 @@ import java.util.Map;
 public class NoteController {
     public static final boolean GET_OFFLINE_NOTE_PRIVATE = false;
     public static final boolean GET_OFFLINE_NOTE_PUBLIC = true;
+    private static final int UPVOTE = 1;
+    private static final int DOWNVOTE = 2;
 
     private WordDAO wordDAO;
     private NoteDAO noteDAO;
@@ -265,5 +268,33 @@ public class NoteController {
         note.setPublic(true);
         note.setNoteID(noteID);
         return note;
+    }
+
+    public void upvote(Note note) throws CannotPerformFirebaseRequest {
+        performVote(note, UPVOTE);
+    }
+
+    public void downvote(Note note) throws CannotPerformFirebaseRequest {
+        performVote(note, DOWNVOTE);
+    }
+
+    private void performVote(final Note note, final int mode) throws CannotPerformFirebaseRequest {
+        if (!user.getUserID().equalsIgnoreCase("GUEST")) {
+            final DocumentReference docRef = db.collection("notes").document(note.getOnlineID());
+            docRef.update("upvoter", FieldValue.arrayRemove(user.getUserID()), "downvoter", FieldValue.arrayRemove(user.getUserID())).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.i("Vote_success", "DELETE FROM LIST");
+                    docRef.update(mode == UPVOTE ? "upvoter" : "downvoter", FieldValue.arrayUnion(user.getUserID())).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i("Vote_success", mode == UPVOTE ? "upvote" : "downvote" + " on " + note.getOnlineID() + " by " + user.getUserID());
+                        }
+                    });
+                }
+            });
+        } else {
+            throw new CannotPerformFirebaseRequest("You must logged in");
+        }
     }
 }
