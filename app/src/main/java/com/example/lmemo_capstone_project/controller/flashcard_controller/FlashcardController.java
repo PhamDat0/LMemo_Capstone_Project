@@ -45,7 +45,7 @@ public class FlashcardController {
      */
     public Word flashcardInfo(int position) {
         WordDAO wordDAO = LMemoDatabase.getInstance(aContext).wordDAO();
-        Word flashcardDetail = wordDAO.getAWords(listFlashcard.get(position).getKana())[0];
+        Word flashcardDetail = wordDAO.getAWords(listFlashcard.get(position).getWordID())[0];
         return flashcardDetail;
     }
 }
