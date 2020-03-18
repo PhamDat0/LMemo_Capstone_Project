@@ -146,7 +146,7 @@ public class WordSearchingFragment extends Fragment {
     public void updateUI(ArrayList<Note> listNote, Map<String, User> listUserMap) {
         Log.i("Note_And_User", listNote.get(0).getOnlineID() + " / " +
                 listUserMap.get(listNote.get(0).getCreatorUserID()).getUserID() + " ; ");
-        NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap);
+        NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap, NoteListAdapter.SEARCH_MODE);
         noteListView.setAdapter(noteListAdapter);
     }
 

@@ -76,4 +76,24 @@ public class MyAccountController {
             }
         });
     }
+
+    public void increaseUserPoint(final String userID, final int pointToIncrease) {
+        final DocumentReference userRef = db.collection("users").document(userID);
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                long contributionPoint = (Long) documentSnapshot.get("contributionPoint");
+                contributionPoint = contributionPoint + pointToIncrease;
+                contributionPoint = Math.max(contributionPoint, 0);
+                final long finalContributionPoint = contributionPoint;
+                userRef.update("contributionPoint", contributionPoint).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i("ContributionPoint", userID + " has " + finalContributionPoint);
+                    }
+                });
+
+            }
+        });
+    }
 }
