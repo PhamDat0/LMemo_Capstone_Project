@@ -91,7 +91,13 @@ public class NoteListAdapter extends BaseAdapter {
         Reward reward = rewardDAO.getBestReward(creator.getContributionPoint() < 1 ? 1 : creator.getContributionPoint())[0];
         holder.tvReward.setText(reward.getRewardName());
         holder.btUpvote.setText(note.getUpvoterList() == null ? "0" : note.getUpvoterList().size() + "↑");
+        if (note.getUpvoterList() != null && note.getUpvoterList().contains(currentUser.getUserID())) {
+            holder.btUpvote.setBackgroundColor(Color.BLUE);
+        }
         holder.btDownvote.setText(note.getDownvoterList() == null ? "0" : note.getDownvoterList().size() + "↓");
+        if (note.getDownvoterList() != null && note.getDownvoterList().contains(currentUser.getUserID())) {
+            holder.btDownvote.setBackgroundColor(Color.BLUE);
+        }
         setActionOnclick(holder, position);
         //ユーザーがノートを持っている場合には削除と更新できます。
         if (creator.getUserID().equalsIgnoreCase(currentUser.getUserID())) {

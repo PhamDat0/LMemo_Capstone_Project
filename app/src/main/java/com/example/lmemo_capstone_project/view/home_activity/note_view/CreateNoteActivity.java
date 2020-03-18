@@ -226,6 +226,9 @@ public class CreateNoteActivity extends AppCompatActivity {
         listAssocitatedWord.setAdapter(associatedWordAdapter);
         WordDAO wordDAO = LMemoDatabase.getInstance(getApplicationContext()).wordDAO();
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
+        if (LMemoDatabase.getInstance(getApplicationContext()).userDAO().getLocalUser()[0].getUserID().equalsIgnoreCase("GUEST")) {
+            isNotePublic.setVisibility(View.INVISIBLE);
+        }
         searchController = new SearchController(wordDAO, flashcardDAO);
         addNoteController = new NoteController(this);
         mode = getIntent().getIntExtra("mode", IN_ADDING_MODE);
