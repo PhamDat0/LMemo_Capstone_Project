@@ -81,8 +81,8 @@ public class GetNoteController {
                                     public int compare(Note o1, Note o2) {
                                         int upvote1 = o1.getUpvoterList().size() - o1.getDownvoterList().size();
                                         int upvote2 = o2.getUpvoterList().size() - o2.getDownvoterList().size();
-                                        int result = (upvote1 - upvote2) / Math.abs(upvote1 - upvote2);
-                                        result *= sortMode == UPVOTE_ASC ? 1 : -1;
+                                        int result = (upvote1 - upvote2) / (Math.abs(upvote1 - upvote2) == 0 ? 1 : Math.abs(upvote1 - upvote2));
+                                        result *= sortMode == UPVOTE_DESC ? 1 : -1;
                                         return result;
                                     }
                                 });
