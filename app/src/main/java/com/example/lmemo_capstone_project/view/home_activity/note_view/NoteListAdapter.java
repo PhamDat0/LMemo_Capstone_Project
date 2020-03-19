@@ -89,14 +89,14 @@ public class NoteListAdapter extends BaseAdapter {
         }
         holder.tvNoteContent.setText(note.getNoteContent());
         Reward reward = rewardDAO.getBestReward(creator.getContributionPoint() < 1 ? 1 : creator.getContributionPoint())[0];
-        holder.tvReward.setText(reward.getRewardName());
-        holder.btUpvote.setText(note.getUpvoterList() == null ? "0" : note.getUpvoterList().size() + "↑");
+        holder.tvReward.setText("("+ reward.getRewardName()+")");
+        holder.likeNumbers.setText(note.getUpvoterList() == null ? "0" : note.getUpvoterList().size() + "");
         if (note.getUpvoterList() != null && note.getUpvoterList().contains(currentUser.getUserID())) {
-            holder.btUpvote.setBackgroundColor(Color.BLUE);
+            holder.likeNumbers.setTextColor(Color.BLUE);
         }
-        holder.btDownvote.setText(note.getDownvoterList() == null ? "0" : note.getDownvoterList().size() + "↓");
+        holder.dislikeNumbers.setText(note.getDownvoterList() == null ? "0" : note.getDownvoterList().size() + "");
         if (note.getDownvoterList() != null && note.getDownvoterList().contains(currentUser.getUserID())) {
-            holder.btDownvote.setBackgroundColor(Color.BLUE);
+            holder.dislikeNumbers.setTextColor(Color.BLUE);
         }
         setActionOnclick(holder, position);
         //ユーザーがノートを持っている場合には削除と更新できます。
@@ -118,6 +118,8 @@ public class NoteListAdapter extends BaseAdapter {
         holder.ibDelete = convertView.findViewById(R.id.ibDeleteNote);
         holder.ibEdit = convertView.findViewById(R.id.ibEditNote);
         holder.btUpvote = convertView.findViewById(R.id.btUpvote);
+        holder.likeNumbers = convertView.findViewById(R.id.likeNumbers);
+        holder.dislikeNumbers = convertView.findViewById(R.id.dislikeNumbers);
         holder.btDownvote = convertView.findViewById(R.id.btDownvote);
         holder.btViewComment = convertView.findViewById(R.id.btViewComment);
         holder.lvComments = convertView.findViewById(R.id.lvComments);
@@ -231,11 +233,13 @@ public class NoteListAdapter extends BaseAdapter {
         TextView tvUser;
         TextView tvReward;
         TextView tvNoteContent;
+        TextView likeNumbers;
+        TextView dislikeNumbers;
         ImageButton ibDelete;
         ImageButton ibEdit;
-        Button btUpvote;
-        Button btDownvote;
-        Button btViewComment;
+        ImageButton btUpvote;
+        ImageButton btDownvote;
+        ImageButton btViewComment;
         ListView lvComments;
         Button btAddComment;
     }

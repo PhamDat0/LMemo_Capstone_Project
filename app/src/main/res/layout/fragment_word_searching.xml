@@ -28,36 +28,48 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/tvKana"
                     android:layout_width="350dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="20dp"
                     android:autoSizeMaxTextSize="24dp"
-                    android:textColor="#DA0F0F"
-                    android:textSize="24sp" />
+                    android:textColor="#DA0F0F" />
                 <ImageButton
                     android:id="@+id/btPronunciation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:background="@drawable/ic_speaker"
+                    android:layout_marginLeft="19dp"
                     android:visibility="invisible" />
             </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
             <TextView
                 android:id="@+id/tvKanji"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="15dp"
+                android:autoSizeMaxTextSize="20dp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
+            <ImageButton
+                android:id="@+id/btnOpenTakeNoteDialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
+                android:layout_marginLeft="10dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_addnote"/>
+        </LinearLayout>
             <TextView
                 android:id="@+id/tvPartOfSpeech"
                 android:layout_width="wrap_content"
@@ -90,12 +102,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btnOpenTakeNoteDialog"
-                    android:layout_width="344dp"
-                    android:layout_height="wrap_content"
-                    android:text="Take note here" />
 
                 <Spinner
                     android:id="@+id/spinnerSort"

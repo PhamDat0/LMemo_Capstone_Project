@@ -2,19 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp">
 
     <TextView
         android:id="@+id/tvAssociatedWord"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:gravity="center_vertical"
+        android:textSize="20sp"
+        android:autoSizeMinTextSize="15sp"
+        android:autoSizeMaxTextSize="20sp"
+        android:layout_marginLeft="10sp"
+        android:textColor="@color/colorPrimary"/>
 
     <ImageButton
         android:id="@+id/ibDeleteAssciation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@color/white"
         app:srcCompat="@drawable/ic_trash" />
 </LinearLayout>
