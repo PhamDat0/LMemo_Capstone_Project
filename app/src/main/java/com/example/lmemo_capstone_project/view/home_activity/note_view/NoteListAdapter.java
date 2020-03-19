@@ -3,7 +3,11 @@ package com.example.lmemo_capstone_project.view.home_activity.note_view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +36,8 @@ import java.util.List;
 import java.util.Map;
 
 public class NoteListAdapter extends BaseAdapter {
-
+    public static final int SEARCH_MODE = 0;
+    public static final int VIEW_MODE = 1;
     private static final int UPVOTE = 1;
     private static final int DOWNVOTE = 2;
     private final Map<String, User> listUserMap;
@@ -40,14 +45,16 @@ public class NoteListAdapter extends BaseAdapter {
     private List<Note> listNote;
     //    private LayoutInflater layoutInflater;
     private RewardDAO rewardDAO;
+    private int mode;
 //    private int pos;
 
 
-    public NoteListAdapter(Activity aContext, List<Note> listNote, Map<String, User> listUserMap) {
+    public NoteListAdapter(Activity aContext, List<Note> listNote, Map<String, User> listUserMap, int mode) {
         this.aContext = aContext;
         this.listNote = listNote;
 //        layoutInflater = LayoutInflater.from(aContext);
         this.listUserMap = listUserMap;
+        this.mode = mode;
         rewardDAO = LMemoDatabase.getInstance(aContext).rewardDAO();
     }
 
@@ -89,15 +96,9 @@ public class NoteListAdapter extends BaseAdapter {
         }
         holder.tvNoteContent.setText(note.getNoteContent());
         Reward reward = rewardDAO.getBestReward(creator.getContributionPoint() < 1 ? 1 : creator.getContributionPoint())[0];
-        holder.tvReward.setText("("+ reward.getRewardName()+")");
-        holder.likeNumbers.setText(note.getUpvoterList() == null ? "0" : note.getUpvoterList().size() + "");
-        if (note.getUpvoterList() != null && note.getUpvoterList().contains(currentUser.getUserID())) {
-            holder.likeNumbers.setTextColor(Color.BLUE);
-        }
-        holder.dislikeNumbers.setText(note.getDownvoterList() == null ? "0" : note.getDownvoterList().size() + "");
-        if (note.getDownvoterList() != null && note.getDownvoterList().contains(currentUser.getUserID())) {
-            holder.dislikeNumbers.setTextColor(Color.BLUE);
-        }
+
+
+
         setActionOnclick(holder, position);
         //ユーザーがノートを持っている場合には削除と更新できます。
         if (creator.getUserID().equalsIgnoreCase(currentUser.getUserID())) {

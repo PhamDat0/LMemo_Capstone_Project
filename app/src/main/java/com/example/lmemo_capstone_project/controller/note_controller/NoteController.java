@@ -271,14 +271,20 @@ public class NoteController {
     }
 
     public void upvote(Note note) throws CannotPerformFirebaseRequest {
-        performVote(note, UPVOTE);
+        if (!note.getUpvoterList().contains(user.getUserID())) {
+            int pointForOwner = note.getDownvoterList().contains(user.getUserID()) ? 2 : 1;
+            performVote(note, UPVOTE, pointForOwner);
+        }
     }
 
     public void downvote(Note note) throws CannotPerformFirebaseRequest {
-        performVote(note, DOWNVOTE);
+        if (!note.getDownvoterList().contains(user.getUserID())) {
+            int pointForOwner = note.getUpvoterList().contains(user.getUserID()) ? -2 : -1;
+            performVote(note, DOWNVOTE, pointForOwner);
+        }
     }
 
-    private void performVote(final Note note, final int mode) throws CannotPerformFirebaseRequest {
+    private void performVote(final Note note, final int mode, final int pointForOwner) throws CannotPerformFirebaseRequest {
         if (!user.getUserID().equalsIgnoreCase("GUEST")) {
             final DocumentReference docRef = db.collection("notes").document(note.getOnlineID());
             docRef.update("upvoter", FieldValue.arrayRemove(user.getUserID()), "downvoter", FieldValue.arrayRemove(user.getUserID())).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -288,6 +294,7 @@ public class NoteController {
                     docRef.update(mode == UPVOTE ? "upvoter" : "downvoter", FieldValue.arrayUnion(user.getUserID())).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            new MyAccountController().increaseUserPoint(note.getCreatorUserID(), pointForOwner);
                             Log.i("Vote_success", mode == UPVOTE ? "upvote" : "downvote" + " on " + note.getOnlineID() + " by " + user.getUserID());
                         }
                     });

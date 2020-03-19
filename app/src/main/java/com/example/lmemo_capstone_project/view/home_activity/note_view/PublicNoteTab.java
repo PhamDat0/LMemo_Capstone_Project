@@ -55,7 +55,7 @@ public class PublicNoteTab extends Fragment {
         List<Note> listNote = getNoteController.getOfflineNote(GetNoteController.GET_OFFLINE_NOTE_PUBLIC, user.getUserID());
         Map<String, User> listUserMap = new HashMap<>();
         listUserMap.put(user.getUserID(), user);
-        NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap);
+        NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap, NoteListAdapter.VIEW_MODE);
         noteListView.setAdapter(noteListAdapter);
     }
 
