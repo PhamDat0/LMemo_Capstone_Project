@@ -8,21 +8,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/gradientbackground"
+        android:background="@color/lightorange"
         android:gravity="center">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Create a note"
             android:padding="10dp"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/white"
             android:textSize="20sp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#02505E"
+        android:background="#F3631E"
         android:gravity="center"
         android:paddingBottom="30dp">
         <AutoCompleteTextView
@@ -41,8 +41,7 @@
             android:layout_width="375dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            android:background="@color/white">
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -52,10 +51,10 @@
                     android:layout_height="200dp"
                     android:ems="10"
                     android:inputType="textMultiLine|textPersonName"
-                    android:background="@drawable/gradientbackground"
+                    android:background="@color/lightorange"
                     android:gravity="top|left"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textColorHint="@color/colorPrimaryDark"
+                    android:textColor="@color/white"
+                    android:textColorHint="#CDCED8"
                     android:hint=" Enter your note" />
             </LinearLayout>
         </LinearLayout>
@@ -64,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/gradientbackground"
+        android:background="#E4E5EC"
         android:gravity="center">
         <Switch
             android:id="@+id/isNotePublic"
@@ -91,7 +90,7 @@
                     android:id="@+id/btnAddNote"
                     android:layout_width="190dp"
                     android:layout_height="wrap_content"
-                    android:background="#02505E"
+                    android:background="@color/lightorange"
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     android:text="Save" />
@@ -105,7 +104,7 @@
                     android:id="@+id/btnCancelAddNote"
                     android:layout_width="190dp"
                     android:layout_height="wrap_content"
-                    android:background="#02505E"
+                    android:background="@color/lightorange"
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     android:text="Cancel" />
@@ -113,10 +112,11 @@
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:padding="10dp"
+        android:background="#E4E5EC"
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
@@ -128,6 +128,8 @@
         <ListView
             android:id="@+id/listAssocitatedWord"
             android:layout_width="match_parent"
+            android:background="#E4E5EC"
+            android:layout_marginTop="10dp"
             android:layout_height="match_parent" />
     </LinearLayout>
 
