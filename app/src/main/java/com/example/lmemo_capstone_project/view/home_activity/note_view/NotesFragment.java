@@ -41,6 +41,7 @@ public class NotesFragment extends Fragment {
         notesPager = new NotesPager(getParentFragmentManager());
         notesPager.addFragment(new PrivateNoteTab(), "Private");
         notesPager.addFragment(new PublicNoteTab(), "Public");
+        viewPager.setOffscreenPageLimit(2);
 
         viewPager.setAdapter(notesPager);
 

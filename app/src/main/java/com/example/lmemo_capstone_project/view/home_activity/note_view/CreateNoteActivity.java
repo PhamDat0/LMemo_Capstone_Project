@@ -1,5 +1,6 @@
 package com.example.lmemo_capstone_project.view.home_activity.note_view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -77,6 +79,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         btnAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(getThisActivity());
                 switch (mode) {
                     case IN_ADDING_MODE:
                         addNoteHandle();
@@ -100,6 +103,10 @@ public class CreateNoteActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private Activity getThisActivity() {
+        return this;
     }
 
     private void editNoteHandle() {
@@ -257,5 +264,16 @@ public class CreateNoteActivity extends AppCompatActivity {
             addToListView(wordDAO.getWordWithID(noteOfWord.getWordID())[0]);
         }
         isNotePublic.setChecked(note.isPublic());
+    }
+
+    private void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

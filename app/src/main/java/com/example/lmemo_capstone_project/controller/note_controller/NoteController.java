@@ -94,13 +94,12 @@ public class NoteController {
             public void onSuccess(DocumentReference documentReference) {
                 Log.w("AddNoteActivity", "Add new note successful " + documentReference.getId());
                 note.setOnlineID(documentReference.getId());
+                Log.w("AddNoteActivity", "OnlineID " + note.getOnlineID());
                 noteDAO.updateNote(note);
                 Log.d("AddNoteActivity", "We get this far");
                 user.setContributionPoint(user.getContributionPoint() + 1);
-                new MyAccountController().updateUser(user);
-                Log.d("AddNoteActivity", user.getContributionPoint() + "");
+                new MyAccountController().increaseUserPoint(user.getUserID(), 1);
                 userDAO.updateUser(user);
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -135,13 +134,7 @@ public class NoteController {
 
     private void updateNoteInSQLite(Note note, String noteContent, boolean noteStatus, List<Word> words) {
         noteOfWordDAO.deleteAllAssociationOfOneNote(note.getNoteID());
-        for (Word word : words) {
-            Log.i("INSERT_HAS_NO_DEFECTS", word.getWordID() + "");
-            NoteOfWord noteOfWord = new NoteOfWord();
-            noteOfWord.setNoteID(note.getNoteID());
-            noteOfWord.setWordID(word.getWordID());
-            noteOfWordDAO.insertNoteOfWord(noteOfWord);
-        }
+        insertWordToNoteOfWord(note, words);
         note.setNoteContent(noteContent);
         note.setTranslatedContent("");
         note.setPublic(noteStatus);
@@ -150,6 +143,7 @@ public class NoteController {
 
     private void deleteNoteFromFB(Note note) {
         String noteOnlineID = note.getOnlineID();
+        Log.w("AddNoteActivity", "OnlineID controller 2" + note.getOnlineID());
         db.collection("notes").document(noteOnlineID).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -177,6 +171,7 @@ public class NoteController {
         noteOfWordDAO.deleteAllAssociationOfOneNote(note.getNoteID());
         noteDAO.deleteNote(note);
         if (note.isPublic()) {
+            Log.w("AddNoteActivity", "OnlineID controller 1 " + note.getOnlineID());
             deleteNoteFromFB(note);
         }
     }
@@ -249,10 +244,12 @@ public class NoteController {
                                     }
                                     Note note = getNoteFromSnapshot(documentSnapshot, noteID);
                                     noteDAO.insertNote(note);
+                                    insertWordToNoteOfWord(note, note.getWordList());
                                 } else {
                                     int noteID = notesByOnlineID[0].getNoteID();
                                     Note note = getNoteFromSnapshot(documentSnapshot, noteID);
                                     noteDAO.updateNote(note);
+                                    insertWordToNoteOfWord(note, note.getWordList());
                                 }
                             }
                         }
@@ -260,11 +257,29 @@ public class NoteController {
                 });
     }
 
+    private void insertWordToNoteOfWord(Note note, List<Word> wordList) {
+        NoteOfWord noteOfWord = new NoteOfWord();
+        noteOfWord.setNoteID(note.getNoteID());
+        for (Word word : wordList) {
+            noteOfWord.setWordID(word.getWordID());
+            noteOfWordDAO.insertNoteOfWord(noteOfWord);
+        }
+    }
+
     private Note getNoteFromSnapshot(QueryDocumentSnapshot documentSnapshot, int noteID) {
         Note note = documentSnapshot.toObject(Note.class);
         Map<String, Object> noteMap = documentSnapshot.getData();
         note.setCreatorUserID((String) noteMap.get("userID"));
         note.setOnlineID(documentSnapshot.getId());
+        List<Long> wordIDList = (List<Long>) noteMap.get("wordID");
+        List<Word> words = new ArrayList<>();
+        for (Long i : wordIDList) {
+            long id = i;
+            Word word = new Word();
+            word.setWordID((int) id);
+            words.add(word);
+        }
+        note.setWordList(words);
         note.setPublic(true);
         note.setNoteID(noteID);
         return note;

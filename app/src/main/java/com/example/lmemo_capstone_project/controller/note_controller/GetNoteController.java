@@ -18,6 +18,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,11 +42,18 @@ public class GetNoteController {
     private WordSearchingFragment wordSearchingFragment;
     private ArrayList<Note> listNote;
     private ArrayList<User> listUser;
+    ListenerRegistration registration;
 
     public GetNoteController(WordSearchingFragment wordSearchingFragment) {
         db = FirebaseFirestore.getInstance();
         this.wordSearchingFragment = wordSearchingFragment;
         noteDAO = LMemoDatabase.getInstance(wordSearchingFragment.getContext()).noteDAO();
+        registration = new ListenerRegistration() {
+            @Override
+            public void remove() {
+
+            }
+        };
     }
 
     public GetNoteController(NoteDAO noteDAO) {
@@ -58,15 +66,16 @@ public class GetNoteController {
      * この関数はファイアベースからノートを取ります
      */
     public void getAllNotesFromFirebase(int wordID, final int sortMode) {
-        db.collection("notes").whereArrayContains("wordID", wordID).
-                orderBy("createdTime", sortMode == TIME_ASC ? Query.Direction.ASCENDING : Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+        registration.remove();
+        Query query = db.collection("notes").whereArrayContains("wordID", wordID).
+                orderBy("createdTime", sortMode == TIME_ASC ? Query.Direction.ASCENDING : Query.Direction.DESCENDING);
+        registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         listNote = new ArrayList<>();
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Log.d("LIST_SIZE", documentSnapshot.getId());
                             Note note = processSnapshot(documentSnapshot);
+                            Log.d("LIST_SIZE", documentSnapshot.getId() + " -> " + documentSnapshot.getData() + "\n" + note.getDownvoterList());
                             listNote.add(note);
                             Log.d("LIST_SIZE", listNote.size() + " in");
                         }

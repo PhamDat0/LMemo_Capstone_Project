@@ -40,4 +40,7 @@ public interface NoteDAO {
 
     @Query("SELECT * FROM Note WHERE OnlineID = :onlineID")
     Note[] getNotesByOnlineID(String onlineID);
+
+    @Query("SELECT * FROM Note WHERE NoteID = :noteID")
+    Note[] getNotesByID(int noteID);
 }

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -146,8 +145,11 @@ public class WordSearchingFragment extends Fragment {
     }
 
     public void updateUI(ArrayList<Note> listNote, Map<String, User> listUserMap) {
-        Log.i("Note_And_User", listNote.get(0).getOnlineID() + " / " +
-                listUserMap.get(listNote.get(0).getCreatorUserID()).getUserID() + " ; ");
+//        Log.i("Note_And_User", listNote.get(0).getOnlineID() + " / " +
+//                listUserMap.get(listNote.get(0).getCreatorUserID()).getUserID() + " ; ");
+        for (Note note : listNote) {
+            Log.i("UPVOTER_DOWNVOTER", note.getUpvoterList() + "" + note.getDownvoterList());
+        }
         NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap, NoteListAdapter.SEARCH_MODE);
         noteListView.setAdapter(noteListAdapter);
     }
