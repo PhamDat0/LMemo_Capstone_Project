@@ -3,7 +3,6 @@ package com.example.lmemo_capstone_project.view.home_activity.note_view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
@@ -86,6 +85,7 @@ public class NoteListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         Note note = getNoteFromDB(position);
+        Log.i("UPVOTER_DOWNVOTER", note.getUpvoterList() + "" + note.getDownvoterList());
         User creator = listUserMap.get(note.getCreatorUserID());
 //        Log.d("Debug_gender",creator.isGender()+"");
         if (creator.isGender()) {
@@ -96,7 +96,7 @@ public class NoteListAdapter extends BaseAdapter {
             holder.tvUser.setTextColor(Color.MAGENTA);
         }
         holder.tvNoteContent.setText(note.getNoteContent());
-        Reward reward = rewardDAO.getBestReward(creator.getContributionPoint() < 1 ? 1 : creator.getContributionPoint())[0];
+        Reward reward = rewardDAO.getBestReward(Math.max(creator.getContributionPoint(), 1))[0];
 
         holder.tvReward.setText(reward.getRewardName());
 
@@ -238,6 +238,9 @@ public class NoteListAdapter extends BaseAdapter {
         Note note;
         try {
             note = noteDAO.getNotesByID(listNote.get(position).getNoteID())[0];
+            note.setUpvoterList(listNote.get(position).getUpvoterList());
+            note.setDownvoterList(listNote.get(position).getDownvoterList());
+            note.setWordList(listNote.get(position).getWordList());
         } catch (ArrayIndexOutOfBoundsException e) {
             note = listNote.get(position);
         }

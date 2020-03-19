@@ -6,6 +6,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,12 @@ public class Note implements Serializable {
     @ColumnInfo(name = "OnlineID") private String onlineID;
     @ColumnInfo(name = "CreatedTime") private Date createdDate;
     @ColumnInfo(name = "UserID") private String creatorUserID;
+
+    public Note() {
+        wordList = new ArrayList<>();
+        upvoterList = new ArrayList<>();
+        downvoterList = new ArrayList<>();
+    }
 
     @Ignore
     private List<Word> wordList;
