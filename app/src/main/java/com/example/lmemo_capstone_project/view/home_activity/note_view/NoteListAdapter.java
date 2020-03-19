@@ -97,6 +97,47 @@ public class NoteListAdapter extends BaseAdapter {
         holder.tvNoteContent.setText(note.getNoteContent());
         Reward reward = rewardDAO.getBestReward(creator.getContributionPoint() < 1 ? 1 : creator.getContributionPoint())[0];
 
+        holder.tvReward.setText(reward.getRewardName());
+
+        List<String> upvoterList = note.getUpvoterList();
+        List<String> downvoterList = note.getDownvoterList();
+
+        if (upvoterList != null) {
+            if (upvoterList.contains(currentUser.getUserID())) {
+                SpannableString spanString = new SpannableString(upvoterList.size() + "↑");
+                spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+                holder.likeNumbers.setText(spanString);
+                holder.btUpvote.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+            } else {
+                SpannableString spanString = new SpannableString(upvoterList.size() + "↑");
+                spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
+                holder.likeNumbers.setText(spanString);
+                holder.btUpvote.getBackground().setColorFilter(null);
+            }
+        }
+        if (downvoterList != null) {
+            if (downvoterList.contains(currentUser.getUserID())) {
+                SpannableString spanString = new SpannableString(downvoterList.size() + "↓");
+                spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+                holder.dislikeNumbers.setText(spanString);
+                holder.btDownvote.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+            } else {
+                SpannableString spanString = new SpannableString(downvoterList.size() + "↓");
+                spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
+                holder.dislikeNumbers.setText(spanString);
+                holder.btDownvote.getBackground().setColorFilter(null);
+            }
+        }
+
+        if (mode == SEARCH_MODE) {
+            holder.btUpvote.setVisibility(View.VISIBLE);
+            holder.btDownvote.setVisibility(View.VISIBLE);
+            holder.btViewComment.setVisibility(View.VISIBLE);
+        } else {
+            holder.btUpvote.setVisibility(View.GONE);
+            holder.btDownvote.setVisibility(View.GONE);
+            holder.btViewComment.setVisibility(View.GONE);
+        }
 
 
         setActionOnclick(holder, position);
