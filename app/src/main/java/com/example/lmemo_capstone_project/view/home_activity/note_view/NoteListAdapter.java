@@ -104,28 +104,32 @@ public class NoteListAdapter extends BaseAdapter {
 
         if (upvoterList != null) {
             if (upvoterList.contains(currentUser.getUserID())) {
-                SpannableString spanString = new SpannableString(upvoterList.size() + "↑");
+                SpannableString spanString = new SpannableString(upvoterList.size() + "");
                 spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-                holder.likeNumbers.setText(spanString);
-                holder.btUpvote.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+                holder.tvlikeNumbers.setText(spanString);
+//                holder.tvlikeNumbers.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+                holder.tvlikeNumbers.setTextColor(Color.BLUE);
             } else {
-                SpannableString spanString = new SpannableString(upvoterList.size() + "↑");
+                SpannableString spanString = new SpannableString(upvoterList.size() + "");
                 spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
-                holder.likeNumbers.setText(spanString);
-                holder.btUpvote.getBackground().setColorFilter(null);
+                holder.tvlikeNumbers.setText(spanString);
+//                holder.btUpvote.getBackground().setColorFilter(null);
+                holder.tvlikeNumbers.setTextColor(Color.BLACK);
             }
         }
         if (downvoterList != null) {
             if (downvoterList.contains(currentUser.getUserID())) {
-                SpannableString spanString = new SpannableString(downvoterList.size() + "↓");
+                SpannableString spanString = new SpannableString(downvoterList.size() + "");
                 spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-                holder.dislikeNumbers.setText(spanString);
-                holder.btDownvote.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+                holder.tvdislikeNumbers.setText(spanString);
+//                holder.btDownvote.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+                holder.tvdislikeNumbers.setTextColor(Color.BLUE);
             } else {
-                SpannableString spanString = new SpannableString(downvoterList.size() + "↓");
+                SpannableString spanString = new SpannableString(downvoterList.size() + "");
                 spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
-                holder.dislikeNumbers.setText(spanString);
-                holder.btDownvote.getBackground().setColorFilter(null);
+                holder.tvdislikeNumbers.setText(spanString);
+//                holder.btDownvote.getBackground().setColorFilter(null);
+                holder.tvdislikeNumbers.setTextColor(Color.BLACK);
             }
         }
 
@@ -136,6 +140,9 @@ public class NoteListAdapter extends BaseAdapter {
         } else {
             holder.btUpvote.setVisibility(View.GONE);
             holder.btDownvote.setVisibility(View.GONE);
+            holder.tvlikeNumbers.setVisibility(View.GONE);
+            holder.tvdislikeNumbers.setVisibility(View.GONE);
+            holder.tvComment.setVisibility(View.GONE);
             holder.btViewComment.setVisibility(View.GONE);
         }
 
@@ -160,8 +167,9 @@ public class NoteListAdapter extends BaseAdapter {
         holder.ibDelete = convertView.findViewById(R.id.ibDeleteNote);
         holder.ibEdit = convertView.findViewById(R.id.ibEditNote);
         holder.btUpvote = convertView.findViewById(R.id.btUpvote);
-        holder.likeNumbers = convertView.findViewById(R.id.likeNumbers);
-        holder.dislikeNumbers = convertView.findViewById(R.id.dislikeNumbers);
+        holder.tvlikeNumbers = convertView.findViewById(R.id.tvlikeNumbers);
+        holder.tvdislikeNumbers = convertView.findViewById(R.id.tvdislikeNumbers);
+        holder.tvComment = convertView.findViewById(R.id.tvComment);
         holder.btDownvote = convertView.findViewById(R.id.btDownvote);
         holder.btViewComment = convertView.findViewById(R.id.btViewComment);
         holder.lvComments = convertView.findViewById(R.id.lvComments);
@@ -275,8 +283,9 @@ public class NoteListAdapter extends BaseAdapter {
         TextView tvUser;
         TextView tvReward;
         TextView tvNoteContent;
-        TextView likeNumbers;
-        TextView dislikeNumbers;
+        TextView tvlikeNumbers;
+        TextView tvdislikeNumbers;
+        TextView tvComment;
         ImageButton ibDelete;
         ImageButton ibEdit;
         ImageButton btUpvote;

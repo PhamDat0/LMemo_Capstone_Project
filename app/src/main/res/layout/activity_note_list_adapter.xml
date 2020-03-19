@@ -90,7 +90,7 @@
                 android:src="@drawable/ic_like"
                 android:background="@color/white" />
             <TextView
-                android:id="@+id/likeNumbers"
+                android:id="@+id/tvlikeNumbers"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -106,7 +106,7 @@
                 android:layout_marginLeft="20dp"
                 android:src="@drawable/ic_dislike_thumb"/>
             <TextView
-                android:id="@+id/dislikeNumbers"
+                android:id="@+id/tvdislikeNumbers"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -127,6 +127,7 @@
                 android:background="@color/white"
                 android:src="@drawable/ic_review" />
             <TextView
+                android:id="@+id/tvComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
