@@ -36,7 +36,7 @@ public class SearchController {
         constrain = constrain.replace("*", "%");
         constrain = constrain.replace("?", "_");
         if ((!constrain.contains("%")) && (!constrain.contains("_"))) {
-            constrain = "%" + constrain + "%";
+            constrain = constrain + "%";
         }
         constrain = constrain.toUpperCase();
         if (constraint == null) {

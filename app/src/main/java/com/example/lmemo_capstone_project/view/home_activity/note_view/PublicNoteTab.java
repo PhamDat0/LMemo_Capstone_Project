@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.view.home_activity.note_view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,9 @@ public class PublicNoteTab extends Fragment {
             user.setUserID("GUEST");
         }
         List<Note> listNote = getNoteController.getOfflineNote(GetNoteController.GET_OFFLINE_NOTE_PUBLIC, user.getUserID());
+        for (Note note : listNote) {
+            Log.w("AddNoteActivity", "OnlineID in public view: " + note.getOnlineID());
+        }
         Map<String, User> listUserMap = new HashMap<>();
         listUserMap.put(user.getUserID(), user);
         NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap, NoteListAdapter.VIEW_MODE);

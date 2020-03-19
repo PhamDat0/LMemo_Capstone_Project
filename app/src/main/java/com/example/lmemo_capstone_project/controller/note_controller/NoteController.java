@@ -94,13 +94,12 @@ public class NoteController {
             public void onSuccess(DocumentReference documentReference) {
                 Log.w("AddNoteActivity", "Add new note successful " + documentReference.getId());
                 note.setOnlineID(documentReference.getId());
+                Log.w("AddNoteActivity", "OnlineID " + note.getOnlineID());
                 noteDAO.updateNote(note);
                 Log.d("AddNoteActivity", "We get this far");
                 user.setContributionPoint(user.getContributionPoint() + 1);
-                new MyAccountController().updateUser(user);
-                Log.d("AddNoteActivity", user.getContributionPoint() + "");
+                new MyAccountController().increaseUserPoint(user.getUserID(), 1);
                 userDAO.updateUser(user);
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -150,6 +149,7 @@ public class NoteController {
 
     private void deleteNoteFromFB(Note note) {
         String noteOnlineID = note.getOnlineID();
+        Log.w("AddNoteActivity", "OnlineID controller 2" + note.getOnlineID());
         db.collection("notes").document(noteOnlineID).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -177,6 +177,7 @@ public class NoteController {
         noteOfWordDAO.deleteAllAssociationOfOneNote(note.getNoteID());
         noteDAO.deleteNote(note);
         if (note.isPublic()) {
+            Log.w("AddNoteActivity", "OnlineID controller 1 " + note.getOnlineID());
             deleteNoteFromFB(note);
         }
     }
