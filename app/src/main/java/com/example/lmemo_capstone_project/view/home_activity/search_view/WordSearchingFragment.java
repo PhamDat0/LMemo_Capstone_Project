@@ -117,8 +117,10 @@ public class WordSearchingFragment extends Fragment {
     }
 
     private void loadPublicNote() {
+        spinnerSort.setSelection(2);
         final GetNoteController getNoteController = new GetNoteController(this);
 //        getPublicNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
+        getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.UPVOTE_ASC);
         spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
