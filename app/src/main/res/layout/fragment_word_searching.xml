@@ -13,10 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
-<!--    <ScrollView-->
-<!--&gt;>>>>>> 334617ccff8e2affd8d87dadf4179046710db30c-->
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -32,7 +28,7 @@
                 <TextView
                     android:id="@+id/tvKana"
                     android:layout_width="350dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:autoSizeMaxTextSize="22dp"
                     android:autoSizeMinTextSize="20dp"
                     android:autoSizeTextType="uniform"
@@ -56,7 +52,7 @@
             <TextView
                 android:id="@+id/tvKanji"
                 android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_marginLeft="15dp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="20sp"
@@ -94,14 +90,6 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-<!--            <Button-->
-<!--<<<<<<< HEAD-->
-<!--                android:id="@+id/btPronunciation"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="発音"-->
-<!--                android:visibility="invisible" />-->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -112,7 +100,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
-
             </LinearLayout>
 
             <ListView
@@ -120,13 +107,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-<!--=======-->
-<!--                android:id="@+id/btnOpenTakeNoteDialog"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Take note here"-->
-<!--                android:visibility="gone" />-->
-<!--&gt;>>>>>> 334617ccff8e2affd8d87dadf4179046710db30c-->
         </LinearLayout>
 
     </ScrollView>
