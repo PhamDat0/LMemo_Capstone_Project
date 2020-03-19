@@ -4,26 +4,20 @@
     android:id="@+id/LinearLayoutFlashcard"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".view.home_activity.flashcard_view.FlashcardListAdapter">
-
-
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:orientation="horizontal">
-
+            android:layout_width="325dp"
+            android:layout_height="match_parent">
             <TextView
                 android:id="@+id/tvUser"
-                android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10sp"
                 android:autoSizeMaxTextSize="15sp"
@@ -31,94 +25,123 @@
                 android:gravity="center_vertical"
                 android:textColor="#DA0F0F"
                 android:textSize="15sp" />
-
             <TextView
                 android:id="@+id/tvReward"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10sp"
                 android:autoSizeMaxTextSize="15sp"
                 android:autoSizeMinTextSize="10sp"
                 android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp" />
-
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvNoteContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:scrollbars="vertical" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btUpvote"
-                android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <ImageButton
+                android:id="@+id/ibEditNote"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="↑" />
-
-            <Button
-                android:id="@+id/btDownvote"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="↓" />
-
-            <Button
-                android:id="@+id/btViewComment"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="View Comment" />
+                android:src="@drawable/ic_edit"
+                android:background="@color/white" />
+            <ImageButton
+                android:id="@+id/ibDeleteNote"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_trash"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@color/white" />
         </LinearLayout>
-
-        <ListView
-            android:id="@+id/lvComments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:visibility="gone" />
 
         <Button
             android:id="@+id/btAddComment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Add Comment"
             android:visibility="gone" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvNoteContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:scrollbars="vertical" />
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageButton
-            android:id="@+id/ibDeleteNote"
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_trash"
-            android:visibility="invisible" />
-
-        <ImageButton
-            android:id="@+id/ibEditNote"
+            android:layout_marginLeft="20dp">
+            <ImageButton
+                android:id="@+id/btUpvote"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_like"
+                android:background="@color/white" />
+            <TextView
+                android:id="@+id/tvlikeNumbers"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:text="0"
+                android:textColor="#000000"
+                android:textSize="20dp"/>
+            <ImageButton
+                android:id="@+id/btDownvote"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/ic_dislike_thumb"/>
+            <TextView
+                android:id="@+id/tvdislikeNumbers"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:layout_marginLeft="5dp"
+                android:textSize="20dp"
+                android:text="0"/>
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@android:drawable/ic_menu_edit"
-            android:visibility="invisible" />
+            android:layout_height="match_parent"
+            android:gravity="top|right"
+            android:layout_marginRight="10dp">
+            <ImageButton
+                android:id="@+id/btViewComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:src="@drawable/ic_review" />
+            <TextView
+                android:id="@+id/tvComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:text="Comment"/>
+        </LinearLayout>
+
     </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvComments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:visibility="gone" />
 
 </LinearLayout>

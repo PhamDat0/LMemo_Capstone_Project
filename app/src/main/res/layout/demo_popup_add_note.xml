@@ -3,64 +3,132 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
+        android:background="@drawable/gradientbackground"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create a note"
+            android:padding="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#02505E"
+        android:gravity="center"
+        android:paddingBottom="30dp">
         <AutoCompleteTextView
             android:id="@+id/txtWord"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
-            android:hint="Word to associate with this note"
+            android:hint="More word to associate with"
             android:imeOptions="actionSearch"
             android:singleLine="true"
-            android:textColor="@color/darkGray"
             android:textStyle="bold"
+            android:textColorHint="@color/white"
             tools:layout_editor_absoluteX="46dp"
             tools:layout_editor_absoluteY="31dp" />
-
-
-        <EditText
-            android:id="@+id/txtTakeNote"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:hint="Enter note here"
-            android:inputType="textPersonName" />
+        <LinearLayout
+            android:layout_width="375dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@color/white">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/txtTakeNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:ems="10"
+                    android:inputType="textMultiLine|textPersonName"
+                    android:background="@drawable/gradientbackground"
+                    android:gravity="top|left"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textColorHint="@color/colorPrimaryDark"
+                    android:hint=" Enter your note" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnAddNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Save" />
-
-    <Switch
-        android:id="@+id/isNotePublic"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Publish Note" />
-
-    <Button
-        android:id="@+id/btnCancelAddNote"
-        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/gradientbackground"
+        android:gravity="center">
+        <Switch
+            android:id="@+id/isNotePublic"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Set to public"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum=".2"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight=".1">
+                <Button
+                    android:id="@+id/btnAddNote"
+                    android:layout_width="190dp"
+                    android:layout_height="wrap_content"
+                    android:background="#02505E"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:text="Save" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight=".1">
+                <Button
+                    android:id="@+id/btnCancelAddNote"
+                    android:layout_width="190dp"
+                    android:layout_height="wrap_content"
+                    android:background="#02505E"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:text="Cancel" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Cancel" />
+        android:gravity="center"
+        android:padding="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Associated words"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"/>
 
-    <ListView
-        android:id="@+id/listAssocitatedWord"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <ListView
+            android:id="@+id/listAssocitatedWord"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class WordSearchingFragment extends Fragment {
     private Dialog addNoteDialog;
-    private Button btnOpenTakeNoteDialog;
+    private ImageButton btnOpenTakeNoteDialog;
     private ListView noteListView;
     private int wordID;
     private TextToSpeech textToSpeech;
