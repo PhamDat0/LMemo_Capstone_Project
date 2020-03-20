@@ -1,6 +1,8 @@
 package com.example.lmemo_capstone_project.view.home_activity.search_view;
 
 import android.app.Activity;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +19,13 @@ public class KanjiListAdapter extends BaseAdapter {
     private Activity aContext;
     private List<Kanji> listKanji;
     private LayoutInflater layoutInflater;
+    private AssetManager assets;
 
     public KanjiListAdapter(Activity aContext, List<Kanji> listKanji) {
         this.aContext = aContext;
         this.listKanji = listKanji;
         layoutInflater = LayoutInflater.from(aContext);
+        assets = aContext.getAssets();
     }
 
     @Override
@@ -55,6 +59,9 @@ public class KanjiListAdapter extends BaseAdapter {
         }
 
         holder.tvKanji.setText(listKanji.get(position).getKanji());
+        Typeface face = Typeface.createFromAsset(assets,
+                "font/kanji_stroke_order_font.ttf");
+        holder.tvKanji.setTypeface(face);
         holder.tvKunyomi.setText(" "+listKanji.get(position).getKunyomi());
         holder.tvOnyomi.setText(" "+listKanji.get(position).getOnyomi());
         return convertView;

@@ -9,7 +9,6 @@
         android:id="@+id/tvKanji"
         android:layout_width="120dp"
         android:layout_height="150dp"
-        android:fontFamily="@font/kanji_stroke_order_font"
         android:textStyle="normal"
         android:textSize="120sp"
         android:gravity="center"
