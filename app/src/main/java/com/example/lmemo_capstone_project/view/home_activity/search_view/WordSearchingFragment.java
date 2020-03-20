@@ -117,7 +117,7 @@ public class WordSearchingFragment extends Fragment {
 
     private void loadPublicNote() {
         spinnerSort.setSelection(2);
-        final GetNoteController getNoteController = new GetNoteController(this);
+        final GetNoteController getNoteController = GetNoteController.getInstance(this);
 //        getPublicNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
         getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.UPVOTE_ASC);
         spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -148,7 +148,7 @@ public class WordSearchingFragment extends Fragment {
 //        Log.i("Note_And_User", listNote.get(0).getOnlineID() + " / " +
 //                listUserMap.get(listNote.get(0).getCreatorUserID()).getUserID() + " ; ");
         for (Note note : listNote) {
-            Log.i("UPVOTER_DOWNVOTER", note.getUpvoterList() + "" + note.getDownvoterList());
+            Log.i("UPVOTER_DOWNVOTER1", note.getUpvoterList() + "" + note.getDownvoterList());
         }
         NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap, NoteListAdapter.SEARCH_MODE);
         noteListView.setAdapter(noteListAdapter);

@@ -19,7 +19,8 @@ public class Note implements Serializable {
     @ColumnInfo(name = "TranslatedContent") private String translatedContent;
     @ColumnInfo(name = "PublicStatus") private boolean isPublic;
     @ColumnInfo(name = "OnlineID") private String onlineID;
-    @ColumnInfo(name = "CreatedTime") private Date createdDate;
+    @ColumnInfo(name = "CreatedTime")
+    private Date createdTime;
     @ColumnInfo(name = "UserID") private String creatorUserID;
 
     public Note() {
@@ -29,7 +30,7 @@ public class Note implements Serializable {
     }
 
     @Ignore
-    private List<Word> wordList;
+    private List<Long> wordList;
 
     @Ignore
     private List<String> upvoterList;
@@ -77,12 +78,12 @@ public class Note implements Serializable {
         this.onlineID = onlineID;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getCreatedTime() {
+        return createdTime;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 
     public String getCreatorUserID() {
@@ -93,11 +94,11 @@ public class Note implements Serializable {
         this.creatorUserID = creatorUserID;
     }
 
-    public List<Word> getWordList() {
+    public List<Long> getWordList() {
         return wordList;
     }
 
-    public void setWordList(List<Word> wordList) {
+    public void setWordList(List<Long> wordList) {
         this.wordList = wordList;
     }
 

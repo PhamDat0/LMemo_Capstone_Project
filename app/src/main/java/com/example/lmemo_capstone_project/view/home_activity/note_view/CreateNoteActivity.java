@@ -165,6 +165,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     try {
                         addSearchWordToList();
+                        hideKeyboard(getThisActivity());
                     } catch (WordNotFoundException e) {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -179,6 +180,7 @@ public class CreateNoteActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     addSearchWordToList();
+                    hideKeyboard(getThisActivity());
                 } catch (WordNotFoundException e) {
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }

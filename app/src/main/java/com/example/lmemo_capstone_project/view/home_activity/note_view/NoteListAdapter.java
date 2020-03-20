@@ -32,6 +32,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -76,7 +77,6 @@ public class NoteListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
         if (convertView == null) {
             convertView = LayoutInflater.from(aContext).inflate(R.layout.activity_note_list_adapter, null);
             holder = getHolder(convertView);
@@ -84,10 +84,25 @@ public class NoteListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Note note = getNoteFromDB(position);
-        Log.i("UPVOTER_DOWNVOTER", note.getUpvoterList() + "" + note.getDownvoterList());
+
+        User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
+        Note note = listNote.get(position);
         User creator = listUserMap.get(note.getCreatorUserID());
-//        Log.d("Debug_gender",creator.isGender()+"");
+        List<String> upvoterList = note.getUpvoterList() == null ? new ArrayList<String>() : note.getUpvoterList();
+        List<String> downvoterList = note.getDownvoterList() == null ? new ArrayList<String>() : note.getDownvoterList();
+        Reward reward = rewardDAO.getBestReward(Math.max(creator.getContributionPoint(), 1))[0];
+        boolean isCreator = creator.getUserID().equalsIgnoreCase(currentUser.getUserID());
+
+        setTextForNoteInfo(holder, creator, reward, note);
+        setTextNumberForUpvoteAndDownVote(holder, upvoterList, downvoterList, currentUser);
+        setVisibilityForButton(holder);
+        setActionOnclick(holder, position);
+        setOwnerButtonVisible(holder, isCreator ? View.VISIBLE : View.INVISIBLE);
+        //ユーザーがノートを持っている場合には削除と更新できます。
+        return convertView;
+    }
+
+    private void setTextForNoteInfo(ViewHolder holder, User creator, Reward reward, Note note) {
         if (creator.isGender()) {
             holder.tvUser.setText(creator.getDisplayName());
             holder.tvUser.setTextColor(Color.BLUE);
@@ -96,44 +111,10 @@ public class NoteListAdapter extends BaseAdapter {
             holder.tvUser.setTextColor(Color.MAGENTA);
         }
         holder.tvNoteContent.setText(note.getNoteContent());
-        Reward reward = rewardDAO.getBestReward(Math.max(creator.getContributionPoint(), 1))[0];
-
         holder.tvReward.setText(reward.getRewardName());
+    }
 
-        List<String> upvoterList = note.getUpvoterList();
-        List<String> downvoterList = note.getDownvoterList();
-
-        if (upvoterList != null) {
-            if (upvoterList.contains(currentUser.getUserID())) {
-                SpannableString spanString = new SpannableString(upvoterList.size() + "");
-                spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-                holder.tvlikeNumbers.setText(spanString);
-//                holder.tvlikeNumbers.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-                holder.tvlikeNumbers.setTextColor(Color.BLUE);
-            } else {
-                SpannableString spanString = new SpannableString(upvoterList.size() + "");
-                spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
-                holder.tvlikeNumbers.setText(spanString);
-//                holder.btUpvote.getBackground().setColorFilter(null);
-                holder.tvlikeNumbers.setTextColor(Color.BLACK);
-            }
-        }
-        if (downvoterList != null) {
-            if (downvoterList.contains(currentUser.getUserID())) {
-                SpannableString spanString = new SpannableString(downvoterList.size() + "");
-                spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-                holder.tvdislikeNumbers.setText(spanString);
-//                holder.btDownvote.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-                holder.tvdislikeNumbers.setTextColor(Color.BLUE);
-            } else {
-                SpannableString spanString = new SpannableString(downvoterList.size() + "");
-                spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
-                holder.tvdislikeNumbers.setText(spanString);
-//                holder.btDownvote.getBackground().setColorFilter(null);
-                holder.tvdislikeNumbers.setTextColor(Color.BLACK);
-            }
-        }
-
+    private void setVisibilityForButton(ViewHolder holder) {
         if (mode == SEARCH_MODE) {
             holder.btUpvote.setVisibility(View.VISIBLE);
             holder.btDownvote.setVisibility(View.VISIBLE);
@@ -146,17 +127,31 @@ public class NoteListAdapter extends BaseAdapter {
             holder.tvComment.setVisibility(View.GONE);
             holder.btViewComment.setVisibility(View.GONE);
         }
+    }
 
-
-        setActionOnclick(holder, position);
-        //ユーザーがノートを持っている場合には削除と更新できます。
-        if (creator.getUserID().equalsIgnoreCase(currentUser.getUserID())) {
-            Log.d("CompareID", creator.getUserID() + " / " + currentUser.getUserID() + " / " + creator.getUserID().equalsIgnoreCase(currentUser.getUserID()));
-            setOwnerButtonVisible(holder, View.VISIBLE);
+    private void setTextNumberForUpvoteAndDownVote(ViewHolder holder, List<String> upvoterList, List<String> downvoterList, User currentUser) {
+        if (upvoterList.contains(currentUser.getUserID())) {
+            SpannableString spanString = new SpannableString(upvoterList.size() + "");
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            holder.tvlikeNumbers.setText(spanString);
+            holder.tvlikeNumbers.setTextColor(Color.BLUE);
         } else {
-            setOwnerButtonVisible(holder, View.INVISIBLE);
+            SpannableString spanString = new SpannableString(upvoterList.size() + "");
+            spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
+            holder.tvlikeNumbers.setText(spanString);
+            holder.tvlikeNumbers.setTextColor(Color.BLACK);
         }
-        return convertView;
+        if (downvoterList.contains(currentUser.getUserID())) {
+            SpannableString spanString = new SpannableString(downvoterList.size() + "");
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            holder.tvdislikeNumbers.setText(spanString);
+            holder.tvdislikeNumbers.setTextColor(Color.BLUE);
+        } else {
+            SpannableString spanString = new SpannableString(downvoterList.size() + "");
+            spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
+            holder.tvdislikeNumbers.setText(spanString);
+            holder.tvdislikeNumbers.setTextColor(Color.BLACK);
+        }
     }
 
     private ViewHolder getHolder(View convertView) {

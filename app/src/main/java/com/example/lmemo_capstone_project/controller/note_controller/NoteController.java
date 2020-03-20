@@ -71,20 +71,20 @@ public class NoteController {
     }
 
     private void addNoteToCloudFireStore(final Note note, String noteContent, boolean noteStatus, List<Word> words) {
-        List<Integer> listWordID = new ArrayList<>();
+        List<Long> listWordID = new ArrayList<>();
         for (Word word : words) {
-            listWordID.add(word.getWordID());
+            listWordID.add((long) word.getWordID());
         }
         note.setNoteContent(noteContent);
-        note.setCreatedDate(note.getCreatedDate() == null ? new Date() : note.getCreatedDate());
+        note.setCreatedTime(note.getCreatedTime() == null ? new Date() : note.getCreatedTime());
         addNoteToCloudFireStore(note, listWordID);
     }
 
-    private void addNoteToCloudFireStore(final Note note, final List<Integer> wordID) {
+    private void addNoteToCloudFireStore(final Note note, final List<Long> wordID) {
         Map<String, Object> addNote = new HashMap<>();
         addNote.put("noteContent", note.getNoteContent());
         addNote.put("translatedContent", note.getTranslatedContent());
-        addNote.put("createdTime", note.getCreatedDate());
+        addNote.put("createdTime", note.getCreatedTime());
         addNote.put("userID", note.getCreatorUserID());
         addNote.put("wordID", wordID);
         addNote.put("upvoter", note.getUpvoterList() == null ? new ArrayList<String>() : note.getUpvoterList());
@@ -134,7 +134,11 @@ public class NoteController {
 
     private void updateNoteInSQLite(Note note, String noteContent, boolean noteStatus, List<Word> words) {
         noteOfWordDAO.deleteAllAssociationOfOneNote(note.getNoteID());
-        insertWordToNoteOfWord(note, words);
+        List<Long> listWordID = new ArrayList<>();
+        for (Word word : words) {
+            listWordID.add((long) word.getWordID());
+        }
+        insertWordToNoteOfWord(note, listWordID);
         note.setNoteContent(noteContent);
         note.setTranslatedContent("");
         note.setPublic(noteStatus);
@@ -188,33 +192,37 @@ public class NoteController {
             noteID = 1;
         }
         note.setNoteID(noteID);
-        note.setCreatedDate(date);
+        note.setCreatedTime(date);
         note.setCreatorUserID(user.getUserID());
         note.setNoteContent(noteContent);
         note.setPublic(noteStatus);
         note.setTranslatedContent("");
+        List<Long> wordIDArray = new ArrayList<>();
+        for (Word word : words) {
+            wordIDArray.add((long) word.getWordID());
+        }
+        note.setWordList(wordIDArray);
         noteOfWord.setNoteID(noteID);
 //        noteOfWord.setWordID(wordID);
-        if (noteStatus == false) {
+        if (!noteStatus) {
             addNoteToSQLite(note);
             addNoteOfWordToSQL(words, noteOfWord);
         } else {
             if (!user.getUserID().equals("GUEST") && !user.getUserID().isEmpty()) {
-
-                List<Integer> wordIDArray = new ArrayList<>();
-                for (Word word : words) {
-                    wordIDArray.add(word.getWordID());
-                }
                 addNoteToSQLite(note);
                 addNoteToCloudFireStore(note, wordIDArray);
                 addNoteOfWordToSQL(words, noteOfWord);
-
             } else {
                 throw new CannotPerformFirebaseRequest("You must log in first!");
             }
         }
     }
 
+    /**
+     * @param words      List of words
+     * @param noteOfWord The note of word contains the inserted NoteID
+     * @throws Exception throw exception if noteOfWord doesn't contain NoteID
+     */
     private void addNoteOfWordToSQL(List<Word> words, NoteOfWord noteOfWord) {
         for (Word word : words) {
             noteOfWord.setWordID(word.getWordID());
@@ -257,11 +265,12 @@ public class NoteController {
                 });
     }
 
-    private void insertWordToNoteOfWord(Note note, List<Word> wordList) {
+    private void insertWordToNoteOfWord(Note note, List<Long> wordList) {
         NoteOfWord noteOfWord = new NoteOfWord();
         noteOfWord.setNoteID(note.getNoteID());
-        for (Word word : wordList) {
-            noteOfWord.setWordID(word.getWordID());
+        for (Long word : wordList) {
+            long wordID = word;
+            noteOfWord.setWordID((int) wordID);
             noteOfWordDAO.insertNoteOfWord(noteOfWord);
         }
     }
@@ -272,14 +281,7 @@ public class NoteController {
         note.setCreatorUserID((String) noteMap.get("userID"));
         note.setOnlineID(documentSnapshot.getId());
         List<Long> wordIDList = (List<Long>) noteMap.get("wordID");
-        List<Word> words = new ArrayList<>();
-        for (Long i : wordIDList) {
-            long id = i;
-            Word word = new Word();
-            word.setWordID((int) id);
-            words.add(word);
-        }
-        note.setWordList(words);
+        note.setWordList(wordIDList);
         note.setPublic(true);
         note.setNoteID(noteID);
         return note;

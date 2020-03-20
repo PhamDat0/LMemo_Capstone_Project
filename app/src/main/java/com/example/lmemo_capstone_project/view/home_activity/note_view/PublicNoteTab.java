@@ -46,13 +46,7 @@ public class PublicNoteTab extends Fragment {
         NoteDAO noteDAO = LMemoDatabase.getInstance(getContext()).noteDAO();
         UserDAO userDAO = LMemoDatabase.getInstance(getContext()).userDAO();
         GetNoteController getNoteController = new GetNoteController(noteDAO);
-        User user;
-        try {
-            user = userDAO.getLocalUser()[0];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            user = new User();
-            user.setUserID("GUEST");
-        }
+        User user = userDAO.getLocalUser()[0];
         List<Note> listNote = getNoteController.getOfflineNote(GetNoteController.GET_OFFLINE_NOTE_PUBLIC, user.getUserID());
         for (Note note : listNote) {
             Log.w("AddNoteActivity", "OnlineID in public view: " + note.getOnlineID());

@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
@@ -37,27 +38,33 @@ public class GetNoteController {
     public static final int TIME_ASC = 1;
     public static final int UPVOTE_DESC = 2;
     public static final int UPVOTE_ASC = 3;
+    private static GetNoteController singleTonInstance;
     private NoteDAO noteDAO;
+    private UserDAO userDAO;
     private FirebaseFirestore db;
     private WordSearchingFragment wordSearchingFragment;
     private ArrayList<Note> listNote;
     private ArrayList<User> listUser;
-    ListenerRegistration registration;
+    private ListenerRegistration registration;
 
-    public GetNoteController(WordSearchingFragment wordSearchingFragment) {
+    private GetNoteController(WordSearchingFragment wordSearchingFragment) {
         db = FirebaseFirestore.getInstance();
         this.wordSearchingFragment = wordSearchingFragment;
         noteDAO = LMemoDatabase.getInstance(wordSearchingFragment.getContext()).noteDAO();
-        registration = new ListenerRegistration() {
-            @Override
-            public void remove() {
-
-            }
-        };
+        userDAO = LMemoDatabase.getInstance(wordSearchingFragment.getContext()).userDAO();
     }
 
     public GetNoteController(NoteDAO noteDAO) {
         this.noteDAO = noteDAO;
+    }
+
+    public static GetNoteController getInstance(WordSearchingFragment wordSearchingFragment) {
+        if (singleTonInstance == null) {
+            singleTonInstance = new GetNoteController(wordSearchingFragment);
+        } else {
+            singleTonInstance.wordSearchingFragment = wordSearchingFragment;
+        }
+        return singleTonInstance;
     }
 
     /**
@@ -66,7 +73,9 @@ public class GetNoteController {
      * この関数はファイアベースからノートを取ります
      */
     public void getAllNotesFromFirebase(int wordID, final int sortMode) {
-        registration.remove();
+        if (registration != null) {
+            registration.remove();
+        }
         Query query = db.collection("notes").whereArrayContains("wordID", wordID).
                 orderBy("createdTime", sortMode == TIME_ASC ? Query.Direction.ASCENDING : Query.Direction.DESCENDING);
         registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -107,17 +116,25 @@ public class GetNoteController {
         note.setCreatorUserID((String) noteMap.get("userID"));
         note.setPublic(true);
         note.setOnlineID(documentSnapshot.getId());
+        note.setWordList((List<Long>) noteMap.get("wordID"));
         note.setUpvoterList((List<String>) noteMap.get("upvoter"));
         note.setDownvoterList((List<String>) noteMap.get("downvoter"));
         Note[] localNote = noteDAO.getNotesByOnlineID(note.getOnlineID());
         if (localNote.length == 0) {
-            if (noteDAO.getLastNote().length != 0) {
-                note.setNoteID(noteDAO.getLastNote()[0].getNoteID() + 1);
+            User[] localUser = userDAO.getLocalUser();
+            if (localUser != null && localUser.length != 0 && localUser[0].getUserID().equalsIgnoreCase(note.getCreatorUserID())) {
+                if (noteDAO.getLastNote().length != 0) {
+                    note.setNoteID(noteDAO.getLastNote()[0].getNoteID() + 1);
+                } else {
+                    note.setNoteID(1);
+                }
+                noteDAO.insertNote(note);
             } else {
-                note.setNoteID(1);
+                note.setNoteID(-1);
             }
         } else {
             note.setNoteID(localNote[0].getNoteID());
+            noteDAO.updateNote(note);
         }
         return note;
     }
