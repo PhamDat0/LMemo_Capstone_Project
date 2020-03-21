@@ -7,8 +7,10 @@ import androidx.annotation.Nullable;
 
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteOfWordDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
+import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +42,7 @@ public class GetNoteController {
     public static final int UPVOTE_ASC = 3;
     private static GetNoteController singleTonInstance;
     private NoteDAO noteDAO;
+    private NoteOfWordDAO noteOfWordDAO;
     private UserDAO userDAO;
     private FirebaseFirestore db;
     private WordSearchingFragment wordSearchingFragment;
@@ -53,6 +56,7 @@ public class GetNoteController {
         this.wordSearchingFragment = wordSearchingFragment;
         noteDAO = LMemoDatabase.getInstance(wordSearchingFragment.getContext()).noteDAO();
         userDAO = LMemoDatabase.getInstance(wordSearchingFragment.getContext()).userDAO();
+        noteOfWordDAO = LMemoDatabase.getInstance(wordSearchingFragment.getContext()).noteOfWordDAO();
         isProcessing = false;
     }
 
@@ -77,9 +81,7 @@ public class GetNoteController {
     public void getAllNotesFromFirebase(int wordID, final int sortMode) {
         isProcessing = false;
         Log.d("myApp", "How many times noteList is call");
-        if (registration != null) {
-            registration.remove();
-        }
+        stopListening();
         Query query = db.collection("notes").whereArrayContains("wordID", wordID).
                 orderBy("createdTime", sortMode == TIME_ASC ? Query.Direction.ASCENDING : Query.Direction.DESCENDING);
         registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -127,7 +129,9 @@ public class GetNoteController {
         note.setUpvoterList((List<String>) noteMap.get("upvoter"));
         note.setDownvoterList((List<String>) noteMap.get("downvoter"));
         Note[] localNote = noteDAO.getNotesByOnlineID(note.getOnlineID());
+        Log.w("AddNoteActivity", "OnlineID from getNote out" + note.getOnlineID());
         if (localNote.length == 0) {
+            Log.w("AddNoteActivity", "OnlineID from getNote in no local" + note.getOnlineID());
             User[] localUser = userDAO.getLocalUser();
             if (localUser != null && localUser.length != 0 && localUser[0].getUserID().equalsIgnoreCase(note.getCreatorUserID())) {
                 if (noteDAO.getLastNote().length != 0) {
@@ -136,19 +140,35 @@ public class GetNoteController {
                     note.setNoteID(1);
                 }
                 noteDAO.insertNote(note);
+                addNoteOfWord(note, (List<Long>) noteMap.get("wordID"));
             } else {
                 note.setNoteID(-1);
             }
         } else {
+            Log.w("AddNoteActivity", "OnlineID from getNote in has local" + note.getOnlineID());
             note.setNoteID(localNote[0].getNoteID());
             noteDAO.updateNote(note);
+            addNoteOfWord(note, (List<Long>) noteMap.get("wordID"));
         }
         return note;
     }
 
+    private void addNoteOfWord(Note note, List<Long> wordID) {
+        noteOfWordDAO.deleteAllAssociationOfOneNote(note.getNoteID());
+        NoteOfWord noteOfWord = new NoteOfWord();
+        noteOfWord.setNoteID(note.getNoteID());
+        for (Long i : wordID) {
+            long wid = i;
+            noteOfWord.setWordID((int) wid);
+            noteOfWordDAO.insertNoteOfWord(noteOfWord);
+        }
+    }
+
+
     private void getUserList() {
         Log.d("myApp", "How many times userlist is call");
         listUser = new ArrayList<>();
+        isProcessing = !(listNote.size() == 0);
         for (Note note : listNote) {
             String creatorUserID = note.getCreatorUserID();
             DocumentReference userRef = db.collection("users").document(creatorUserID);
@@ -190,5 +210,11 @@ public class GetNoteController {
     public List<Note> getOfflineNote(boolean mode, String userID) {
         Note[] notesOfUser = noteDAO.getNotesOfUser(mode, userID);
         return Lists.newArrayList(notesOfUser);
+    }
+
+    public void stopListening() {
+        if (registration != null) {
+            registration.remove();
+        }
     }
 }

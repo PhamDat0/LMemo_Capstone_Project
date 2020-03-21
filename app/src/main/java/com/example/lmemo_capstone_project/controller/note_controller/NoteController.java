@@ -33,8 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 public class NoteController {
-    public static final boolean GET_OFFLINE_NOTE_PRIVATE = false;
-    public static final boolean GET_OFFLINE_NOTE_PUBLIC = true;
     private static final int UPVOTE = 1;
     private static final int DOWNVOTE = 2;
 
@@ -89,13 +87,16 @@ public class NoteController {
         addNote.put("wordID", wordID);
         addNote.put("upvoter", note.getUpvoterList() == null ? new ArrayList<String>() : note.getUpvoterList());
         addNote.put("downvoter", note.getDownvoterList() == null ? new ArrayList<String>() : note.getDownvoterList());
+        final boolean baseStatus = note.isPublic();
         db.collection("notes").add(addNote).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.w("AddNoteActivity", "Add new note successful " + documentReference.getId());
-                note.setOnlineID(documentReference.getId());
-                Log.w("AddNoteActivity", "OnlineID " + note.getOnlineID());
-                noteDAO.updateNote(note);
+                if (!baseStatus) {
+                    note.setOnlineID(documentReference.getId());
+                    Log.w("AddNoteActivity", "OnlineID " + note.getOnlineID());
+                    noteDAO.updateNote(note);
+                }
                 Log.d("AddNoteActivity", "We get this far");
                 user.setContributionPoint(user.getContributionPoint() + 1);
                 new MyAccountController().increaseUserPoint(user.getUserID(), 1);
@@ -104,8 +105,8 @@ public class NoteController {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                note.setPublic(false);
-                noteDAO.updateNote(note);
+//                note.setPublic(false);
+//                noteDAO.updateNote(note);
                 Log.w("AddNoteActivity", "Error writing document");
             }
         });
@@ -209,9 +210,9 @@ public class NoteController {
             addNoteOfWordToSQL(words, noteOfWord);
         } else {
             if (!user.getUserID().equals("GUEST") && !user.getUserID().isEmpty()) {
-                addNoteToSQLite(note);
+//                addNoteToSQLite(note);
                 addNoteToCloudFireStore(note, wordIDArray);
-                addNoteOfWordToSQL(words, noteOfWord);
+//                addNoteOfWordToSQL(words, noteOfWord);
             } else {
                 throw new CannotPerformFirebaseRequest("You must log in first!");
             }
@@ -304,17 +305,12 @@ public class NoteController {
     private void performVote(final Note note, final int mode, final int pointForOwner) throws CannotPerformFirebaseRequest {
         if (!user.getUserID().equalsIgnoreCase("GUEST")) {
             final DocumentReference docRef = db.collection("notes").document(note.getOnlineID());
-            docRef.update("upvoter", FieldValue.arrayRemove(user.getUserID()), "downvoter", FieldValue.arrayRemove(user.getUserID())).addOnSuccessListener(new OnSuccessListener<Void>() {
+            docRef.update("upvoter", FieldValue.arrayRemove(user.getUserID()), "downvoter", FieldValue.arrayRemove(user.getUserID()), mode == UPVOTE ? "upvoter" : "downvoter", FieldValue.arrayUnion(user.getUserID())).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Log.i("Vote_success", "DELETE FROM LIST");
-                    docRef.update(mode == UPVOTE ? "upvoter" : "downvoter", FieldValue.arrayUnion(user.getUserID())).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            new MyAccountController().increaseUserPoint(note.getCreatorUserID(), pointForOwner);
-                            Log.i("Vote_success", mode == UPVOTE ? "upvote" : "downvote" + " on " + note.getOnlineID() + " by " + user.getUserID());
-                        }
-                    });
+                    new MyAccountController().increaseUserPoint(note.getCreatorUserID(), pointForOwner);
+                    Log.i("Vote_success", mode == UPVOTE ? "upvote" : "downvote" + " on " + note.getOnlineID() + " by " + user.getUserID());
                 }
             });
         } else {

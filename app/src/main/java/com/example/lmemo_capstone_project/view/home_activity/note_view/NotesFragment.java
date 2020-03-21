@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.note_controller.GetNoteController;
+import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
 import com.google.android.material.tabs.TabLayout;
 
 
@@ -35,7 +37,8 @@ public class NotesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
-
+        GetNoteController getNoteController = GetNoteController.getInstance(new WordSearchingFragment());
+        getNoteController.stopListening();
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         notesPager = new NotesPager(getParentFragmentManager());
