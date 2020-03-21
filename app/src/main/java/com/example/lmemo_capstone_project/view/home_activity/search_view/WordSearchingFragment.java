@@ -24,6 +24,7 @@ import com.example.lmemo_capstone_project.controller.note_controller.GetNoteCont
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 import com.example.lmemo_capstone_project.view.home_activity.note_view.CreateNoteActivity;
 import com.example.lmemo_capstone_project.view.home_activity.note_view.NoteListAdapter;
@@ -55,6 +56,7 @@ public class WordSearchingFragment extends Fragment {
         noteListView = view.findViewById(R.id.NoteListView);
         btnOpenTakeNoteDialog = view.findViewById(R.id.btnOpenTakeNoteDialog);
         addListenerOnSpinnerItemSelection(view);
+        setUpSpinner();
         wordSearchResult(view);
         addNoteDialog = new Dialog(this.getActivity());
         textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
@@ -73,6 +75,33 @@ public class WordSearchingFragment extends Fragment {
         });
 //        loadPublicNote();
         return view;
+    }
+
+    private void setUpSpinner() {
+        final GetNoteController getNoteController = GetNoteController.getInstance(this);
+        spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(0)) && InternetCheckingController.isOnline(getContext())) {
+//                    getNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
+                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.TIME_ASC);
+                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(1)) && InternetCheckingController.isOnline(getContext())) {
+//                    getNoteController.getAllNoteDescendingFromFirebase(noteListView, getActivity(), wordID);
+                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.TIME_DESC);
+                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(2)) && InternetCheckingController.isOnline(getContext())) {
+                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.UPVOTE_ASC);
+                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(3)) && InternetCheckingController.isOnline(getContext())) {
+                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.UPVOTE_DESC);
+                } else {
+                    Toast.makeText(getContext(), "No Internet connection [Offline Mode]", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //callback
+            }
+        });
     }
 
     private void showAddNoteDialog(View v) {
@@ -101,6 +130,7 @@ public class WordSearchingFragment extends Fragment {
                     textToSpeech.speak(word.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
                 }
             });
+            Log.d("myApplication", " there is key in bundle");
         } else {
             Log.d("myApplication", " no key in bundle");
             btnOpenTakeNoteDialog.setVisibility(View.INVISIBLE);
@@ -117,31 +147,9 @@ public class WordSearchingFragment extends Fragment {
 
     private void loadPublicNote() {
         spinnerSort.setSelection(2);
-        final GetNoteController getNoteController = GetNoteController.getInstance(this);
+//        final GetNoteController getNoteController = GetNoteController.getInstance(this);
 //        getPublicNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
-        getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.UPVOTE_ASC);
-        spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(0)) && InternetCheckingController.isOnline(getContext())) {
-//                    getNoteController.getAllNoteAscendingFromFirebase(noteListView, getActivity(), wordID);
-                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.TIME_ASC);
-                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(1)) && InternetCheckingController.isOnline(getContext())) {
-//                    getNoteController.getAllNoteDescendingFromFirebase(noteListView, getActivity(), wordID);
-                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.TIME_DESC);
-                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(2)) && InternetCheckingController.isOnline(getContext())) {
-                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.UPVOTE_ASC);
-                } else if (spinnerSort.getSelectedItem().equals(parent.getItemAtPosition(3)) && InternetCheckingController.isOnline(getContext())) {
-                    getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.UPVOTE_DESC);
-                } else {
-                    Toast.makeText(getContext(), "No Internet connection [Offline Mode]", Toast.LENGTH_LONG).show();
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //callback
-            }
-        });
+//        getNoteController.getAllNotesFromFirebase(wordID, GetNoteController.UPVOTE_ASC);
     }
 
     public void updateUI(ArrayList<Note> listNote, Map<String, User> listUserMap) {
@@ -152,6 +160,8 @@ public class WordSearchingFragment extends Fragment {
         }
         NoteListAdapter noteListAdapter = new NoteListAdapter(getActivity(), listNote, listUserMap, NoteListAdapter.SEARCH_MODE);
         noteListView.setAdapter(noteListAdapter);
+        ProgressDialog instance = ProgressDialog.getInstance();
+        instance.dismiss();
     }
 
     private void addListenerOnSpinnerItemSelection(View v) {

@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         loadDictionaryDatabase();
         wordOfTheDayController = new WordOfTheDayController();
         wordOfTheDayController.createNotificationChannel(this);
-
     }
     @Override
     public void onStart() {

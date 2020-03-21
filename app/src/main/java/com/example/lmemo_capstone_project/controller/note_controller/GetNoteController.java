@@ -73,6 +73,7 @@ public class GetNoteController {
      * この関数はファイアベースからノートを取ります
      */
     public void getAllNotesFromFirebase(int wordID, final int sortMode) {
+        Log.d("myApp", "How many times noteList is call");
         if (registration != null) {
             registration.remove();
         }
@@ -140,6 +141,7 @@ public class GetNoteController {
     }
 
     private void getUserList() {
+        Log.d("myApp", "How many times userlist is call");
         listUser = new ArrayList<>();
         for (Note note : listNote) {
             String creatorUserID = note.getCreatorUserID();

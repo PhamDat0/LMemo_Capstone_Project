@@ -30,6 +30,7 @@ import com.example.lmemo_capstone_project.controller.note_controller.NoteControl
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 
 import java.util.ArrayList;
@@ -247,8 +248,10 @@ public class NoteListAdapter extends BaseAdapter {
             Log.i("Vote_success", "Has internet");
             NoteController noteController = new NoteController(aContext);
             Note note = getNoteFromDB(position);
+            ProgressDialog instance = ProgressDialog.getInstance();
             switch (mode) {
                 case UPVOTE:
+                    instance.show(aContext);
                     try {
                         Log.i("Vote_success", "Start perform");
                         noteController.upvote(note);
@@ -257,6 +260,7 @@ public class NoteListAdapter extends BaseAdapter {
                     }
                     break;
                 case DOWNVOTE:
+                    instance.show(aContext);
                     try {
                         Log.i("Vote_success", "Start perform");
                         noteController.downvote(note);
