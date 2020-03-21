@@ -46,12 +46,14 @@ public class GetNoteController {
     private ArrayList<Note> listNote;
     private ArrayList<User> listUser;
     private ListenerRegistration registration;
+    private boolean isProcessing;
 
     private GetNoteController(WordSearchingFragment wordSearchingFragment) {
         db = FirebaseFirestore.getInstance();
         this.wordSearchingFragment = wordSearchingFragment;
         noteDAO = LMemoDatabase.getInstance(wordSearchingFragment.getContext()).noteDAO();
         userDAO = LMemoDatabase.getInstance(wordSearchingFragment.getContext()).userDAO();
+        isProcessing = false;
     }
 
     public GetNoteController(NoteDAO noteDAO) {
@@ -73,6 +75,7 @@ public class GetNoteController {
      * この関数はファイアベースからノートを取ります
      */
     public void getAllNotesFromFirebase(int wordID, final int sortMode) {
+        isProcessing = false;
         Log.d("myApp", "How many times noteList is call");
         if (registration != null) {
             registration.remove();
@@ -82,31 +85,34 @@ public class GetNoteController {
         registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        listNote = new ArrayList<>();
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Note note = processSnapshot(documentSnapshot);
-                            Log.d("LIST_SIZE", documentSnapshot.getId() + " -> " + documentSnapshot.getData() + "\n" + note.getDownvoterList());
-                            listNote.add(note);
-                            Log.d("LIST_SIZE", listNote.size() + " in");
+                        if (!isProcessing) {
+                            isProcessing = true;
+                            listNote = new ArrayList<>();
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                Note note = processSnapshot(documentSnapshot);
+                                Log.d("LIST_SIZE", documentSnapshot.getId() + " -> " + documentSnapshot.getData() + "\n" + note.getDownvoterList());
+                                listNote.add(note);
+                                Log.d("LIST_SIZE", listNote.size() + " in");
+                            }
+                            Log.d("LIST_SIZE", listNote.size() + " out");
+                            switch (sortMode) {
+                                case TIME_ASC:
+                                case TIME_DESC:
+                                    break;
+                                default:
+                                    Collections.sort(listNote, new Comparator<Note>() {
+                                        @Override
+                                        public int compare(Note o1, Note o2) {
+                                            int upvote1 = o1.getUpvoterList().size() - o1.getDownvoterList().size();
+                                            int upvote2 = o2.getUpvoterList().size() - o2.getDownvoterList().size();
+                                            int result = (upvote1 - upvote2) / (Math.abs(upvote1 - upvote2) == 0 ? 1 : Math.abs(upvote1 - upvote2));
+                                            result *= sortMode == UPVOTE_DESC ? 1 : -1;
+                                            return result;
+                                        }
+                                    });
+                            }
+                            getUserList();
                         }
-                        Log.d("LIST_SIZE", listNote.size() + " out");
-                        switch (sortMode) {
-                            case TIME_ASC:
-                            case TIME_DESC:
-                                break;
-                            default:
-                                Collections.sort(listNote, new Comparator<Note>() {
-                                    @Override
-                                    public int compare(Note o1, Note o2) {
-                                        int upvote1 = o1.getUpvoterList().size() - o1.getDownvoterList().size();
-                                        int upvote2 = o2.getUpvoterList().size() - o2.getDownvoterList().size();
-                                        int result = (upvote1 - upvote2) / (Math.abs(upvote1 - upvote2) == 0 ? 1 : Math.abs(upvote1 - upvote2));
-                                        result *= sortMode == UPVOTE_DESC ? 1 : -1;
-                                        return result;
-                                    }
-                                });
-                        }
-                        getUserList();
                     }
                 });
     }
@@ -176,6 +182,7 @@ public class GetNoteController {
             for (User user : listUser) {
                 listUserMap.put(user.getUserID(), user);
             }
+            isProcessing = false;
             wordSearchingFragment.updateUI(listNote, listUserMap);
         }
     }

@@ -1,6 +1,5 @@
 package com.example.lmemo_capstone_project.view.home_activity.search_view;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -38,7 +37,6 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class WordSearchingFragment extends Fragment {
-    private Dialog addNoteDialog;
     private ImageButton btnOpenTakeNoteDialog;
     private ListView noteListView;
     private int wordID;
@@ -58,7 +56,7 @@ public class WordSearchingFragment extends Fragment {
         addListenerOnSpinnerItemSelection(view);
         setUpSpinner();
         wordSearchResult(view);
-        addNoteDialog = new Dialog(this.getActivity());
+        spinnerSort.setSelection(2);
         textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -131,12 +129,12 @@ public class WordSearchingFragment extends Fragment {
                 }
             });
             Log.d("myApplication", " there is key in bundle");
+            loadPublicNote();
         } else {
             Log.d("myApplication", " no key in bundle");
             btnOpenTakeNoteDialog.setVisibility(View.INVISIBLE);
             spinnerSort.setVisibility(View.INVISIBLE);
         }
-        loadPublicNote();
     }
 
     private Word getWord() {
