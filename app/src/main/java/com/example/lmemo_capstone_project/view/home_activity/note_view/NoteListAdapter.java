@@ -244,6 +244,7 @@ public class NoteListAdapter extends BaseAdapter {
     }
 
     private void vote(int mode, int position) {
+        User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
         if (InternetCheckingController.isOnline(aContext)) {
             Log.i("Vote_success", "Has internet");
             NoteController noteController = new NoteController(aContext);
@@ -251,21 +252,25 @@ public class NoteListAdapter extends BaseAdapter {
             ProgressDialog instance = ProgressDialog.getInstance();
             switch (mode) {
                 case UPVOTE:
-                    instance.show(aContext);
-                    try {
-                        Log.i("Vote_success", "Start perform");
-                        noteController.upvote(note);
-                    } catch (CannotPerformFirebaseRequest cannotPerformFirebaseRequest) {
-                        Toast.makeText(aContext, cannotPerformFirebaseRequest.getMessage(), Toast.LENGTH_LONG).show();
+                    if (!note.getUpvoterList().contains(currentUser.getUserID())) {
+                        instance.show(aContext);
+                        try {
+                            Log.i("Vote_success", "Start perform");
+                            noteController.upvote(note);
+                        } catch (CannotPerformFirebaseRequest cannotPerformFirebaseRequest) {
+                            Toast.makeText(aContext, cannotPerformFirebaseRequest.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
                     break;
                 case DOWNVOTE:
-                    instance.show(aContext);
-                    try {
-                        Log.i("Vote_success", "Start perform");
-                        noteController.downvote(note);
-                    } catch (CannotPerformFirebaseRequest cannotPerformFirebaseRequest) {
-                        Toast.makeText(aContext, cannotPerformFirebaseRequest.getMessage(), Toast.LENGTH_LONG).show();
+                    if (!note.getDownvoterList().contains(currentUser.getUserID())) {
+                        instance.show(aContext);
+                        try {
+                            Log.i("Vote_success", "Start perform");
+                            noteController.downvote(note);
+                        } catch (CannotPerformFirebaseRequest cannotPerformFirebaseRequest) {
+                            Toast.makeText(aContext, cannotPerformFirebaseRequest.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
                     break;
                 default:
