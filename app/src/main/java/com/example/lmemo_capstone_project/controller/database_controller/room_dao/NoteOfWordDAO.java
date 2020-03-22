@@ -3,13 +3,14 @@ package com.example.lmemo_capstone_project.controller.database_controller.room_d
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 
 @Dao
 public interface NoteOfWordDAO {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertNoteOfWord(NoteOfWord noteOfWord);
 
     @Delete
