@@ -41,8 +41,8 @@ public class CommentAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(aContext).inflate(R.layout.activity_note_list_adapter, null);
-            holder = getHolder(convertView);
-            convertView.setTag(holder);
+//            holder = getHolder(convertView);
+//            convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
