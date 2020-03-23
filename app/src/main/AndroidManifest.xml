@@ -15,9 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.home_activity.note_view.CreateNoteActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity android:name=".view.home_activity.comment_view.AddCommentActivity"></activity>
+        <activity
+            android:name=".view.home_activity.note_view.CreateNoteActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <receiver
             android:name=".controller.word_of_day_controller.BootReceiver"
@@ -34,7 +35,7 @@
         <service
             android:name=".controller.word_of_day_controller.WordService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity android:name=".view.home_activity.flashcard_view.FlashcardListAdapter" />
         <activity android:name=".view.home_activity.flashcard_view.review_activity.WritingTestActivity" />
