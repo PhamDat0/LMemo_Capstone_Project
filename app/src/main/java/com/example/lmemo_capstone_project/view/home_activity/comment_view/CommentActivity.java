@@ -34,7 +34,7 @@ public class CommentActivity extends AppCompatActivity {
 
     }
 
-    public void updateUI(ArrayList<Comment> listNote, Map<String, User> listUserMap) {
+    public void updateUI(ArrayList<Comment> listComment, Map<String, User> listUserMap) {
         for (Comment comment : listComment) {
             Log.i("UPVOTER_DOWNVOTER1", comment.getUpvoters() + "" + comment.getDownvoters());
         }
@@ -43,5 +43,4 @@ public class CommentActivity extends AppCompatActivity {
         ProgressDialog instance = ProgressDialog.getInstance();
         instance.dismiss();
     }
-
 }
