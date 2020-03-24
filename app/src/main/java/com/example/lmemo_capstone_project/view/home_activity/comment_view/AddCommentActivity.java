@@ -44,11 +44,15 @@ public class AddCommentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (InternetCheckingController.isOnline(getApplicationContext())) {
                     String commentContent = etCommentContent.getText().toString();
-                    CommentController commentController = new CommentController();
+                    CommentController commentController = new CommentController(getApplicationContext());
                     if (commentContent.trim().length() != 0) {
                         switch (mode) {
                             case IN_ADDING_MODE:
-                                commentController.addComment(note, currentUser, commentContent);
+                                if (!currentUser.getUserID().equalsIgnoreCase("GUEST")) {
+                                    commentController.addComment(note, currentUser, commentContent);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "You must logged in first.", Toast.LENGTH_LONG).show();
+                                }
                                 break;
                             case IN_EDITING_MODE:
                                 commentController.editComment(comment, commentContent);

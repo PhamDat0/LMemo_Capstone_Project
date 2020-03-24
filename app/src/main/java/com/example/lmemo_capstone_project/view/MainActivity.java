@@ -18,6 +18,7 @@ import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 
 public class MainActivity extends AppCompatActivity {
     WordOfTheDayController wordOfTheDayController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,12 +32,14 @@ public class MainActivity extends AppCompatActivity {
         wordOfTheDayController = new WordOfTheDayController();
         wordOfTheDayController.createNotificationChannel(this);
     }
+
     @Override
     public void onStart() {
 
         super.onStart();
-        wordOfTheDayController.startAlarm(true,false,this);
+        wordOfTheDayController.startAlarm(true, false, this);
     }
+
     /**
      * この関数はプログレスバーの進度を1パーセント足します。
      */

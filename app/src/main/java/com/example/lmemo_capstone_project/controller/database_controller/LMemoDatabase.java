@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.ExampleDAO;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardBelongToSetDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.KanjiDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
@@ -81,5 +82,7 @@ public abstract class LMemoDatabase extends RoomDatabase {
     public abstract WordDAO wordDAO();
 
     public abstract NoteOfWordDAO noteOfWordDAO();
+
+    public abstract FlashcardBelongToSetDAO flashcardBelongToSetDAO();
 }
 
