@@ -15,10 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.home_activity.comment_view.AddCommentActivity"></activity>
+        <activity android:name=".view.home_activity.comment_view.CommentActivity"></activity>
+        <activity android:name=".view.home_activity.comment_view.AddCommentActivity" />
         <activity
             android:name=".view.home_activity.note_view.CreateNoteActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".controller.word_of_day_controller.BootReceiver"

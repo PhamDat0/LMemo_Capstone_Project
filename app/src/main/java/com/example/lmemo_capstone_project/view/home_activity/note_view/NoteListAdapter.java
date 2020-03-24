@@ -27,11 +27,13 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.note_controller.NoteController;
+import com.example.lmemo_capstone_project.model.Comment;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
+import com.example.lmemo_capstone_project.view.home_activity.comment_view.CommentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +95,14 @@ public class NoteListAdapter extends BaseAdapter {
         List<String> downvoterList = note.getDownvoterList() == null ? new ArrayList<String>() : note.getDownvoterList();
         Reward reward = rewardDAO.getBestReward(Math.max(creator.getContributionPoint(), 1))[0];
         boolean isCreator = creator.getUserID().equalsIgnoreCase(currentUser.getUserID());
+
+        holder.tvComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(aContext,CommentActivity.class);
+                aContext.startActivity(intent);
+            }
+        });
 
         setTextForNoteInfo(holder, creator, reward, note);
         setTextNumberForUpvoteAndDownVote(holder, upvoterList, downvoterList, currentUser);
@@ -169,7 +179,7 @@ public class NoteListAdapter extends BaseAdapter {
         holder.tvComment = convertView.findViewById(R.id.tvComment);
         holder.btDownvote = convertView.findViewById(R.id.btDownvote);
         holder.btViewComment = convertView.findViewById(R.id.btViewComment);
-        holder.lvComments = convertView.findViewById(R.id.lvComments);
+//        holder.lvComments = convertView.findViewById(R.id.lvComments);
         holder.btAddComment = convertView.findViewById(R.id.btAddComment);
         return holder;
     }
@@ -181,8 +191,7 @@ public class NoteListAdapter extends BaseAdapter {
                 Note note = getNoteFromDB(position);
                 NoteController editAndDeleteNoteController = new NoteController(aContext);
                 if (note.isPublic()) {
-                    InternetCheckingController internetCheckingController = new InternetCheckingController();
-                    if (internetCheckingController.isOnline(aContext)) {
+                    if (InternetCheckingController.isOnline(aContext)) {
                         Log.w("AddNoteActivity", "OnlineID adapter: " + note.getOnlineID());
                         editAndDeleteNoteController.deleteNote(note);
                         updateUI(position);
@@ -311,7 +320,7 @@ public class NoteListAdapter extends BaseAdapter {
         ImageButton btUpvote;
         ImageButton btDownvote;
         ImageButton btViewComment;
-        ListView lvComments;
+//        ListView lvComments;
         Button btAddComment;
     }
 }

@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayoutFlashcard"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".view.home_activity.flashcard_view.FlashcardListAdapter">
+    android:orientation="vertical"
+    tools:context=".view.home_activity.comment_view.CommentActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:background="#2C03F4E0"
         android:orientation="horizontal">
+
         <LinearLayout
             android:layout_width="325dp"
             android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/tvUser"
                 android:layout_width="wrap_content"
@@ -25,48 +29,48 @@
                 android:gravity="center_vertical"
                 android:textColor="#DA0F0F"
                 android:textSize="15sp" />
+
             <TextView
                 android:id="@+id/tvReward"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
                 android:autoSizeMaxTextSize="15sp"
                 android:autoSizeMinTextSize="10sp"
                 android:gravity="center_vertical"
-                android:layout_marginLeft="10dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center">
+
             <ImageButton
                 android:id="@+id/ibEditNote"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_edit"
-                android:background="@color/white" />
+                android:background="@color/white"
+                android:src="@drawable/ic_edit" />
+
             <ImageButton
                 android:id="@+id/ibDeleteNote"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_trash"
-                android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
-                android:background="@color/white" />
+                android:layout_marginRight="10dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_trash" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btAddComment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Add Comment"
-            android:visibility="gone" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#2C03F4E0">
+
         <TextView
             android:id="@+id/tvNoteContent"
             android:layout_width="wrap_content"
@@ -78,63 +82,77 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#2C03F4E0"
         android:orientation="horizontal">
+
         <LinearLayout
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp">
+
             <ImageButton
                 android:id="@+id/btUpvote"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_like"
-                android:background="@color/white" />
+                android:background="@color/white"
+                android:src="@drawable/ic_like" />
+
             <TextView
                 android:id="@+id/tvlikeNumbers"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_marginLeft="5dp"
+                android:gravity="center"
                 android:text="0"
                 android:textColor="#000000"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
+
             <ImageButton
                 android:id="@+id/btDownvote"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@color/white"
                 android:layout_marginLeft="20dp"
-                android:src="@drawable/ic_dislike_thumb"/>
+                android:background="@color/white"
+                android:src="@drawable/ic_dislike_thumb" />
+
             <TextView
                 android:id="@+id/tvdislikeNumbers"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textColor="#000000"
                 android:layout_marginLeft="5dp"
-                android:textSize="20dp"
-                android:text="0"/>
+                android:gravity="center"
+                android:text="0"
+                android:textColor="#000000"
+                android:textSize="20dp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="top|right"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="10dp"
+            android:gravity="top|right">
+
             <ImageButton
-                android:id="@+id/btViewComment"
+                android:id="@+id/btAddComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:src="@drawable/ic_review" />
+
             <TextView
-                android:id="@+id/tvComment"
+                android:id="@+id/tvAddComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Add Comment"
                 android:textColor="#000000"
-                android:textSize="15sp"
-                android:text="Comment"/>
+                android:textSize="15sp" />
         </LinearLayout>
 
     </LinearLayout>
+
+    <ListView
+        android:id="@+id/commentListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

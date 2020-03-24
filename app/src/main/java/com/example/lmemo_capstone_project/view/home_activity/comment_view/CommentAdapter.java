@@ -1,23 +1,33 @@
 package com.example.lmemo_capstone_project.view.home_activity.comment_view;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.CannotPerformFirebaseRequest;
 import com.example.lmemo_capstone_project.controller.comment_controller.CommentController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.model.Comment;
+import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CommentAdapter extends BaseAdapter {
 
@@ -25,10 +35,13 @@ public class CommentAdapter extends BaseAdapter {
     private Activity aContext;
     private static final int UPVOTE = 1;
     private static final int DOWNVOTE = 2;
+    private final Map<String, User> listUserMap;
+    private RewardDAO rewardDAO;
 
-    public CommentAdapter(List<Comment> commentList, Activity aContext) {
+    public CommentAdapter(List<Comment> commentList, Map<String, User> listUserMap, Activity aContext) {
         this.commentList = commentList;
         this.aContext = aContext;
+        this.listUserMap = listUserMap;
     }
 
     @Override
@@ -43,7 +56,7 @@ public class CommentAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -51,17 +64,104 @@ public class CommentAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(aContext).inflate(R.layout.activity_note_list_adapter, null);
-//            holder = getHolder(convertView);
-//            convertView.setTag(holder);
+            holder = getHolder(convertView);
+            convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        return null;
+
+        User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
+        Comment comment = commentList.get(position);
+        User userComment = listUserMap.get(comment.getUserID());
+        List<String> upvoterList = comment.getUpvoters() == null ? new ArrayList<String>() : comment.getUpvoters();
+        List<String> downvoterList = comment.getDownvoters() == null ? new ArrayList<String>() : comment.getDownvoters();
+        Reward reward = rewardDAO.getBestReward(Math.max(userComment.getContributionPoint(), 1))[0];
+        boolean isCreator = userComment.getUserID().equalsIgnoreCase(currentUser.getUserID());
+
+//        holder.tvUser.setText();
+        setTextForCommentInfo(holder, userComment, reward, comment);
+        setTextNumberForUpvoteAndDownVote(holder, upvoterList, downvoterList, currentUser);
+        setOwnerButtonVisible(holder, isCreator ? View.VISIBLE : View.INVISIBLE);
+        return convertView;
+    }
+
+    private void setTextForCommentInfo(ViewHolder holder, User creator, Reward reward, Comment comment) {
+        if (creator.isGender()) {
+            holder.tvUser.setText(creator.getDisplayName());
+            holder.tvUser.setTextColor(Color.BLUE);
+        } else {
+            holder.tvUser.setText(creator.getDisplayName());
+            holder.tvUser.setTextColor(Color.MAGENTA);
+        }
+        holder.tvCommentContent.setText(comment.getContent());
+        holder.tvReward.setText(reward.getRewardName());
+    }
+
+    private void setTextNumberForUpvoteAndDownVote(ViewHolder holder, List<String> upvoterList, List<String> downvoterList, User currentUser) {
+        if (upvoterList.contains(currentUser.getUserID())) {
+            SpannableString spanString = new SpannableString(upvoterList.size() + "");
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            holder.tvlikeNumbers.setText(spanString);
+            holder.tvlikeNumbers.setTextColor(Color.BLUE);
+        } else {
+            SpannableString spanString = new SpannableString(upvoterList.size() + "");
+            spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
+            holder.tvlikeNumbers.setText(spanString);
+            holder.tvlikeNumbers.setTextColor(Color.BLACK);
+        }
+        if (downvoterList.contains(currentUser.getUserID())) {
+            SpannableString spanString = new SpannableString(downvoterList.size() + "");
+            spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+            holder.tvdislikeNumbers.setText(spanString);
+            holder.tvdislikeNumbers.setTextColor(Color.BLUE);
+        } else {
+            SpannableString spanString = new SpannableString(downvoterList.size() + "");
+            spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
+            holder.tvdislikeNumbers.setText(spanString);
+            holder.tvdislikeNumbers.setTextColor(Color.BLACK);
+        }
+    }
+
+    private ViewHolder getHolder(View convertView) {
+        ViewHolder holder = new ViewHolder();
+        holder.tvUser = convertView.findViewById(R.id.tvUser);
+        holder.tvReward = convertView.findViewById(R.id.tvReward);
+        holder.tvCommentContent = convertView.findViewById(R.id.tvNoteContent);
+//        holder.tvNoteContent.setMovementMethod(new ScrollingMovementMethod());
+        holder.ibDelete = convertView.findViewById(R.id.ibDeleteNote);
+        holder.ibEdit = convertView.findViewById(R.id.ibEditNote);
+        holder.btUpvote = convertView.findViewById(R.id.btUpvote);
+        holder.tvlikeNumbers = convertView.findViewById(R.id.tvlikeNumbers);
+        holder.tvdislikeNumbers = convertView.findViewById(R.id.tvdislikeNumbers);
+        holder.tvAddComment = convertView.findViewById(R.id.tvAddComment);
+        holder.btDownvote = convertView.findViewById(R.id.btDownvote);
+        holder.btAddComment = convertView.findViewById(R.id.btAddComment);
+//        holder.lvComments = convertView.findViewById(R.id.lvComments);
+        holder.btAddComment = convertView.findViewById(R.id.btAddComment);
+        holder.btAddComment.setVisibility(View.INVISIBLE);
+        holder.tvAddComment.setVisibility(View.INVISIBLE);
+        return holder;
+    }
+
+    private void setOwnerButtonVisible(ViewHolder holder, int mode) {
+        holder.ibDelete.setVisibility(mode);
+        holder.ibEdit.setVisibility(mode);
     }
 
     private static class ViewHolder {
-
+        TextView tvUser;
+        TextView tvReward;
+        TextView tvCommentContent;
+        TextView tvlikeNumbers;
+        TextView tvdislikeNumbers;
+        TextView tvAddComment;
+        ImageButton ibDelete;
+        ImageButton ibEdit;
+        ImageButton btUpvote;
+        ImageButton btDownvote;
+        ImageButton btAddComment;
     }
+
     private void voteComment(int mode, int position){
         User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
         if (InternetCheckingController.isOnline(aContext)) {
