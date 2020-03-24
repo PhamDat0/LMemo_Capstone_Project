@@ -25,7 +25,7 @@ public class CommentController {
     private UserDAO userDAO;
     private static final int UPVOTE = 1;
     private static final int DOWNVOTE = 2;
-    public CommentController(Context context) {
+    public CommentController() {
         db = FirebaseFirestore.getInstance();
         user = userDAO.getLocalUser()[0];
     }

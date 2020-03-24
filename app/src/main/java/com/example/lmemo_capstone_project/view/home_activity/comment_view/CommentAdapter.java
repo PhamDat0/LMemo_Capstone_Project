@@ -66,7 +66,7 @@ public class CommentAdapter extends BaseAdapter {
         User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
         if (InternetCheckingController.isOnline(aContext)) {
             Log.i("Vote_success", "Has internet");
-            CommentController commentController = new CommentController(aContext);
+            CommentController commentController = new CommentController();
             Comment comment = null;
             ProgressDialog instance = ProgressDialog.getInstance();
             switch (mode){
