@@ -1,24 +1,33 @@
 package com.example.lmemo_capstone_project.controller.comment_controller;
 
 import android.util.Log;
-
+import android.content.Context;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
+import com.example.lmemo_capstone_project.controller.my_account_controller.MyAccountController;
 import com.example.lmemo_capstone_project.model.Comment;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CommentController {
     private FirebaseFirestore db;
-
-    public CommentController() {
+    private User user;
+    private UserDAO userDAO;
+    private static final int UPVOTE = 1;
+    private static final int DOWNVOTE = 2;
+    public CommentController(Context context) {
         db = FirebaseFirestore.getInstance();
+        user = userDAO.getLocalUser()[0];
     }
 
     /**
@@ -49,8 +58,8 @@ public class CommentController {
         commentToAdd.put("userID", currentUser.getUserID());
         commentToAdd.put("createdDate", new Date());
         commentToAdd.put("content", commentContent);
-        commentToAdd.put("upvoters", new ArrayList<String>());
-        commentToAdd.put("downvoters", new ArrayList<String>());
+        commentToAdd.put("upvoter", new ArrayList<String>());
+        commentToAdd.put("downvoter", new ArrayList<String>());
         return commentToAdd;
     }
 
@@ -66,5 +75,37 @@ public class CommentController {
                 Log.d("COMMENT_CONTROLLER", "Update content successfully");
             }
         });
+    }
+    private void getAllDataOfComment(){
+
+    }
+    public void upvoteComment(Comment comment){
+        if(comment.getUpvoters().contains(user.getUserID())){
+            int pointForOwner = comment.getUpvoters().contains(user.getUserID()) ? 2 : 1;
+            performVoteComment(comment, UPVOTE, pointForOwner);
+        }
+    }
+    public void downvoteComment(Comment comment){
+        if(comment.getDownvoters().contains(user.getUserID())){
+            int pointForOwner = comment.getDownvoters().contains(user.getUserID()) ? -2 : -1;
+            performVoteComment(comment, DOWNVOTE, pointForOwner);
+        }
+    }
+    private void performVoteComment(final Comment comment, final int mode, final int pointForOwner){
+        if (!user.getUserID().equalsIgnoreCase("GUEST")) {
+            final DocumentReference docRef = db.collection("comments").document("");
+            docRef.update("upvoter", FieldValue.arrayRemove(user.getUserID()),
+                    "downvoter", FieldValue.arrayRemove(user.getUserID()),
+                    mode == UPVOTE ? "upvoter" : "downvoter",
+                    FieldValue.arrayUnion(user.getUserID())).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.i("Vote_success", "DELETE FROM LIST");
+                    new MyAccountController().increaseUserPoint(comment.getUserID(), pointForOwner);
+                    Log.i("Vote_success", mode == UPVOTE ? "upvote" : "downvote" + " on " + comment.getCommentID() + " by " + user.getUserID());
+                }
+            });
+        }
+
     }
 }

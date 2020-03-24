@@ -6,7 +6,7 @@ import java.util.List;
 public class Comment {
     private String noteOnlineID, userID, content, commentID;
     private Date createdDate;
-    private List<String> upvoters, downvoters;
+    private List<String> upvoter, downvoter;
 
     public Comment() {
     }
@@ -44,19 +44,19 @@ public class Comment {
     }
 
     public List<String> getUpvoters() {
-        return upvoters;
+        return upvoter;
     }
 
-    public void setUpvoters(List<String> upvoters) {
-        this.upvoters = upvoters;
+    public void setUpvoters(List<String> upvoter) {
+        this.upvoter = upvoter;
     }
 
     public List<String> getDownvoters() {
-        return downvoters;
+        return downvoter;
     }
 
-    public void setDownvoters(List<String> downvoters) {
-        this.downvoters = downvoters;
+    public void setDownvoters(List<String> downvoter) {
+        this.downvoter = downvoter;
     }
 
     public String getCommentID() {
