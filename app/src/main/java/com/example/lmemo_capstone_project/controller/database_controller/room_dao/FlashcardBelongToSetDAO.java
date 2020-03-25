@@ -15,7 +15,7 @@ public interface FlashcardBelongToSetDAO {
     @Delete
     void deleteFlashcardBelongToSet(FlashcardBelongToSet flashcardBelongToSet);
 
-    @Query("SELECT FlashcardID FROM FlashcardBelongToSet WHERE SetID=:setID")
+    @Query("SELECT * FROM FlashcardBelongToSet WHERE SetID=:setID")
     FlashcardBelongToSet[] getFlashcardBySetID(int setID);
 
     @Query("DELETE FROM FlashcardBelongToSet WHERE SetID=:setID")

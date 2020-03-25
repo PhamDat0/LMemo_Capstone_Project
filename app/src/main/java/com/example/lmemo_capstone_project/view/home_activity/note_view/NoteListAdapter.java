@@ -90,25 +90,19 @@ public class NoteListAdapter extends BaseAdapter {
         }
 
         User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
-
         Note note = listNote.get(position);
         final User creator = listUserMap.get(note.getCreatorUserID());
-        final List<String> upvoterList = note.getUpvoterList() == null ? new ArrayList<String>() : note.getUpvoterList();
-        final List<String> downvoterList = note.getDownvoterList() == null ? new ArrayList<String>() : note.getDownvoterList();
+        List<String> upvoterList = note.getUpvoterList() == null ? new ArrayList<String>() : note.getUpvoterList();
+        List<String> downvoterList = note.getDownvoterList() == null ? new ArrayList<String>() : note.getDownvoterList();
         Reward reward = rewardDAO.getBestReward(Math.max(creator.getContributionPoint(), 1))[0];
         boolean isCreator = creator.getUserID().equalsIgnoreCase(currentUser.getUserID());
 
-        holder.tvComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                passNoteDetailToCommentActivity(position,listNote,listUserMap,creator);
-            }
-        });
+
 
         setTextForNoteInfo(holder, creator, reward, note);
         setTextNumberForUpvoteAndDownVote(holder, upvoterList, downvoterList, currentUser);
         setVisibilityForButton(holder);
-        setActionOnclick(holder, position);
+        setActionOnclick(holder, position,creator);
         setOwnerButtonVisible(holder, isCreator ? View.VISIBLE : View.INVISIBLE);
         //ユーザーがノートを持っている場合には削除と更新できます。
         return convertView;
@@ -118,7 +112,7 @@ public class NoteListAdapter extends BaseAdapter {
         User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
         Intent intent = new Intent(aContext,CommentActivity.class);
         intent.putExtra("userID",listNote.get(position).getCreatorUserID());
-        intent.putExtra("noteID",listNote.get(position).getNoteID());
+        intent.putExtra("noteOnlineID",listNote.get(position).getOnlineID());
         intent.putExtra("user",creator.getDisplayName());
         intent.putExtra("gender",creator.isGender());
         intent.putExtra("reward", rewardDAO.getBestReward(Math.max(listUserMap.get(listNote
@@ -126,6 +120,7 @@ public class NoteListAdapter extends BaseAdapter {
         intent.putExtra("noteContent",listNote.get(position).getNoteContent());
         intent.putExtra("like", listNote.get(position).getUpvoterList().size());
         intent.putExtra("dislike", listNote.get(position).getDownvoterList().size());
+        intent.putExtra("position",position);
 //        intent.putExtra("isCreator", creator.getUserID().equalsIgnoreCase(currentUser.getUserID()));
         aContext.startActivity(intent);
     }
@@ -200,7 +195,7 @@ public class NoteListAdapter extends BaseAdapter {
         return holder;
     }
 
-    private void setActionOnclick(ViewHolder holder, final int position) {
+    private void setActionOnclick(ViewHolder holder, final int position, final User creator) {
         holder.ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,6 +245,12 @@ public class NoteListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Log.i("Vote_success", "Onclick");
                 vote(DOWNVOTE, position);
+            }
+        });
+        holder.tvComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                passNoteDetailToCommentActivity(position,listNote,listUserMap,creator);
             }
         });
     }

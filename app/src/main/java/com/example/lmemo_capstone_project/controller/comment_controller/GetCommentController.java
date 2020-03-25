@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import com.example.lmemo_capstone_project.model.Comment;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.home_activity.comment_view.CommentActivity;
-import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -34,16 +33,16 @@ public class GetCommentController {
     private boolean isProcessing;
     private ArrayList<User> listUser;
 
-    private GetCommentController(CommentActivity commentActivity) {
+    public GetCommentController(CommentActivity commentActivity) {
         db = FirebaseFirestore.getInstance();
         this.commentActivity = commentActivity;
         isProcessing = false;
     }
 
-    public void getAllCommentFromFirebase(int noteOnlineID) {
+    public void getAllCommentFromFirebase(String noteOnlineID) {
         isProcessing = false;
         stopListening();
-        Query query = db.collection("comments").whereArrayContains("noteOnlineID",noteOnlineID).
+        Query query = db.collection("comments").whereEqualTo("noteOnlineID",noteOnlineID).
                 orderBy("createdDate", Query.Direction.ASCENDING);
         registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -66,7 +65,7 @@ public class GetCommentController {
     }
 
     private void getUserList() {
-//        Log.d("myApp", "How many times userlist is call");
+        Log.d("myApp", "How many times userlist is call");
         listUser = new ArrayList<>();
         isProcessing = !(listComment.size() == 0);
         for (Comment comment : listComment) {
@@ -85,10 +84,10 @@ public class GetCommentController {
                             listUser.add(user);
                             compareTwoListSize();
                         } else {
-                            Log.d("myApp", "No such document");
+                            Log.d("myAppComment", "No such document");
                         }
                     } else {
-                        Log.d("myApp", "get failed with ", task.getException());
+                        Log.d("myAppComment", "get failed with ", task.getException());
                     }
                 }
             });
@@ -96,7 +95,7 @@ public class GetCommentController {
     }
 
     private void compareTwoListSize() {
-        Log.d("compare_size", listComment.size() + " / " + listUser.size());
+        Log.d("compare_size_Comment", listComment.size() + " / " + listUser.size());
         if (listComment.size() == listUser.size()) {
             Map<String, User> listUserMap = new HashMap<>();
             for (User user : listUser) {

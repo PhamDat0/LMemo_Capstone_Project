@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,8 +33,6 @@ public class CommentAdapter extends BaseAdapter {
 
     private List<Comment> commentList;
     private Activity aContext;
-    private static final int UPVOTE = 1;
-    private static final int DOWNVOTE = 2;
     private final Map<String, User> listUserMap;
     private RewardDAO rewardDAO;
 
@@ -41,6 +40,7 @@ public class CommentAdapter extends BaseAdapter {
         this.commentList = commentList;
         this.aContext = aContext;
         this.listUserMap = listUserMap;
+        rewardDAO = LMemoDatabase.getInstance(aContext).rewardDAO();
     }
 
     @Override
@@ -74,8 +74,10 @@ public class CommentAdapter extends BaseAdapter {
         User userComment = listUserMap.get(comment.getUserID());
         List<String> upvoterList = comment.getUpvoters() == null ? new ArrayList<String>() : comment.getUpvoters();
         List<String> downvoterList = comment.getDownvoters() == null ? new ArrayList<String>() : comment.getDownvoters();
+        Log.d("debug",userComment.getContributionPoint()+"");
         Reward reward = rewardDAO.getBestReward(Math.max(userComment.getContributionPoint(), 1))[0];
         boolean isCreator = userComment.getUserID().equalsIgnoreCase(currentUser.getUserID());
+//        String reward = "aaaaaa";
 
 //        holder.tvUser.setText();
         setTextForCommentInfo(holder, userComment, reward, comment);
@@ -86,13 +88,13 @@ public class CommentAdapter extends BaseAdapter {
 
     private void setTextForCommentInfo(ViewHolder holder, User creator, Reward reward, Comment comment) {
         if (creator.isGender()) {
-            holder.tvUser.setText(creator.getDisplayName());
+            holder.tvUser.setText(String.format("    %s", creator.getDisplayName()));
             holder.tvUser.setTextColor(Color.BLUE);
         } else {
-            holder.tvUser.setText(creator.getDisplayName());
+            holder.tvUser.setText(String.format("    %s", creator.getDisplayName()));
             holder.tvUser.setTextColor(Color.MAGENTA);
         }
-        holder.tvCommentContent.setText(comment.getContent());
+        holder.tvCommentContent.setText(String.format("    %s", comment.getContent()));
         holder.tvReward.setText(reward.getRewardName());
     }
 
@@ -129,16 +131,14 @@ public class CommentAdapter extends BaseAdapter {
 //        holder.tvNoteContent.setMovementMethod(new ScrollingMovementMethod());
         holder.ibDelete = convertView.findViewById(R.id.ibDeleteNote);
         holder.ibEdit = convertView.findViewById(R.id.ibEditNote);
-        holder.btUpvote = convertView.findViewById(R.id.btUpvote);
+        holder.ibtUpvote = convertView.findViewById(R.id.btUpvote);
         holder.tvlikeNumbers = convertView.findViewById(R.id.tvlikeNumbers);
         holder.tvdislikeNumbers = convertView.findViewById(R.id.tvdislikeNumbers);
-        holder.tvAddComment = convertView.findViewById(R.id.tvAddComment);
-        holder.btDownvote = convertView.findViewById(R.id.btDownvote);
-        holder.btAddComment = convertView.findViewById(R.id.btAddComment);
-//        holder.lvComments = convertView.findViewById(R.id.lvComments);
-        holder.btAddComment = convertView.findViewById(R.id.btAddComment);
-        holder.btAddComment.setVisibility(View.INVISIBLE);
-        holder.tvAddComment.setVisibility(View.INVISIBLE);
+        holder.tvComment = convertView.findViewById(R.id.tvComment);
+        holder.ibtDownvote = convertView.findViewById(R.id.btDownvote);
+        holder.btViewComment = convertView.findViewById(R.id.btViewComment);
+        holder.btViewComment.setVisibility(View.INVISIBLE);
+        holder.tvComment.setVisibility(View.INVISIBLE);
         return holder;
     }
 
@@ -153,50 +153,50 @@ public class CommentAdapter extends BaseAdapter {
         TextView tvCommentContent;
         TextView tvlikeNumbers;
         TextView tvdislikeNumbers;
-        TextView tvAddComment;
+        TextView tvComment;
         ImageButton ibDelete;
         ImageButton ibEdit;
-        ImageButton btUpvote;
-        ImageButton btDownvote;
-        ImageButton btAddComment;
+        ImageButton ibtUpvote;
+        ImageButton ibtDownvote;
+        ImageButton btViewComment;
     }
 
-    private void voteComment(int mode, int position){
-        User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
-        if (InternetCheckingController.isOnline(aContext)) {
-            Log.i("Vote_success", "Has internet");
-            CommentController commentController = new CommentController(aContext);
-            Comment comment = null;
-            ProgressDialog instance = ProgressDialog.getInstance();
-            switch (mode){
-                case UPVOTE:
-                    if (comment.getUpvoters().contains(currentUser.getUserID())){
-                        instance.show(aContext);
-                        try {
-                            Log.i("Vote_success", "Start perform");
-                            commentController.upvoteComment(comment);
-                        } catch (Exception e) {
-                            Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    break;
-                case DOWNVOTE:
-                    if (!comment.getDownvoters().contains(currentUser.getUserID())) {
-                        instance.show(aContext);
-                        try {
-                            Log.i("Vote_success", "Start perform");
-                            commentController.downvoteComment(comment);
-                        } catch (Exception e) {
-                            Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    break;
-                default:
-                    throw new UnsupportedOperationException("There is no such mode");
-            }
-        }
-        else {
-            Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
-        }
-    }
+//    private void voteComment(int mode, int position){
+//        User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
+//        if (InternetCheckingController.isOnline(aContext)) {
+//            Log.i("Vote_success", "Has internet");
+//            CommentController commentController = new CommentController(aContext);
+//            Comment comment = null;
+//            ProgressDialog instance = ProgressDialog.getInstance();
+//            switch (mode){
+//                case UPVOTE:
+//                    if (comment.getUpvoters().contains(currentUser.getUserID())){
+//                        instance.show(aContext);
+//                        try {
+//                            Log.i("Vote_success", "Start perform");
+//                            commentController.upvoteComment(comment);
+//                        } catch (Exception e) {
+//                            Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                    break;
+//                case DOWNVOTE:
+//                    if (!comment.getDownvoters().contains(currentUser.getUserID())) {
+//                        instance.show(aContext);
+//                        try {
+//                            Log.i("Vote_success", "Start perform");
+//                            commentController.downvoteComment(comment);
+//                        } catch (Exception e) {
+//                            Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                    break;
+//                default:
+//                    throw new UnsupportedOperationException("There is no such mode");
+//            }
+//        }
+//        else {
+//            Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
+//        }
+//    }
 }
