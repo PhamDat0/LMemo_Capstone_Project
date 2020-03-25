@@ -51,7 +51,7 @@ public class CommentAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return commentList.get(position);
     }
 
     @Override

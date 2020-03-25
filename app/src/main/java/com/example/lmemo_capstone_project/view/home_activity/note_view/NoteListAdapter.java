@@ -34,6 +34,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 import com.example.lmemo_capstone_project.view.home_activity.comment_view.CommentActivity;
+import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,18 +90,18 @@ public class NoteListAdapter extends BaseAdapter {
         }
 
         User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
+
         Note note = listNote.get(position);
-        User creator = listUserMap.get(note.getCreatorUserID());
-        List<String> upvoterList = note.getUpvoterList() == null ? new ArrayList<String>() : note.getUpvoterList();
-        List<String> downvoterList = note.getDownvoterList() == null ? new ArrayList<String>() : note.getDownvoterList();
+        final User creator = listUserMap.get(note.getCreatorUserID());
+        final List<String> upvoterList = note.getUpvoterList() == null ? new ArrayList<String>() : note.getUpvoterList();
+        final List<String> downvoterList = note.getDownvoterList() == null ? new ArrayList<String>() : note.getDownvoterList();
         Reward reward = rewardDAO.getBestReward(Math.max(creator.getContributionPoint(), 1))[0];
         boolean isCreator = creator.getUserID().equalsIgnoreCase(currentUser.getUserID());
 
         holder.tvComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(aContext,CommentActivity.class);
-                aContext.startActivity(intent);
+                passNoteDetailToCommentActivity(position,listNote,listUserMap,creator);
             }
         });
 
@@ -111,6 +112,22 @@ public class NoteListAdapter extends BaseAdapter {
         setOwnerButtonVisible(holder, isCreator ? View.VISIBLE : View.INVISIBLE);
         //ユーザーがノートを持っている場合には削除と更新できます。
         return convertView;
+    }
+
+    private void passNoteDetailToCommentActivity(int position, List<Note> listNote, Map<String, User> listUserMap, User creator) {
+        User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
+        Intent intent = new Intent(aContext,CommentActivity.class);
+        intent.putExtra("userID",listNote.get(position).getCreatorUserID());
+        intent.putExtra("noteID",listNote.get(position).getNoteID());
+        intent.putExtra("user",creator.getDisplayName());
+        intent.putExtra("gender",creator.isGender());
+        intent.putExtra("reward", rewardDAO.getBestReward(Math.max(listUserMap.get(listNote
+                .get(position).getCreatorUserID()).getContributionPoint(), 1))[0].getRewardName());
+        intent.putExtra("noteContent",listNote.get(position).getNoteContent());
+        intent.putExtra("like", listNote.get(position).getUpvoterList().size());
+        intent.putExtra("dislike", listNote.get(position).getDownvoterList().size());
+//        intent.putExtra("isCreator", creator.getUserID().equalsIgnoreCase(currentUser.getUserID()));
+        aContext.startActivity(intent);
     }
 
     private void setTextForNoteInfo(ViewHolder holder, User creator, Reward reward, Note note) {
@@ -179,7 +196,6 @@ public class NoteListAdapter extends BaseAdapter {
         holder.tvComment = convertView.findViewById(R.id.tvComment);
         holder.btDownvote = convertView.findViewById(R.id.btDownvote);
         holder.btViewComment = convertView.findViewById(R.id.btViewComment);
-//        holder.lvComments = convertView.findViewById(R.id.lvComments);
         holder.btAddComment = convertView.findViewById(R.id.btAddComment);
         return holder;
     }
