@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Browse Sets"
-            android:visibility="gone" />
+            android:visibility="visible" />
     </LinearLayout>
 
     <ListView

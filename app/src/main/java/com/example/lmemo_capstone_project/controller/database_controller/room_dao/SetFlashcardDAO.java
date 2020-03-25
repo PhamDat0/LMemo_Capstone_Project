@@ -29,4 +29,7 @@ public interface SetFlashcardDAO {
     @Transaction
     @Query("Select * FROM SetFlashcard")
     List<SetWithFlashcards> getSetsWithFlashcards();
+
+    @Query("SELECT * FROM SetFlashcard ORDER BY SetID DESC LIMIT 1")
+    SetFlashcard[] getLastSet();
 }

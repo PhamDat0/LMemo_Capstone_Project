@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lmemo_capstone_project.R;
-import com.example.lmemo_capstone_project.controller.CannotPerformFirebaseRequest;
 import com.example.lmemo_capstone_project.controller.comment_controller.CommentController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
@@ -166,7 +165,7 @@ public class CommentAdapter extends BaseAdapter {
         User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
         if (InternetCheckingController.isOnline(aContext)) {
             Log.i("Vote_success", "Has internet");
-            CommentController commentController = new CommentController();
+            CommentController commentController = new CommentController(aContext);
             Comment comment = null;
             ProgressDialog instance = ProgressDialog.getInstance();
             switch (mode){

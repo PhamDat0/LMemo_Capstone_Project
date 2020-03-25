@@ -3,6 +3,7 @@ package com.example.lmemo_capstone_project.controller.database_controller.room_d
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.Query;
 
 import com.example.lmemo_capstone_project.model.room_db_entity.FlashcardBelongToSet;
 
@@ -13,4 +14,10 @@ public interface FlashcardBelongToSetDAO {
 
     @Delete
     void deleteFlashcardBelongToSet(FlashcardBelongToSet flashcardBelongToSet);
+
+    @Query("SELECT FlashcardID FROM FlashcardBelongToSet WHERE SetID=:setID")
+    FlashcardBelongToSet[] getFlashcardBySetID(int setID);
+
+    @Query("DELETE FROM FlashcardBelongToSet WHERE SetID=:setID")
+    void deleteAllAssociationWithSet(int setID);
 }

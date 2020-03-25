@@ -1,7 +1,9 @@
 package com.example.lmemo_capstone_project.controller.comment_controller;
 
-import android.util.Log;
 import android.content.Context;
+import android.util.Log;
+
+import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.controller.my_account_controller.MyAccountController;
 import com.example.lmemo_capstone_project.model.Comment;
@@ -11,12 +13,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CommentController {
@@ -25,8 +25,10 @@ public class CommentController {
     private UserDAO userDAO;
     private static final int UPVOTE = 1;
     private static final int DOWNVOTE = 2;
-    public CommentController() {
+
+    public CommentController(Context context) {
         db = FirebaseFirestore.getInstance();
+        userDAO = LMemoDatabase.getInstance(context).userDAO();
         user = userDAO.getLocalUser()[0];
     }
 
