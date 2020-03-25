@@ -87,13 +87,10 @@ public class CommentActivity extends AppCompatActivity {
             String reward = extras.getString("reward");
             String content = extras.getString("noteContent");
             Boolean gender = extras.getBoolean("gender");
-            int upvoter = extras.getInt("like");
-            int downvoter = extras.getInt("dislike");
+//            int upvoter = extras.getInt("like");
+//            int downvoter = extras.getInt("dislike");
 //            Boolean isCreator = extras.getBoolean("isCreator");
 //            String noteOnlineID = extras.getString("noteOnlineID");
-//            Log.d("NOTEONLINEID",noteOnlineID);
-            String userID = extras.getString("userID");
-//            int position = extras.getInt("position");
             note = new Note();
             note.setOnlineID(getOnlineNoteID());
             note.setNoteContent(content);
@@ -106,8 +103,8 @@ public class CommentActivity extends AppCompatActivity {
                 tvUser.setTextColor(Color.MAGENTA);
             }
 
-            tvLikeNumber.setText("" + upvoter);
-            tvDislikeNumber.setText("" + downvoter);
+//            tvLikeNumber.setText("" + upvoter);
+//            tvDislikeNumber.setText("" + downvoter);
             setButtonInvisible(View.INVISIBLE);
             loadCommentToUI(getOnlineNoteID());
         }
@@ -127,19 +124,6 @@ public class CommentActivity extends AppCompatActivity {
                 } else {
                     notifyNoInternet();
                 }
-            }
-        });
-        btUpvote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                vote(UPVOTE);
-            }
-        });
-        btDownvote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("onclick", "Already Click");
-//                vote(DOWNVOTE);
             }
         });
     }
@@ -171,6 +155,10 @@ public class CommentActivity extends AppCompatActivity {
     private void setButtonInvisible(int mode) {
         ibDeleteNote.setVisibility(mode);
         ibEditNote.setVisibility(mode);
+        tvDislikeNumber.setVisibility(mode);
+        tvLikeNumber.setVisibility(mode);
+        btDownvote.setVisibility(mode);
+        btUpvote.setVisibility(mode);
     }
 
     private void loadCommentToUI(String noteID) {
@@ -187,58 +175,4 @@ public class CommentActivity extends AppCompatActivity {
         ProgressDialog instance = ProgressDialog.getInstance();
         instance.dismiss();
     }
-
-//    private Note getOnlineNoteFromDB() {
-//        NoteDAO noteDAO = LMemoDatabase.getInstance(getApplicationContext()).noteDAO();
-//        Note note;
-//        try {
-//            Log.d("ONLINE_NOTE_FROM_DB",noteDAO.getNotesByOnlineID(getOnlineNoteID())[0]+" ");
-//            note = noteDAO.getNotesByOnlineID(getOnlineNoteID())[0];
-////            note.setUpvoterList(note.getUpvoterList());
-////            note.setDownvoterList(note.getDownvoterList());
-////            note.setWordList(note.getWordList());
-//        } catch (ArrayIndexOutOfBoundsException e) {
-//            note = new Note();
-//            Log.d("Error_DB",e.getMessage());
-//        }
-//        return note;
-//    }
-
-//    private void vote(int mode) {
-//        User currentUser = LMemoDatabase.getInstance(getApplicationContext()).userDAO().getLocalUser()[0];
-//        if (InternetCheckingController.isOnline(getApplicationContext())) {
-//            Log.i("Vote_success", "Has internet");
-//            NoteController noteController = new NoteController(getApplicationContext());
-//            Log.d("ONLINE_NOTE",note.getNoteContent()+"//////");
-//            ProgressDialog instance = ProgressDialog.getInstance();
-//            switch (mode) {
-//                case UPVOTE:
-//                    if (!note.getUpvoterList().contains(currentUser.getUserID())) {
-//                        instance.show(getApplicationContext());
-//                        try {
-//                            Log.i("Vote_success", "Start perform");
-//                            noteController.upvote(note);
-//                        } catch (CannotPerformFirebaseRequest cannotPerformFirebaseRequest) {
-//                            Toast.makeText(getApplicationContext(), cannotPerformFirebaseRequest.getMessage(), Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                    break;
-//                case DOWNVOTE:
-//                    if (!note.getDownvoterList().contains(currentUser.getUserID())) {
-//                        instance.show(getApplicationContext());
-//                        try {
-//                            Log.i("Vote_success", "Start perform");
-//                            noteController.downvote(note);
-//                        } catch (CannotPerformFirebaseRequest cannotPerformFirebaseRequest) {
-//                            Toast.makeText(getApplicationContext(), cannotPerformFirebaseRequest.getMessage(), Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                    break;
-//                default:
-//                    throw new UnsupportedOperationException("There is no such mode");
-//            }
-//        } else {
-//            Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
-//        }
-//    }
 }

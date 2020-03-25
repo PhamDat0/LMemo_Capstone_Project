@@ -117,9 +117,8 @@ public class NoteListAdapter extends BaseAdapter {
         intent.putExtra("reward", rewardDAO.getBestReward(Math.max(listUserMap.get(listNote
                 .get(position).getCreatorUserID()).getContributionPoint(), 1))[0].getRewardName());
         intent.putExtra("noteContent",listNote.get(position).getNoteContent());
-        intent.putExtra("like", listNote.get(position).getUpvoterList().size());
-        intent.putExtra("dislike", listNote.get(position).getDownvoterList().size());
-        intent.putExtra("position",position);
+//        intent.putExtra("like", listNote.get(position).getUpvoterList().size());
+//        intent.putExtra("dislike", listNote.get(position).getDownvoterList().size());
 //        intent.putExtra("isCreator", creator.getUserID().equalsIgnoreCase(currentUser.getUserID()));
         aContext.startActivity(intent);
     }
