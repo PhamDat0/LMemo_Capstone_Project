@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,14 +26,12 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.note_controller.NoteController;
-import com.example.lmemo_capstone_project.model.Comment;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 import com.example.lmemo_capstone_project.view.home_activity.comment_view.CommentActivity;
-import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +108,8 @@ public class NoteListAdapter extends BaseAdapter {
     private void passNoteDetailToCommentActivity(int position, List<Note> listNote, Map<String, User> listUserMap, User creator) {
         User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
         Intent intent = new Intent(aContext,CommentActivity.class);
+        intent.putExtra("note", listNote.get(position));
+        intent.putExtra("creator", creator);
         intent.putExtra("userID",listNote.get(position).getCreatorUserID());
         intent.putExtra("noteOnlineID",listNote.get(position).getOnlineID());
         intent.putExtra("user",creator.getDisplayName());

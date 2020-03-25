@@ -50,14 +50,17 @@ public class SetFlashcardController {
     }
 
     private Map<String, Object> mapping(SetFlashcard setFlashcard) {
-        Map<String, Object> setToAdd = new HashMap<>();
-        setToAdd.put("name", setFlashcard.getSetName());
-        setToAdd.put("userID", setFlashcard.getCreatorID());
         FlashcardBelongToSet[] flashcards = flashcardBelongToSetDAO.getFlashcardBySetID(setFlashcard.getSetID());
         List<Long> flashcardIDList = new ArrayList<>();
         for (FlashcardBelongToSet flashcard : flashcards) {
             flashcardIDList.add((long) flashcard.getFlashcardID());
         }
+        if (flashcardIDList.size() < 10) {
+            throw new UnsupportedOperationException("Public set must have at least 10 flashcards");
+        }
+        Map<String, Object> setToAdd = new HashMap<>();
+        setToAdd.put("name", setFlashcard.getSetName());
+        setToAdd.put("userID", setFlashcard.getCreatorID());
         setToAdd.put("flashcards", flashcardIDList);
         return setToAdd;
     }

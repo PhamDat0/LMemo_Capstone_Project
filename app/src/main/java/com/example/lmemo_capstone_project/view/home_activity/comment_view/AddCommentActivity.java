@@ -88,6 +88,7 @@ public class AddCommentActivity extends AppCompatActivity {
         currentUser = LMemoDatabase.getInstance(getApplicationContext()).userDAO().getLocalUser()[0];
         if (mode == IN_EDITING_MODE) {
             comment = (Comment) getIntent().getSerializableExtra("comment");
+            etCommentContent.setText(comment.getContent());
         }
     }
 }

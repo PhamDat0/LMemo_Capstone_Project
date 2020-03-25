@@ -76,7 +76,11 @@ public class SetFlashcardAdapter extends BaseAdapter {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (InternetCheckingController.isOnline(aContext)) {
                     if (isChecked) {
-                        setFlashcardController.uploadSetToFirebase(setFlashcard);
+                        try {
+                            setFlashcardController.uploadSetToFirebase(setFlashcard);
+                        } catch (UnsupportedOperationException e) {
+                            Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     } else {
                         setFlashcardController.makeSetPrivate(setFlashcard);
                     }

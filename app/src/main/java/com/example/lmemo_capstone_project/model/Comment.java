@@ -1,9 +1,10 @@
 package com.example.lmemo_capstone_project.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Comment {
+public class Comment implements Serializable {
     private String noteOnlineID, userID, content, commentID;
     private Date createdDate;
     private List<String> upvoter, downvoter;

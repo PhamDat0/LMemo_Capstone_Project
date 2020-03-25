@@ -1,10 +1,7 @@
 package com.example.lmemo_capstone_project.view.home_activity.comment_view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,23 +10,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.lmemo_capstone_project.R;
-import com.example.lmemo_capstone_project.controller.CannotPerformFirebaseRequest;
 import com.example.lmemo_capstone_project.controller.comment_controller.GetCommentController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
-import com.example.lmemo_capstone_project.controller.note_controller.NoteController;
 import com.example.lmemo_capstone_project.model.Comment;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
-import com.example.lmemo_capstone_project.view.home_activity.note_view.NoteListAdapter;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class CommentActivity extends AppCompatActivity {
+    public static final int ADD_COMMENT_REQUEST_CODE = 103;
+    public static final int EDIT_COMMENT_REQUEST_CODE = 104;
 
     private ListView listViewComment;
     private ArrayList<Comment> listComment;
@@ -46,6 +43,8 @@ public class CommentActivity extends AppCompatActivity {
     private static final int DOWNVOTE = 2;
     private ImageButton btUpvote;
     private ImageButton btDownvote;
+    private Note note;
+    private User creator;
 
 
     @Override
@@ -63,18 +62,21 @@ public class CommentActivity extends AppCompatActivity {
         btUpvote = findViewById(R.id.btUpvote);
         tvAddComment = findViewById(R.id.tvAddComment);
         listViewComment = findViewById(R.id.commentListView);
+        Intent intent = getIntent();
+        note = (Note) intent.getSerializableExtra("note");
+        creator = (User) intent.getSerializableExtra("creator");
         loadAChosenNoteAndComment();
         onButtonClick();
     }
 
     private String getOnlineNoteID() {
         Bundle extras = getIntent().getExtras();
-        String noteOnlineID="0";
+        String noteOnlineID = "0";
         if (extras != null) {
             noteOnlineID = extras.getString("noteOnlineID");
-            Log.d("NOTEONLINEID",noteOnlineID);
+            Log.d("NOTEONLINEID", noteOnlineID);
         }
-        Log.d("NOTEONLINEID_OUTSIDE",noteOnlineID);
+        Log.d("NOTEONLINEID_OUTSIDE", noteOnlineID);
         return noteOnlineID;
     }
 
@@ -92,17 +94,20 @@ public class CommentActivity extends AppCompatActivity {
 //            Log.d("NOTEONLINEID",noteOnlineID);
             String userID = extras.getString("userID");
 //            int position = extras.getInt("position");
+            note = new Note();
+            note.setOnlineID(getOnlineNoteID());
+            note.setNoteContent(content);
             tvUser.setText(user);
             tvReward.setText(reward);
             tvNoteContent.setText(content);
-            if(gender) {
+            if (gender) {
                 tvUser.setTextColor(Color.BLUE);
             } else {
                 tvUser.setTextColor(Color.MAGENTA);
             }
 
-            tvLikeNumber.setText(""+upvoter);
-            tvDislikeNumber.setText(""+downvoter);
+            tvLikeNumber.setText("" + upvoter);
+            tvDislikeNumber.setText("" + downvoter);
             setButtonInvisible(View.INVISIBLE);
             loadCommentToUI(getOnlineNoteID());
         }
@@ -112,7 +117,16 @@ public class CommentActivity extends AppCompatActivity {
         tvAddComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (hasInternet()) {
+                    if (!isGuest()) {
+                        Intent intent = prepareIntentForCreateCommentActivity(AddCommentActivity.IN_ADDING_MODE);
+                        startActivityForResult(intent, ADD_COMMENT_REQUEST_CODE);
+                    } else {
+                        notifyLogin();
+                    }
+                } else {
+                    notifyNoInternet();
+                }
             }
         });
         btUpvote.setOnClickListener(new View.OnClickListener() {
@@ -124,10 +138,34 @@ public class CommentActivity extends AppCompatActivity {
         btDownvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("onclick","Already Click");
+                Log.d("onclick", "Already Click");
 //                vote(DOWNVOTE);
             }
         });
+    }
+
+    private Intent prepareIntentForCreateCommentActivity(int mode) {
+        Intent intent = new Intent(getApplicationContext(), AddCommentActivity.class);
+        intent.putExtra("note", note);
+        intent.putExtra("creator", creator);
+        intent.putExtra("mode", mode);
+        return intent;
+    }
+
+    private void notifyLogin() {
+        Toast.makeText(getApplicationContext(), "You must login first", Toast.LENGTH_LONG).show();
+    }
+
+    private boolean isGuest() {
+        return LMemoDatabase.getInstance(getApplicationContext()).userDAO().getLocalUser()[0].isGuest();
+    }
+
+    private boolean hasInternet() {
+        return InternetCheckingController.isOnline(getApplicationContext());
+    }
+
+    private void notifyNoInternet() {
+        Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
     }
 
     private void setButtonInvisible(int mode) {
@@ -171,7 +209,6 @@ public class CommentActivity extends AppCompatActivity {
 //        if (InternetCheckingController.isOnline(getApplicationContext())) {
 //            Log.i("Vote_success", "Has internet");
 //            NoteController noteController = new NoteController(getApplicationContext());
-//            Note note = getOnlineNoteFromDB();
 //            Log.d("ONLINE_NOTE",note.getNoteContent()+"//////");
 //            ProgressDialog instance = ProgressDialog.getInstance();
 //            switch (mode) {

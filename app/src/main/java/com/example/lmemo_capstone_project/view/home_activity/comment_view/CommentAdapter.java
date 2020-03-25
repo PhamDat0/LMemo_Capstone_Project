@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.view.home_activity.comment_view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.SpannableString;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +21,7 @@ import com.example.lmemo_capstone_project.controller.database_controller.LMemoDa
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.model.Comment;
+import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
@@ -31,6 +32,8 @@ import java.util.Map;
 
 public class CommentAdapter extends BaseAdapter {
 
+    private static final int UPVOTE = 0;
+    private static final int DOWNVOTE = 1;
     private List<Comment> commentList;
     private Activity aContext;
     private final Map<String, User> listUserMap;
@@ -83,7 +86,46 @@ public class CommentAdapter extends BaseAdapter {
         setTextForCommentInfo(holder, userComment, reward, comment);
         setTextNumberForUpvoteAndDownVote(holder, upvoterList, downvoterList, currentUser);
         setOwnerButtonVisible(holder, isCreator ? View.VISIBLE : View.INVISIBLE);
+        setActionForButton(holder, comment, currentUser, userComment, upvoterList, downvoterList);
         return convertView;
+    }
+
+    private void setActionForButton(ViewHolder holder, final Comment comment, User currentUser, User userComment, List<String> upvoterList, List<String> downvoterList) {
+        holder.ibEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Note note = (Note) aContext.getIntent().getSerializableExtra("note");
+                Intent intent = new Intent(aContext, AddCommentActivity.class);
+                intent.putExtra("mode", AddCommentActivity.IN_EDITING_MODE);
+                intent.putExtra("note", note);
+                intent.putExtra("comment", comment);
+                aContext.startActivityForResult(intent, CommentActivity.EDIT_COMMENT_REQUEST_CODE);
+            }
+        });
+        holder.ibtUpvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voteComment(UPVOTE, comment);
+            }
+        });
+        holder.tvlikeNumbers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voteComment(UPVOTE, comment);
+            }
+        });
+        holder.ibtDownvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voteComment(DOWNVOTE, comment);
+            }
+        });
+        holder.tvdislikeNumbers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voteComment(DOWNVOTE, comment);
+            }
+        });
     }
 
     private void setTextForCommentInfo(ViewHolder holder, User creator, Reward reward, Comment comment) {
@@ -161,42 +203,40 @@ public class CommentAdapter extends BaseAdapter {
         ImageButton btViewComment;
     }
 
-//    private void voteComment(int mode, int position){
-//        User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
-//        if (InternetCheckingController.isOnline(aContext)) {
-//            Log.i("Vote_success", "Has internet");
-//            CommentController commentController = new CommentController(aContext);
-//            Comment comment = null;
-//            ProgressDialog instance = ProgressDialog.getInstance();
-//            switch (mode){
-//                case UPVOTE:
-//                    if (comment.getUpvoters().contains(currentUser.getUserID())){
-//                        instance.show(aContext);
-//                        try {
-//                            Log.i("Vote_success", "Start perform");
-//                            commentController.upvoteComment(comment);
-//                        } catch (Exception e) {
-//                            Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                    break;
-//                case DOWNVOTE:
-//                    if (!comment.getDownvoters().contains(currentUser.getUserID())) {
-//                        instance.show(aContext);
-//                        try {
-//                            Log.i("Vote_success", "Start perform");
-//                            commentController.downvoteComment(comment);
-//                        } catch (Exception e) {
-//                            Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                    break;
-//                default:
-//                    throw new UnsupportedOperationException("There is no such mode");
-//            }
-//        }
-//        else {
-//            Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
-//        }
-//    }
+    private void voteComment(int mode, Comment comment) {
+        User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
+        if (InternetCheckingController.isOnline(aContext)) {
+            Log.i("Vote_success", "Has internet");
+            CommentController commentController = new CommentController(aContext);
+            ProgressDialog instance = ProgressDialog.getInstance();
+            switch (mode) {
+                case UPVOTE:
+                    if (!comment.getUpvoters().contains(currentUser.getUserID())) {
+                        instance.show(aContext);
+                        try {
+                            Log.i("Vote_success", "Start perform");
+                            commentController.upvoteComment(comment);
+                        } catch (Exception e) {
+                            Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    break;
+                case DOWNVOTE:
+                    if (!comment.getDownvoters().contains(currentUser.getUserID())) {
+                        instance.show(aContext);
+                        try {
+                            Log.i("Vote_success", "Start perform");
+                            commentController.downvoteComment(comment);
+                        } catch (Exception e) {
+                            Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    break;
+                default:
+                    throw new UnsupportedOperationException("There is no such mode");
+            }
+        } else {
+            Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
+        }
+    }
 }

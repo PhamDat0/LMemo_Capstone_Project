@@ -9,6 +9,7 @@ import com.example.lmemo_capstone_project.controller.my_account_controller.MyAcc
 import com.example.lmemo_capstone_project.model.Comment;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -44,6 +45,7 @@ public class CommentController {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.d("COMMENT_CONTROLLER", "Add successfully");
+                ProgressDialog.getInstance().dismiss();
             }
         });
     }
@@ -75,6 +77,7 @@ public class CommentController {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d("COMMENT_CONTROLLER", "Update content successfully");
+                ProgressDialog.getInstance().dismiss();
             }
         });
     }
@@ -82,20 +85,20 @@ public class CommentController {
 
     }
     public void upvoteComment(Comment comment){
-        if(comment.getUpvoters().contains(user.getUserID())){
+        if (!comment.getUpvoters().contains(user.getUserID())) {
             int pointForOwner = comment.getUpvoters().contains(user.getUserID()) ? 2 : 1;
             performVoteComment(comment, UPVOTE, pointForOwner);
         }
     }
     public void downvoteComment(Comment comment){
-        if(comment.getDownvoters().contains(user.getUserID())){
+        if (!comment.getDownvoters().contains(user.getUserID())) {
             int pointForOwner = comment.getDownvoters().contains(user.getUserID()) ? -2 : -1;
             performVoteComment(comment, DOWNVOTE, pointForOwner);
         }
     }
     private void performVoteComment(final Comment comment, final int mode, final int pointForOwner){
         if (!user.getUserID().equalsIgnoreCase("GUEST")) {
-            final DocumentReference docRef = db.collection("comments").document("");
+            final DocumentReference docRef = db.collection("comments").document(comment.getCommentID());
             docRef.update("upvoter", FieldValue.arrayRemove(user.getUserID()),
                     "downvoter", FieldValue.arrayRemove(user.getUserID()),
                     mode == UPVOTE ? "upvoter" : "downvoter",
@@ -105,6 +108,7 @@ public class CommentController {
                     Log.i("Vote_success", "DELETE FROM LIST");
                     new MyAccountController().increaseUserPoint(comment.getUserID(), pointForOwner);
                     Log.i("Vote_success", mode == UPVOTE ? "upvote" : "downvote" + " on " + comment.getCommentID() + " by " + user.getUserID());
+                    ProgressDialog.getInstance().dismiss();
                 }
             });
         }
