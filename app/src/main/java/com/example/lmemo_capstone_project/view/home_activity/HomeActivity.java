@@ -22,6 +22,7 @@ import com.example.lmemo_capstone_project.controller.database_controller.LMemoDa
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
+import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.home_activity.account_view.MyAccountFragment;
 import com.example.lmemo_capstone_project.view.home_activity.account_view.SignInFragment;
@@ -34,6 +35,7 @@ import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.Flas
 import com.example.lmemo_capstone_project.view.home_activity.note_view.NotesFragment;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.SearchFragment;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
+import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.SetFlashCardFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -212,7 +214,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.commit();
         } else if (id == R.id.myFlashcard) {
             showFlashcardFragment();
-        } else if (id == R.id.myNote) {
+        } else if (id == R.id.setFlashcard) {
+            SetFlashCardFragment fragment = new SetFlashCardFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "setFlashcard");
+            fragmentTransaction.commit();
+        }
+        else if (id == R.id.myNote) {
             showNoteFragment();
         } else if (id == R.id.settings) {
             SettingsFragment fragment = new SettingsFragment();
