@@ -108,7 +108,7 @@ public class CommentAdapter extends BaseAdapter {
                 voteComment(UPVOTE, comment);
             }
         });
-        holder.tvlikeNumbers.setOnClickListener(new View.OnClickListener() {
+        holder.tvLikeNumbers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 voteComment(UPVOTE, comment);
@@ -120,7 +120,7 @@ public class CommentAdapter extends BaseAdapter {
                 voteComment(DOWNVOTE, comment);
             }
         });
-        holder.tvdislikeNumbers.setOnClickListener(new View.OnClickListener() {
+        holder.tvDislikeNumbers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 voteComment(DOWNVOTE, comment);
@@ -130,13 +130,13 @@ public class CommentAdapter extends BaseAdapter {
 
     private void setTextForCommentInfo(ViewHolder holder, User creator, Reward reward, Comment comment) {
         if (creator.isGender()) {
-            holder.tvUser.setText(String.format("    %s", creator.getDisplayName()));
+            holder.tvUser.setText(creator.getDisplayName());
             holder.tvUser.setTextColor(Color.BLUE);
         } else {
-            holder.tvUser.setText(String.format("    %s", creator.getDisplayName()));
+            holder.tvUser.setText(creator.getDisplayName());
             holder.tvUser.setTextColor(Color.MAGENTA);
         }
-        holder.tvCommentContent.setText(String.format("    %s", comment.getContent()));
+        holder.tvCommentContent.setText(comment.getContent());
         holder.tvReward.setText(reward.getRewardName());
     }
 
@@ -144,24 +144,24 @@ public class CommentAdapter extends BaseAdapter {
         if (upvoterList.contains(currentUser.getUserID())) {
             SpannableString spanString = new SpannableString(upvoterList.size() + "");
             spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-            holder.tvlikeNumbers.setText(spanString);
-            holder.tvlikeNumbers.setTextColor(Color.BLUE);
+            holder.tvLikeNumbers.setText(spanString);
+            holder.tvLikeNumbers.setTextColor(Color.BLUE);
         } else {
             SpannableString spanString = new SpannableString(upvoterList.size() + "");
             spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
-            holder.tvlikeNumbers.setText(spanString);
-            holder.tvlikeNumbers.setTextColor(Color.BLACK);
+            holder.tvLikeNumbers.setText(spanString);
+            holder.tvLikeNumbers.setTextColor(Color.BLACK);
         }
         if (downvoterList.contains(currentUser.getUserID())) {
             SpannableString spanString = new SpannableString(downvoterList.size() + "");
             spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-            holder.tvdislikeNumbers.setText(spanString);
-            holder.tvdislikeNumbers.setTextColor(Color.BLUE);
+            holder.tvDislikeNumbers.setText(spanString);
+            holder.tvDislikeNumbers.setTextColor(Color.BLUE);
         } else {
             SpannableString spanString = new SpannableString(downvoterList.size() + "");
             spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
-            holder.tvdislikeNumbers.setText(spanString);
-            holder.tvdislikeNumbers.setTextColor(Color.BLACK);
+            holder.tvDislikeNumbers.setText(spanString);
+            holder.tvDislikeNumbers.setTextColor(Color.BLACK);
         }
     }
 
@@ -174,8 +174,8 @@ public class CommentAdapter extends BaseAdapter {
         holder.ibDelete = convertView.findViewById(R.id.ibDeleteNote);
         holder.ibEdit = convertView.findViewById(R.id.ibEditNote);
         holder.ibtUpvote = convertView.findViewById(R.id.btUpvote);
-        holder.tvlikeNumbers = convertView.findViewById(R.id.tvlikeNumbers);
-        holder.tvdislikeNumbers = convertView.findViewById(R.id.tvdislikeNumbers);
+        holder.tvLikeNumbers = convertView.findViewById(R.id.tvlikeNumbers);
+        holder.tvDislikeNumbers = convertView.findViewById(R.id.tvdislikeNumbers);
         holder.tvComment = convertView.findViewById(R.id.tvComment);
         holder.ibtDownvote = convertView.findViewById(R.id.btDownvote);
         holder.btViewComment = convertView.findViewById(R.id.btViewComment);
@@ -193,8 +193,8 @@ public class CommentAdapter extends BaseAdapter {
         TextView tvUser;
         TextView tvReward;
         TextView tvCommentContent;
-        TextView tvlikeNumbers;
-        TextView tvdislikeNumbers;
+        TextView tvLikeNumbers;
+        TextView tvDislikeNumbers;
         TextView tvComment;
         ImageButton ibDelete;
         ImageButton ibEdit;

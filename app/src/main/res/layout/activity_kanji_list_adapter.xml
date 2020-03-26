@@ -13,12 +13,12 @@
         android:textSize="120sp"
         android:gravity="center"
         android:textColor="#DA0F0F"
-        android:layout_marginBottom="25dp"
-        />
+        android:layout_marginBottom="25dp" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="75dp"

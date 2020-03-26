@@ -12,83 +12,82 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:background="#2C03F4E0"
         android:orientation="horizontal">
-
         <LinearLayout
-            android:layout_width="325dp"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tvUser"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center|left"
+            android:orientation="horizontal">
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10sp"
-                android:autoSizeMaxTextSize="15sp"
-                android:autoSizeMinTextSize="10sp"
-                android:gravity="center_vertical"
-                android:textColor="#DA0F0F"
-                android:textSize="15sp" />
-
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_reward"/>
             <TextView
                 android:id="@+id/tvReward"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"
                 android:autoSizeMaxTextSize="15sp"
                 android:autoSizeMinTextSize="10sp"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorPrimary"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/darkGray"
+                android:text="xyz"
                 android:textSize="15sp" />
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right"
+            android:gravity="center|right">
             <ImageButton
                 android:id="@+id/ibEditNote"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:src="@drawable/ic_edit" />
-
+                android:src="@drawable/ic_edit"
+                android:background="@color/white" />
             <ImageButton
                 android:id="@+id/ibDeleteNote"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_trash"
                 android:layout_marginRight="10dp"
-                android:background="@color/white"
-                android:src="@drawable/ic_trash" />
+                android:layout_marginLeft="10dp"
+                android:background="@color/white" />
         </LinearLayout>
-
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#2C03F4E0">
-
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvUser"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10sp"
+            android:autoSizeMaxTextSize="15sp"
+            android:autoSizeMinTextSize="10sp"
+            android:text="abc"
+            android:textSize="20sp" />
         <TextView
             android:id="@+id/tvNoteContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:scrollbars="vertical" />
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/colorPrimary"
+            android:scrollbars="vertical"
+            android:textSize="20sp" />
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#2C03F4E0"
+        android:background="@color/white"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="30dp">
 
             <ImageButton
                 android:id="@+id/btUpvote"
@@ -129,14 +128,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
-            android:gravity="top|right">
+            android:gravity="center|right"
+            android:layout_marginRight="10dp">
 
             <ImageButton
                 android:id="@+id/btAddComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:layout_marginTop="2dp"
                 android:src="@drawable/ic_review" />
 
             <TextView
@@ -145,11 +145,10 @@
                 android:layout_height="wrap_content"
                 android:text="Add Comment"
                 android:textColor="#000000"
-                android:textSize="15sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
     </LinearLayout>
-
     <ListView
         android:id="@+id/commentListView"
         android:layout_width="match_parent"
