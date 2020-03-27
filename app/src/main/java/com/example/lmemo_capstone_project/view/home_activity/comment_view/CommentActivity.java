@@ -126,6 +126,12 @@ public class CommentActivity extends AppCompatActivity {
                 }
             }
         });
+        ibDeleteNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     private Intent prepareIntentForCreateCommentActivity(int mode) {

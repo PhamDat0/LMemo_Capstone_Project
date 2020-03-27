@@ -3,6 +3,8 @@ package com.example.lmemo_capstone_project.controller.comment_controller;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.controller.my_account_controller.MyAccountController;
@@ -10,6 +12,7 @@ import com.example.lmemo_capstone_project.model.Comment;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -83,6 +86,31 @@ public class CommentController {
     }
     private void getAllDataOfComment(){
 
+    }
+    public void deleteCommentFromFB(Comment comment) {
+        String commentID = comment.getCommentID();
+        Log.w("AddCommentActivity", "OnlineID controller 2" + comment.getCommentID());
+        db.collection("comments").document(commentID).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("EditCommentController", "DocumentSnapshot successfully deleted!");
+                        updateUserContributionPoint(-1);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+        comment.setCommentID(null);
+    }
+
+    private void updateUserContributionPoint(int addPoint) {
+        user.setContributionPoint(user.getContributionPoint() + addPoint);
+        MyAccountController myAccountController = new MyAccountController();
+        myAccountController.updateUser(user);
+        userDAO.updateUser(user);
     }
     public void upvoteComment(Comment comment){
         if (!comment.getUpvoters().contains(user.getUserID())) {

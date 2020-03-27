@@ -102,6 +102,19 @@ public class CommentAdapter extends BaseAdapter {
                 aContext.startActivityForResult(intent, CommentActivity.EDIT_COMMENT_REQUEST_CODE);
             }
         });
+        holder.ibDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommentController commentController = new CommentController(aContext);
+                if (InternetCheckingController.isOnline(aContext)) {
+                    Log.w("AddCommentActivity", "OnlineID adapter: " + comment.getCommentID());
+                    commentController.deleteCommentFromFB(comment);
+                    updateUI(comment);
+                } else {
+                    Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         holder.ibtUpvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +140,10 @@ public class CommentAdapter extends BaseAdapter {
             }
         });
     }
-
+    private void updateUI(Comment comment) {
+        commentList.remove(comment);
+        this.notifyDataSetChanged();
+    }
     private void setTextForCommentInfo(ViewHolder holder, User creator, Reward reward, Comment comment) {
         if (creator.isGender()) {
             holder.tvUser.setText(creator.getDisplayName());
