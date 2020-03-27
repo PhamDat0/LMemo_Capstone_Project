@@ -36,6 +36,7 @@ import com.example.lmemo_capstone_project.view.home_activity.note_view.NotesFrag
 import com.example.lmemo_capstone_project.view.home_activity.search_view.SearchFragment;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
 import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.SetFlashCardFragment;
+import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.SetFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -215,9 +216,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.myFlashcard) {
             showFlashcardFragment();
         } else if (id == R.id.setFlashcard) {
-            SetFlashCardFragment fragment = new SetFlashCardFragment();
+            SetFragment fragment = new SetFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "setFlashcard");
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "setFragment");
             fragmentTransaction.commit();
         }
         else if (id == R.id.myNote) {
