@@ -28,22 +28,25 @@ public class WordOfTheDayController {
         }
     }
 
-    public void startAlarm(boolean isNotification, boolean isRepeat, Activity activity) {
+    public static void startAlarm(boolean isNotification, boolean isRepeat, Activity activity, long dailyTime) {
 
         Intent myIntent;
         PendingIntent pendingIntent;
 
-        // SET TIME HERE
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
-        calendar.set(Calendar.MINUTE, 00);
-        myIntent = new Intent(activity.getApplicationContext(), WordOfDayReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(activity.getApplicationContext(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager manager = (AlarmManager) activity.getSystemService(activity.getApplicationContext().ALARM_SERVICE);
-        if (!isRepeat)
-            manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
-        else
-            manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            // SET TIME HERE
+            myIntent = new Intent(activity.getApplicationContext(), WordOfDayReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(activity.getApplicationContext(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (isNotification){
+            AlarmManager manager = (AlarmManager) activity.getApplicationContext().getSystemService(activity.getApplicationContext().ALARM_SERVICE);
+            if (!isRepeat)
+                manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);
+            else {
+                manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, dailyTime, AlarmManager.INTERVAL_DAY, pendingIntent);
+            }
+        }
+
+
     }
 
 
