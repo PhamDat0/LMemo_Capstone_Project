@@ -128,11 +128,9 @@ public class CreateSetActivity extends AppCompatActivity {
             if (!txtSetName.getText().toString().isEmpty()) {
                 if (!isSetPublic.isChecked()) {
                     setFlashcardController.createNewSet(txtSetName.getText().toString(), associatedWordAdapter.getListOfWord(), isSetPublic.isChecked());
-//                    addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtSetName.getText().toString(), isSetPublic.isChecked());
                     Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
                 } else if (InternetCheckingController.isOnline(getApplicationContext())) {
                     setFlashcardController.createNewSet(txtSetName.getText().toString(), associatedWordAdapter.getListOfWord(), isSetPublic.isChecked());
-//                    addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtSetName.getText().toString(), isSetPublic.isChecked());
                     Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
