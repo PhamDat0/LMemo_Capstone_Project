@@ -1,7 +1,6 @@
 package com.example.lmemo_capstone_project.view.home_activity.flashcard_view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
-import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.controller.flashcard_controller.FlashcardController;
-import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 
 import java.util.ArrayList;
@@ -27,14 +24,14 @@ public class FlashcardListAdapter extends BaseAdapter {
 
     private Activity aContext;
     private ArrayList<Word> listFlashcard;
-    private LayoutInflater layoutInflater;
-    private FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(aContext).flashcardDAO();
+    private FlashcardDAO flashcardDAO;
     private FlashcardController flashcardController;
 
     public FlashcardListAdapter(Activity aContext, ArrayList<Word> listFlashcard) {
         this.aContext = aContext;
         this.listFlashcard = listFlashcard;
-        layoutInflater = LayoutInflater.from(aContext);
+        flashcardDAO = LMemoDatabase.getInstance(aContext).flashcardDAO();
+//        LayoutInflater layoutInflater = LayoutInflater.from(aContext);
     }
 
     @Override
@@ -117,8 +114,6 @@ public class FlashcardListAdapter extends BaseAdapter {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
-
-
 
     static class ViewHolder {
         TextView tvKanji;

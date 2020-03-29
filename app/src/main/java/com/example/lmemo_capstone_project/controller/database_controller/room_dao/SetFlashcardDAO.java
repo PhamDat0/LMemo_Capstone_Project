@@ -32,4 +32,7 @@ public interface SetFlashcardDAO {
 
     @Query("SELECT * FROM SetFlashcard ORDER BY SetID DESC LIMIT 1")
     SetFlashcard[] getLastSet();
+
+    @Query("SELECT * FROM SetFlashcard WHERE OnlineID=:onlineID")
+    SetFlashcard[] getSetWithOnlineID(String onlineID);
 }

@@ -14,10 +14,9 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
-import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.database_controller.room_dao.SetFlashcardDAO;
+import com.example.lmemo_capstone_project.controller.set_flashcard_controller.GetSetFlashcardController;
+import com.example.lmemo_capstone_project.controller.set_flashcard_controller.SetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
-import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -26,7 +25,9 @@ public class SetFlashCardFragment extends Fragment {
     private Button btAddSet;
     private Button btBrowseSet;
     private ListView lvSetList;
-    private SetFlashcardDAO setFlashcardDAO;
+    private GetSetFlashcardController getSetFlashcardController;
+    private SetFlashcardController setFlashcardController;
+    private EditText etSearch;
 
     public SetFlashCardFragment() {
         // Required empty public constructor
@@ -79,8 +80,8 @@ public class SetFlashCardFragment extends Fragment {
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SetFlashcard setFlashcardFromUser = getSetFlashcardFromUser(input.getText().toString());
-                setFlashcardDAO.insertSetFlashcard(setFlashcardFromUser);
+                String setName = input.getText().toString();
+                setFlashcardController.createNewSet(setName);
                 loadOfflineSet();
             }
         });
@@ -93,26 +94,17 @@ public class SetFlashCardFragment extends Fragment {
         builder.show();
     }
 
-    private SetFlashcard getSetFlashcardFromUser(String name) {
-        SetFlashcard result = new SetFlashcard();
-        result.setCreatorID(LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0].getUserID());
-        result.setPublic(false);
-        try {
-            result.setSetID(setFlashcardDAO.getLastSet()[0].getSetID() + 1);
-        } catch (Exception e) {
-            result.setSetID(1);
-        }
-        result.setSetName(name);
-        return result;
-    }
-
     private void loadOnlineNote() {
-
+        getSetFlashcardController.getOnlineSet();
     }
 
     private void loadOfflineSet() {
-        List<SetFlashcard> setFlashcards = Lists.newArrayList(setFlashcardDAO.getAllSets());
-        SetFlashcardAdapter setFlashcardAdapter = new SetFlashcardAdapter(setFlashcards, getActivity(), SetFlashcardAdapter.OFFLINE_MODE);
+        List<SetFlashcard> setFlashcards = getSetFlashcardController.getOfflineSet();
+        updateUI(setFlashcards, SetFlashcardAdapter.OFFLINE_MODE);
+    }
+
+    public void updateUI(List<SetFlashcard> setFlashcards, int mode) {
+        SetFlashcardAdapter setFlashcardAdapter = new SetFlashcardAdapter(setFlashcards, getActivity(), mode);
         lvSetList.setAdapter(setFlashcardAdapter);
     }
 
@@ -120,6 +112,8 @@ public class SetFlashCardFragment extends Fragment {
         btAddSet = view.findViewById(R.id.btAddSet);
         btBrowseSet = view.findViewById(R.id.btBrowseSet);
         lvSetList = view.findViewById(R.id.lvSetList);
-        setFlashcardDAO = LMemoDatabase.getInstance(getContext()).setFlashcardDAO();
+        etSearch = view.findViewById(R.id.etSearchForSet);
+        getSetFlashcardController = new GetSetFlashcardController(this);
+        setFlashcardController = new SetFlashcardController(getActivity());
     }
 }

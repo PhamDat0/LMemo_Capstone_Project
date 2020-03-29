@@ -35,4 +35,7 @@ public interface UserDAO {
     @Transaction
     @Query("SELECT * FROM User order by UserID asc LIMIT 1")
     List<UserWithSets> getUserWithSets();
+
+    @Query("SELECT * FROM User WHERE UserID = :creatorID")
+    User[] getUserByID(String creatorID);
 }

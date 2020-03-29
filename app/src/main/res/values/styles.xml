@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 <!--        <item name="fontFamily">@font/hanamina</item>-->
-        <item name="fontFamily">@font/yumin</item>
+        <item name="fontFamily">@font/hanamina</item>
 <!--        <item name="fontFamily">@font/yumindb</item>-->
 <!--        <item name="fontFamily">@font/yuminl</item>-->
     </style>
@@ -16,19 +16,19 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 <!--        <item name="fontFamily">@font/hanamina</item>-->
-        <item name="fontFamily">@font/yumin</item>
+        <item name="fontFamily">@font/hanamina</item>
         <!--        <item name="fontFamily">@font/yumindb</item>-->
         <!--        <item name="fontFamily">@font/yuminl</item>-->
     </style>
     <style name="AppTheme.AppBarOverLay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
 <!--        <item name="fontFamily">@font/hanamina</item>-->
-        <item name="fontFamily">@font/yumin</item>
+        <item name="fontFamily">@font/hanamina</item>
         <!--        <item name="fontFamily">@font/yumindb</item>-->
         <!--        <item name="fontFamily">@font/yuminl</item>-->
     </style>
     <style name="AppTheme.PopupOverLay" parent="ThemeOverlay.AppCompat.Light">
 <!--        <item name="fontFamily">@font/hanamina</item>-->
-        <item name="fontFamily">@font/yumin</item>
+        <item name="fontFamily">@font/hanamina</item>
         <!--        <item name="fontFamily">@font/yumindb</item>-->
         <!--        <item name="fontFamily">@font/yuminl</item>-->
     </style>

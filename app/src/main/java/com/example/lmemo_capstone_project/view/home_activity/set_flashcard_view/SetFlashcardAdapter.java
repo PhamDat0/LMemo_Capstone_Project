@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,15 +62,21 @@ public class SetFlashcardAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
         SetFlashcard setFlashcard = setFlashcardList.get(position);
-        holder.tvSetName.setText(setFlashcard.getSetName());
+
+        setupContent(holder, setFlashcard);
         setVisibleForButtons(setFlashcard, holder);
         setActionForButtons(setFlashcard, holder);
         return convertView;
     }
 
-    private void setActionForButtons(final SetFlashcard setFlashcard, ViewHolder holder) {
+    private void setupContent(ViewHolder holder, SetFlashcard setFlashcard) {
+        holder.tvSetName.setText("Set Name: " + setFlashcard.getSetName());
+        holder.tvCreatorDisplayName.setText(setFlashcard.getCreator().getDisplayName());
+        holder.tvCreatorReward.setText(LMemoDatabase.getInstance(aContext).rewardDAO().getBestReward(setFlashcard.getCreator().getContributionPoint())[0].getRewardName());
+    }
+
+    private void setActionForButtons(final SetFlashcard setFlashcard, final ViewHolder holder) {
         final SetFlashcardController setFlashcardController = new SetFlashcardController(aContext);
         holder.swPublic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -79,32 +86,75 @@ public class SetFlashcardAdapter extends BaseAdapter {
                         try {
                             setFlashcardController.uploadSetToFirebase(setFlashcard);
                         } catch (UnsupportedOperationException e) {
+                            holder.swPublic.setChecked(false);
                             Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     } else {
                         setFlashcardController.makeSetPrivate(setFlashcard);
                     }
                 } else {
-                    Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
+                    holder.swPublic.setChecked(false);
+                    notifyNoInternet();
                 }
             }
         });
         holder.ibChangeWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(aContext, CreateSetActivity.class);
+                intent.putExtra("mode", CreateSetActivity.IN_EDITING_MODE);
+                intent.putExtra("set", setFlashcard);
+                aContext.startActivity(intent);
+            }
+        });
+        holder.ibReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
+        holder.ibDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (setFlashcard.isPublic()) {
+                    if (InternetCheckingController.isOnline(aContext)) {
+                        setFlashcardController.deleteSetFromFirebase(setFlashcard);
+                        setFlashcardList.remove(setFlashcard);
+                    } else {
+                        notifyNoInternet();
+                    }
+                } else {
+                    setFlashcardController.deleteOfflineSet(setFlashcard);
+                    setFlashcardList.remove(setFlashcard);
+                }
+                notifyDataSetChanged();
+            }
+        });
+        holder.ibDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFlashcardController.downloadSet(setFlashcard);
             }
         });
     }
 
+    private void notifyNoInternet() {
+        Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
+    }
+
     private void setVisibleForButtons(SetFlashcard setFlashcard, ViewHolder holder) {
         boolean isOwner = isOwner(setFlashcard);
-        holder.swPublic.setVisibility(isOwner && !setFlashcard.getCreatorID().equalsIgnoreCase("GUEST") ? View.VISIBLE : View.INVISIBLE);
+        boolean isGuest = isBelongToGuest(setFlashcard);
+        holder.swPublic.setVisibility((isOwner && !isGuest) ? View.VISIBLE : View.INVISIBLE);
         holder.swPublic.setChecked(setFlashcard.isPublic());
         holder.ibChangeWord.setVisibility(isOwner ? View.VISIBLE : View.INVISIBLE);
         holder.ibDelete.setVisibility(isOwner ? View.VISIBLE : View.INVISIBLE);
         holder.ibReview.setVisibility(isInOfflineMode() ? View.VISIBLE : View.INVISIBLE);
         holder.ibDownload.setVisibility((!isInOfflineMode() && !isOwner(setFlashcard)) ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private boolean isBelongToGuest(SetFlashcard setFlashcard) {
+        return setFlashcard.getCreatorID().equalsIgnoreCase("GUEST");
     }
 
     private boolean isInOfflineMode() {
@@ -124,12 +174,14 @@ public class SetFlashcardAdapter extends BaseAdapter {
         viewHolder.ibChangeWord = convertView.findViewById(R.id.ibChangeWord);
         viewHolder.ibDelete = convertView.findViewById(R.id.ibDelete);
         viewHolder.ibDownload = convertView.findViewById(R.id.ibDownload);
+        viewHolder.tvCreatorDisplayName = convertView.findViewById(R.id.tvCreatorDisplayName);
+        viewHolder.tvCreatorReward = convertView.findViewById(R.id.tvCreatorReward);
 
         return viewHolder;
     }
 
     private static class ViewHolder {
-        TextView tvSetName;
+        TextView tvSetName, tvCreatorDisplayName, tvCreatorReward;
         Switch swPublic;
         ImageButton ibReview, ibChangeWord, ibDelete, ibDownload;
     }

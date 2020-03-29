@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.home_activity.comment_view.CommentActivity"></activity>
+        <activity android:name=".view.home_activity.set_flashcard_view.CreateSetActivity"></activity>
+        <activity android:name=".view.home_activity.comment_view.CommentActivity" />
         <activity android:name=".view.home_activity.comment_view.AddCommentActivity" />
         <activity
             android:name=".view.home_activity.note_view.CreateNoteActivity"

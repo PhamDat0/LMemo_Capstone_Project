@@ -27,6 +27,29 @@
             android:visibility="visible" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etSearchForSet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:hint="Search Here"
+            android:inputType="textPersonName"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_search" />
+
+    </LinearLayout>
+
     <ListView
         android:id="@+id/lvSetList"
         android:layout_width="match_parent"

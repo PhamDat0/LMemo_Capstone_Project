@@ -1,7 +1,6 @@
-package com.example.lmemo_capstone_project.view.home_activity.note_view;
+package com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
@@ -25,46 +24,41 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lmemo_capstone_project.R;
-import com.example.lmemo_capstone_project.controller.CannotPerformFirebaseRequest;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
+import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardBelongToSetDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
-import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteOfWordDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
-import com.example.lmemo_capstone_project.controller.note_controller.NoteController;
 import com.example.lmemo_capstone_project.controller.search_controller.SearchController;
 import com.example.lmemo_capstone_project.controller.search_controller.WordNotFoundException;
-import com.example.lmemo_capstone_project.model.room_db_entity.Note;
-import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
+import com.example.lmemo_capstone_project.controller.set_flashcard_controller.SetFlashcardController;
+import com.example.lmemo_capstone_project.model.room_db_entity.FlashcardBelongToSet;
+import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
-import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.AssociatedWordAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateNoteActivity extends AppCompatActivity {
+public class CreateSetActivity extends AppCompatActivity {
 
     public static final int IN_ADDING_MODE = 1;
     public static final int IN_EDITING_MODE = 0;
     private AutoCompleteTextView txtWord;
-    private EditText txtTakeNote;
-    private Button btnAddNote;
-    private Switch isNotePublic;
-    private Button btnCancelAddNote;
-    private ListView listAssocitatedWord;
+    private EditText txtSetName;
+    private Button btnAddSet;
+    private Switch isSetPublic;
+    private Button btnCancelAddSet;
     private int mode;
-    private Word word;
-    private Note note;
+    private SetFlashcard setFlashcard;
     private SearchController searchController;
-    private List<Word> listWord;
     private AssociatedWordAdapter associatedWordAdapter;
-    private NoteController addNoteController;
+    private SetFlashcardController setFlashcardController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.demo_popup_add_note);
+        setContentView(R.layout.demo_popup_add_set);
         setUpReference();
         setUpSuggestion();
         setUpAction();
@@ -76,20 +70,16 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     private void setUpActionForButton() {
-        btnAddNote.setOnClickListener(new View.OnClickListener() {
+        btnAddSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideKeyboard(getThisActivity());
                 switch (mode) {
                     case IN_ADDING_MODE:
-                        addNoteHandle();
-                        Intent intent = new Intent();
-                        intent.putExtra("wordID", word.getWordID());
-                        setResult(HomeActivity.ADD_NOTE_REQUEST_CODE, intent);
+                        addSetHandle();
                         break;
                     case IN_EDITING_MODE:
-                        editNoteHandle();
-                        setResult(HomeActivity.EDIT_NOTE_REQUEST_CODE);
+                        editSetHandle();
                         break;
                     default:
                         Toast.makeText(getApplicationContext(), "There's no such that mode", Toast.LENGTH_LONG).show();
@@ -97,7 +87,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                 finish();
             }
         });
-        btnCancelAddNote.setOnClickListener(new View.OnClickListener() {
+        btnCancelAddSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideKeyboard(getThisActivity());
@@ -110,45 +100,47 @@ public class CreateNoteActivity extends AppCompatActivity {
         return this;
     }
 
-    private void editNoteHandle() {
-        if (!txtTakeNote.getText().toString().isEmpty()) {
-            if (note.isPublic() || isNotePublic.isChecked()) {
+    private void editSetHandle() {
+        if (!txtSetName.getText().toString().isEmpty()) {
+            if (setFlashcard.isPublic() || isSetPublic.isChecked()) {
                 if (InternetCheckingController.isOnline(getApplicationContext())) {
-                    performEditNote();
+                    performEditSet();
                 } else {
                     Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
                 }
             } else {
-                performEditNote();
+                performEditSet();
             }
         } else {
-            txtTakeNote.setError("Please enter note");
+            txtSetName.setError("Please enter note");
         }
     }
 
-    private void performEditNote() {
-        NoteController editAndDeleteNoteController = new NoteController(this);
-        editAndDeleteNoteController.updateNote(note, txtTakeNote.getText().toString(), isNotePublic.isChecked(), associatedWordAdapter.getListOfWord());
+    private void performEditSet() {
+        setFlashcardController.updateSet(setFlashcard, txtSetName.getText().toString(), isSetPublic.isChecked(), associatedWordAdapter.getListOfWord());
+
+//        NoteController editAndDeleteNoteController = new NoteController(this);
+//        editAndDeleteNoteController.updateNote(setFlashcard, txtSetName.getText().toString(), isSetPublic.isChecked(), associatedWordAdapter.getListOfWord());
     }
 
-    private void addNoteHandle() {
+    private void addSetHandle() {
         try {
-            if (!txtTakeNote.getText().toString().isEmpty()) {
-                if (!isNotePublic.isChecked()) {
-                    addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
-                    Toast.makeText(getApplicationContext(), "Add note successful", Toast.LENGTH_LONG).show();
+            if (!txtSetName.getText().toString().isEmpty()) {
+                if (!isSetPublic.isChecked()) {
+                    setFlashcardController.createNewSet(txtSetName.getText().toString(), associatedWordAdapter.getListOfWord(), isSetPublic.isChecked());
+//                    addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtSetName.getText().toString(), isSetPublic.isChecked());
+                    Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
                 } else if (InternetCheckingController.isOnline(getApplicationContext())) {
-                    addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
-                    Toast.makeText(getApplicationContext(), "Add note successful", Toast.LENGTH_LONG).show();
+                    setFlashcardController.createNewSet(txtSetName.getText().toString(), associatedWordAdapter.getListOfWord(), isSetPublic.isChecked());
+//                    addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtSetName.getText().toString(), isSetPublic.isChecked());
+                    Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
                 }
             } else {
-                txtTakeNote.setError("Please enter note");
+                txtSetName.setError("Please enter note");
             }
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-        } catch (CannotPerformFirebaseRequest e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
@@ -222,51 +214,55 @@ public class CreateNoteActivity extends AppCompatActivity {
     private void addToListView(Word word) {
 //        Log.d("SetUpAdapter", "success");
         associatedWordAdapter.addWordToList(word);
+        if (associatedWordAdapter.getCount() >= 10) {
+            isSetPublic.setVisibility(View.VISIBLE);
+        } else {
+            isSetPublic.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setUpReference() {
-        listWord = new ArrayList<>();
+        List<Word> listWord = new ArrayList<>();
         txtWord = findViewById(R.id.txtWord);
-        txtTakeNote = findViewById(R.id.txtTakeNote);
-        btnAddNote = findViewById(R.id.btnAddNote);
-        isNotePublic = findViewById(R.id.isNotePublic);
-        btnCancelAddNote = findViewById(R.id.btnCancelAddNote);
-        listAssocitatedWord = findViewById(R.id.listAssocitatedWord);
+        txtSetName = findViewById(R.id.txtTakeNote);
+        btnAddSet = findViewById(R.id.btnAddNote);
+        isSetPublic = findViewById(R.id.isNotePublic);
+        btnCancelAddSet = findViewById(R.id.btnCancelAddNote);
+        ListView listAssocitatedWord = findViewById(R.id.listAssocitatedWord);
         associatedWordAdapter = new AssociatedWordAdapter(this, listWord);
         listAssocitatedWord.setAdapter(associatedWordAdapter);
         WordDAO wordDAO = LMemoDatabase.getInstance(getApplicationContext()).wordDAO();
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
-        if (LMemoDatabase.getInstance(getApplicationContext()).userDAO().getLocalUser()[0].getUserID().equalsIgnoreCase("GUEST")) {
-            isNotePublic.setVisibility(View.INVISIBLE);
+        if (LMemoDatabase.getInstance(getApplicationContext()).userDAO().getLocalUser()[0].isGuest() || listWord.size() < 10) {
+            isSetPublic.setVisibility(View.INVISIBLE);
+            isSetPublic.setChecked(false);
         }
         searchController = new SearchController(wordDAO, flashcardDAO);
-        addNoteController = new NoteController(this);
+        setFlashcardController = new SetFlashcardController(this);
         mode = getIntent().getIntExtra("mode", IN_ADDING_MODE);
         switch (mode) {
             case IN_ADDING_MODE:
-                word = (Word) getIntent().getSerializableExtra("word");
-                addToListView(word);
-                note = new Note();
+                setFlashcard = new SetFlashcard();
                 break;
             case IN_EDITING_MODE:
-                note = (Note) getIntent().getSerializableExtra("note");
-                setUpNoteForEdit();
+                setFlashcard = (SetFlashcard) getIntent().getSerializableExtra("set");
+                setUpSetForEdit();
                 break;
             default:
                 throw new UnsupportedOperationException("Wrong mode");
         }
     }
 
-    private void setUpNoteForEdit() {
-        txtTakeNote.setText(note.getNoteContent());
-        NoteOfWordDAO noteOfWordDAO = LMemoDatabase.getInstance(getApplicationContext()).noteOfWordDAO();
-        NoteOfWord[] notesOfWord = noteOfWordDAO.getNoteOfWord(note.getNoteID());
+    private void setUpSetForEdit() {
+        txtSetName.setText(setFlashcard.getSetName());
+        FlashcardBelongToSetDAO flashcardBelongToSetDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardBelongToSetDAO();
+        FlashcardBelongToSet[] flashcardBelongToSets = flashcardBelongToSetDAO.getFlashcardBySetID(setFlashcard.getSetID());
         WordDAO wordDAO = LMemoDatabase.getInstance(getApplicationContext()).wordDAO();
-        for (NoteOfWord noteOfWord : notesOfWord) {
-            Log.i("READ_HAS_NO_DEFECTS", noteOfWord.getWordID() + "");
-            addToListView(wordDAO.getWordWithID(noteOfWord.getWordID())[0]);
+        for (FlashcardBelongToSet flashcardInSet : flashcardBelongToSets) {
+            Log.i("READ_HAS_NO_DEFECTS", flashcardInSet.getFlashcardID() + "");
+            addToListView(wordDAO.getWordWithID(flashcardInSet.getFlashcardID())[0]);
         }
-        isNotePublic.setChecked(note.isPublic());
+        isSetPublic.setChecked(setFlashcard.isPublic());
     }
 
     private void hideKeyboard(Activity activity) {
