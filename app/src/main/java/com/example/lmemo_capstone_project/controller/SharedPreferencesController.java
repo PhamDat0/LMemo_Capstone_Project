@@ -35,4 +35,62 @@ public class SharedPreferencesController {
         editor.commit();
         Log.i("TEST", hasKanjiData(context) + "");
     }
+
+
+    public static boolean dailyWordIsOn(Context context){
+            return getSharedPreferences(context).getBoolean(
+                    context.getString(R.string.daily_word_state), false);
+    }
+    public static void setDailyWordStatus(Context context, boolean isOn){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putBoolean(context.getString(R.string.daily_word_state), isOn);
+        editor.commit();
+
+    }
+    public static boolean ReminderIsOn(Context context){
+        return getSharedPreferences(context).getBoolean(
+                context.getString(R.string.reminder_state), false);
+    }
+    public static void setReminderStatus(Context context, boolean isOn){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putBoolean(context.getString(R.string.reminder_state), isOn);
+        editor.commit();
+
+    }
+    public static void setDailyWordTime(Context context, long time){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putLong(context.getString(R.string.daily_word_time), time);
+        editor.commit();
+    }
+    public static long getDailyWordTime(Context context){
+        return getSharedPreferences(context).getLong(
+                context.getString(R.string.daily_word_time), 0);
+    }
+    public static void setReminderTime(Context context, long time){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putLong(context.getString(R.string.reminder_time), time);
+        editor.commit();
+    }
+    public static long getReminderTime(Context context){
+        return getSharedPreferences(context).getLong(
+                context.getString(R.string.reminder_time), 0);
+    }
+    public static boolean dismissDailyWordIsOn(Context context){
+        return getSharedPreferences(context).getBoolean(
+                context.getString(R.string.daily_word_dismiss_status), false);
+    }
+    public static void setDailyWordDismissStatus(Context context, boolean isOn){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putBoolean(context.getString(R.string.daily_word_dismiss_status), isOn);
+        editor.commit();
+    }
+    public static boolean dismissReminderIsOn(Context context){
+        return getSharedPreferences(context).getBoolean(
+                context.getString(R.string.reminder_dismiss_status), false);
+    }
+    public static void setReminderDismissStatus(Context context, boolean isOn){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putBoolean(context.getString(R.string.reminder_dismiss_status), isOn);
+        editor.commit();
+    }
 }

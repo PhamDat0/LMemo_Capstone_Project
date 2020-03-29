@@ -22,7 +22,12 @@
     <string name="cancel">Cancel</string>
     <string name="number_of_questions">number_of_questions</string>
     <string name="country_prompt">Choose a country</string>
-
+    <string name="daily_word_state">daily_word_is_on</string>
+    <string name="reminder_state">reminder_is_on</string>
+    <string name="daily_word_time">daily_word_time</string>
+    <string name="reminder_time">reminder_time</string>
+    <string name="daily_word_dismiss_status">daily_word_dismiss_is_on</string>
+    <string name="reminder_dismiss_status">reminder_dismiss_is_on</string>
     <string-array name="sort_array">
         <item>Chronological in ascending</item>
         <item>Chronological in descending</item>

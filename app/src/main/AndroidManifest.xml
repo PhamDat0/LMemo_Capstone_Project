@@ -32,7 +32,8 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".controller.word_of_day_controller.WordOfDayReceiver" />
+        <receiver android:name=".controller.word_of_day_controller.WordOfDayReceiver"
+            />
 
         <service
             android:name=".controller.word_of_day_controller.WordService"

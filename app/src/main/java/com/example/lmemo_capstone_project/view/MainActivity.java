@@ -37,8 +37,11 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
 
         super.onStart();
-        wordOfTheDayController.startAlarm(true, false, this);
+        wordOfTheDayController.startAlarm(
+                SharedPreferencesController.dailyWordIsOn(getApplicationContext()), true, this,
+                SharedPreferencesController.getDailyWordTime(getApplicationContext()));
     }
+
 
     /**
      * この関数はプログレスバーの進度を1パーセント足します。

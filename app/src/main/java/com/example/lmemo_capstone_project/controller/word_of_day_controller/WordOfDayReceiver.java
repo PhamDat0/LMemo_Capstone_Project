@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+
+import com.example.lmemo_capstone_project.controller.SharedPreferencesController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
@@ -44,6 +46,7 @@ public class WordOfDayReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.dictionicon)
                 .setContentTitle("Word Of The Day")
                 .setContentIntent(pendingIntent)
+                .setOngoing(SharedPreferencesController.dismissDailyWordIsOn(context))
                 .setContentText(contentText)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
                 .setContentInfo("Info");
