@@ -130,6 +130,8 @@ public class SetFlashcardController {
         if (hasThisSetInSQLite(setFlashcard)) {
             setFlashcard.setSetID(getSetIDFromOnlineID(setFlashcard));
             deleteFromSQLite(setFlashcard);
+        } else {
+            setFlashcard.setSetID(setFlashcardDAO.getLastSet()[0].getSetID());
         }
         writeToSQLite(setFlashcard);
     }

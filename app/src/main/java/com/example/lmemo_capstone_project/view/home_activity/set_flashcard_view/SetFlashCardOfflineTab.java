@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.GetSetFlashcardController;
-import com.example.lmemo_capstone_project.controller.set_flashcard_controller.SetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 
 import java.util.List;
@@ -25,7 +24,6 @@ public class SetFlashCardOfflineTab extends Fragment {
 
     private Button btAddSet;
     private ListView lvSetList;
-    private SetFlashcardController setFlashcardController;
     private GetSetFlashcardController getSetFlashcardController;
 
     public SetFlashCardOfflineTab() {
@@ -102,7 +100,6 @@ public class SetFlashCardOfflineTab extends Fragment {
     private void setupReferences(View view) {
         btAddSet = view.findViewById(R.id.btAddSet);
         lvSetList = view.findViewById(R.id.lvSetList);
-        getSetFlashcardController = new GetSetFlashcardController(new SetFlashCardFragment());
-        setFlashcardController = new SetFlashcardController(getActivity());
+        getSetFlashcardController = new GetSetFlashcardController(new SetFlashCardOnlineTab());
     }
 }

@@ -6,25 +6,37 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.FlashcardBelongToSet;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
-import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.SetFlashCardFragment;
+import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.SetFlashCardOnlineTab;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.Lists;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GetSetFlashcardController {
 
+    private static final String COLLECTION_PATH = "setFlashCards";
+
     private UserDAO userDAO;
     private FlashcardBelongToSetDAO flashcardBelongToSetDAO;
-    private SetFlashCardFragment setFlashCardFragment;
+    private SetFlashCardOnlineTab setFlashCardFragment;
     private SetFlashcardDAO setFlashcardDAO;
+    private FirebaseFirestore firebaseFirestore;
+    private List<SetFlashcard> listSet;
 
-    public GetSetFlashcardController(SetFlashCardFragment setFlashCardFragment) {
+
+    public GetSetFlashcardController(SetFlashCardOnlineTab setFlashCardFragment) {
         this.setFlashCardFragment = setFlashCardFragment;
         LMemoDatabase dbInstance = LMemoDatabase.getInstance(setFlashCardFragment.getContext());
         setFlashcardDAO = dbInstance.setFlashcardDAO();
         userDAO = dbInstance.userDAO();
         flashcardBelongToSetDAO = dbInstance.flashcardBelongToSetDAO();
+        firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
     /**
@@ -47,5 +59,76 @@ public class GetSetFlashcardController {
 
     public void getOnlineSet() {
 
+    }
+
+    public void getUserOnlineSet(User currentUser) {
+        listSet = new ArrayList<>();
+        firebaseFirestore.collection(COLLECTION_PATH).whereEqualTo("userID", currentUser.getUserID())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                for (DocumentSnapshot document : documents) {
+                    SetFlashcard setFlashcard = getSetFromSnapshot(document);
+                    listSet.add(setFlashcard);
+                }
+                getSetOwners();
+            }
+        });
+    }
+
+    private void getSetOwners() {
+        for (final SetFlashcard setFlashcard : listSet) {
+            firebaseFirestore.collection("users").document(setFlashcard.getCreatorID())
+                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    User owner = getUserFromSnapshot(documentSnapshot);
+                    setFlashcard.setCreator(owner);
+                    updateInterfaceIfFinish();
+                }
+            });
+        }
+    }
+
+    private void updateInterfaceIfFinish() {
+        if (isFinish()) {
+            setFlashCardFragment.updateUI(listSet);
+        }
+    }
+
+    private boolean isFinish() {
+        for (SetFlashcard setFlashcard : listSet) {
+            if (setFlashcard.getCreator() == null)
+                return false;
+        }
+        return true;
+    }
+
+
+    private User getUserFromSnapshot(DocumentSnapshot document) {
+        User user = document.toObject(User.class);
+        Map<String, Object> userMap = document.getData();
+        user.setGender((Boolean) userMap.get("isMale"));
+        return user;
+    }
+
+    private SetFlashcard getSetFromSnapshot(DocumentSnapshot document) {
+        SetFlashcard setFlashcard = new SetFlashcard();
+        setFlashcard.setSetName((String) document.get("name"));
+        setFlashcard.setPublic(true);
+        setFlashcard.setWordID((List<Long>) document.get("flashcards"));
+        setFlashcard.setCreatorID((String) document.get("userID"));
+        setFlashcard.setCreator(null);
+        setFlashcard.setOnlineID(document.getId());
+        updateOfflineSetIfNecessary(setFlashcard);
+        return setFlashcard;
+    }
+
+    private void updateOfflineSetIfNecessary(SetFlashcard setFlashcard) {
+        if (setFlashcard.getCreatorID().equalsIgnoreCase(userDAO.getLocalUser()[0].getUserID())) {
+            SetFlashcardController setFlashcardController = new SetFlashcardController(setFlashCardFragment.getActivity());
+            setFlashcardController.downloadSet(setFlashcard);
+        }
     }
 }
