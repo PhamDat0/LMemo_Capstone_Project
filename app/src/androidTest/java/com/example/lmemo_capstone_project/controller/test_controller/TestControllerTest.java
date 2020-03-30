@@ -43,7 +43,7 @@ public class TestControllerTest {
 
     @Test
     public void prepareTestNormalCaseMultipleChoiceTestFor() {
-        List<Word> words1 = testControllerForMultipleChoice.prepareTest(NUMBER_OF_TEST_NORMAL_CASE);
+        List<Word> words1 = testControllerForMultipleChoice.prepareTest(NUMBER_OF_TEST_NORMAL_CASE, null);
         //NUMBER_OF_TEST_NORMAL_CASEのフラッシュカードがあるかどうか確認します。
         assertEquals(words1.size(), NUMBER_OF_TEST_NORMAL_CASE);
         Set<Integer> wordIDs = new HashSet<>();
@@ -56,7 +56,7 @@ public class TestControllerTest {
 
     @Test
     public void prepareTestOutOfFlashcardCaseMultipleChoiceFor() {
-        List<Word> words1 = testControllerForMultipleChoice.prepareTest(NUMBER_OF_TEST_OUT_OF_FLASHCARD);
+        List<Word> words1 = testControllerForMultipleChoice.prepareTest(NUMBER_OF_TEST_OUT_OF_FLASHCARD, null);
         //すべてのフラッシュカードがあるかどうか確認します。
         assertEquals(words1.size(), flashcardDAO.getNumberOfVisibleFlashcards());
         Set<Integer> wordIDs = new HashSet<>();
@@ -69,14 +69,14 @@ public class TestControllerTest {
 
     @Test
     public void prepareTestSmallerThanZeroCaseMultipleChoiceFor() {
-        List<Word> words1 = testControllerForMultipleChoice.prepareTest(NUMBER_OF_TEST_SMALLER_THAN_0);
+        List<Word> words1 = testControllerForMultipleChoice.prepareTest(NUMBER_OF_TEST_SMALLER_THAN_0, null);
         //１つの質問があるかどうか確認します。
         assertEquals(words1.size(), 1);
     }
 
     @Test
     public void prepareTestNormalCaseWriting() {
-        List<Word> words1 = testControllerForWriting.prepareTest(NUMBER_OF_TEST_NORMAL_CASE);
+        List<Word> words1 = testControllerForWriting.prepareTest(NUMBER_OF_TEST_NORMAL_CASE, null);
         //NUMBER_OF_TEST_NORMAL_CASEのフラッシュカードがあるかどうか確認します。
         assertEquals(words1.size(), NUMBER_OF_TEST_NORMAL_CASE);
         Set<Integer> wordIDs = new HashSet<>();
@@ -89,7 +89,7 @@ public class TestControllerTest {
 
     @Test
     public void prepareTestOutOfFlashcardCaseWriting() {
-        List<Word> words1 = testControllerForWriting.prepareTest(NUMBER_OF_TEST_OUT_OF_FLASHCARD);
+        List<Word> words1 = testControllerForWriting.prepareTest(NUMBER_OF_TEST_OUT_OF_FLASHCARD, null);
         //すべてのフラッシュカードがあるかどうか確認します。
         assertEquals(words1.size(), flashcardDAO.getNumberOfVisibleFlashcards());
         Set<Integer> wordIDs = new HashSet<>();
@@ -102,7 +102,7 @@ public class TestControllerTest {
 
     @Test
     public void prepareTestSmallerThanZeroCaseWriting() {
-        List<Word> words1 = testControllerForWriting.prepareTest(NUMBER_OF_TEST_SMALLER_THAN_0);
+        List<Word> words1 = testControllerForWriting.prepareTest(NUMBER_OF_TEST_SMALLER_THAN_0, null);
         //１つの質問があるかどうか確認します。
         assertEquals(words1.size(), 1);
     }

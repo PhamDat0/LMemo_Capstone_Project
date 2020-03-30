@@ -1,13 +1,20 @@
 package com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,12 +25,17 @@ import com.example.lmemo_capstone_project.controller.internet_checking_controlle
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.SetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
+import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.review_activity.MultipleChoiceTestActivity;
+import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.review_activity.WritingTestActivity;
 
 import java.util.List;
 
 public class SetFlashcardAdapter extends BaseAdapter {
     public static final int OFFLINE_MODE = 0;
     public static final int ONLINE_MODE = 1;
+    private static final int WRITING = 1;
+    private static final int MULTIPLE_CHOICE = 2;
 
     private List<SetFlashcard> setFlashcardList;
     private Activity aContext;
@@ -110,7 +122,7 @@ public class SetFlashcardAdapter extends BaseAdapter {
         holder.ibReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                createTestControlDialog(setFlashcard);
             }
         });
         holder.ibDelete.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +150,60 @@ public class SetFlashcardAdapter extends BaseAdapter {
         });
     }
 
+    /**
+     * @param setFlashcard テストするセット
+     *                     この関数はテストの設定のダイアログを作成します。
+     */
+    private void createTestControlDialog(final SetFlashcard setFlashcard) {
+        final Dialog dialog = new Dialog(aContext);
+        dialog.setContentView(R.layout.dialog_test_control);
+        dialog.setTitle("Test setting: ");
+        dialog.findViewById(R.id.btStartTest).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText etNumberOfQuestion = dialog.findViewById(R.id.etNumberOfQuestion);
+                if (etNumberOfQuestion.getText().toString().length() != 0) {
+                    int numberOfTest = Integer.parseInt(etNumberOfQuestion.getText().toString());
+                    if (numberOfTest == 0 || numberOfTest > numberOfFlashcards(setFlashcard)) {
+                        etNumberOfQuestion.setError(numberOfTest == 0 ? "This must different than 0" : "Must smaller than " + (numberOfFlashcards(setFlashcard) + 1));
+                    } else {
+                        int checkedRadioButtonId = ((RadioGroup) dialog.findViewById(R.id.rgTestMode)).getCheckedRadioButtonId();
+                        int testMode = ((RadioButton) dialog.findViewById(checkedRadioButtonId)).getText().toString().equals("Writing") ? WRITING : MULTIPLE_CHOICE;
+                        Intent intent = new Intent(aContext, WritingTestActivity.class);
+                        switch (testMode) {
+                            case MULTIPLE_CHOICE:
+                                if (numberOfFlashcards(setFlashcard) < 4) {
+                                    Toast.makeText(aContext, "There are not enough flashcards to create a multiple-choice test. Required at least 4.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    intent = new Intent(aContext, MultipleChoiceTestActivity.class);
+                                }
+                                break;
+                        }
+                        intent.putExtra(aContext.getString(R.string.number_of_questions), numberOfTest);
+                        intent.putExtra(aContext.getString(R.string.set_container), setFlashcard);
+                        aContext.startActivityForResult(intent, HomeActivity.TEST_FLASHCARD_REQUEST_CODE);
+                        dialog.dismiss();
+                    }
+                } else {
+                    etNumberOfQuestion.setError("This is required");
+                }
+            }
+        });
+        dialog.findViewById(R.id.btCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        Log.i("Dialog", "Created");
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    private int numberOfFlashcards(SetFlashcard setFlashcard) {
+        return setFlashcard.getWordID().size();
+    }
+
     private void notifyNoInternet() {
         Toast.makeText(aContext, "There is no internet", Toast.LENGTH_LONG).show();
     }
@@ -149,7 +215,7 @@ public class SetFlashcardAdapter extends BaseAdapter {
         holder.swPublic.setChecked(setFlashcard.isPublic());
         holder.ibChangeWord.setVisibility(isOwner ? View.VISIBLE : View.INVISIBLE);
         holder.ibDelete.setVisibility(isOwner ? View.VISIBLE : View.INVISIBLE);
-        holder.ibReview.setVisibility(isInOfflineMode() ? View.VISIBLE : View.INVISIBLE);
+        holder.ibReview.setVisibility((isInOfflineMode() && (numberOfFlashcards(setFlashcard) != 0)) ? View.VISIBLE : View.INVISIBLE);
         holder.ibDownload.setVisibility((!isInOfflineMode() && !isOwner(setFlashcard)) ? View.VISIBLE : View.INVISIBLE);
     }
 

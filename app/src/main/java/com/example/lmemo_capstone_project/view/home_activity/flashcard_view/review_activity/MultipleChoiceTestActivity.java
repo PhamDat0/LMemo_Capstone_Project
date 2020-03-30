@@ -20,6 +20,7 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.controller.test_controller.TestController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
+import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 
@@ -44,8 +45,8 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
     private Word currentWord;
     private Date startTime;
     private TextToSpeech textToSpeech;
-    private int MEANING_CHARACTER_LIMIT = 60;
     private TestController testController;
+    private SetFlashcard setFlashcard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
         testController = new TestController(wordDAO, flashcardDAO, TestController.MULTIPLE_CHOICE_MODE);
         numberOfQuestion = intent.getIntExtra(getString(R.string.number_of_questions), 0);
+        setFlashcard = (SetFlashcard) intent.getSerializableExtra(getString(R.string.set_container));
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -150,7 +152,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         final Thread loadQuestionThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                words = testController.prepareTest(numberOfQuestion);
+                words = testController.prepareTest(numberOfQuestion, setFlashcard);
             }
         });
         loadQuestionThread.start();

@@ -8,6 +8,7 @@ import com.example.lmemo_capstone_project.controller.test_controller.answer_hand
 import com.example.lmemo_capstone_project.controller.test_controller.answer_handler.MultipleChoiceAnswerHandler;
 import com.example.lmemo_capstone_project.controller.test_controller.answer_handler.WritingAnswerHandler;
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
+import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.review_activity.MultipleChoiceTestActivity;
 
@@ -48,25 +49,20 @@ public class TestController {
      * @param numberOfQuestion 質問数
      * @return 聞く言葉のリスト
      * この関数はテストの準備します。
-     * 1. フラッシュカードをKMeanで分類します。
-     * 2. 質問数がゼロの場合はそれを１にします。
-     * 3. テストの質問リストを作ります。フラッシュカードのLastStateが高ければ高いほど選ばれる確率が低くなります。
+     * 1. 質問数がゼロの場合はそれを１にします。
+     * 2. テストの質問リストを作ります。フラッシュカードのLastStateが高ければ高いほど選ばれる確率が低くなります。
      */
-    public List<Word> prepareTest(int numberOfQuestion) {
-        restateFlashcard();
-
+    private List<Word> getRandomListWordForTest(int numberOfQuestion) {
         List<Word> result = new ArrayList<>();
-
-        if (numberOfQuestion <= 0) {
-            numberOfQuestion = 1;
-        }
-
         int size = 0;
         for (List list : listOfListFlashcard) {
             size += list.size();
         }
 
-        if (numberOfQuestion > size) {
+        if (numberOfQuestion <= 0) {
+            numberOfQuestion = 1;
+        }
+        if (numberOfQuestion >= size) {
             for (List list : listOfListFlashcard) {
                 result.addAll(list);
             }
@@ -275,5 +271,38 @@ public class TestController {
      */
     public void updateFlashcard(String answer, Word currentWord, Date startTime, String question) {
         answerHandler.updateFlashcard(answer, currentWord, startTime, question);
+    }
+
+    /**
+     * @param numberOfQuestion 質問数
+     * @param setFlashcard     テストするセット
+     * @return 聞く言葉のリスト
+     */
+    public List<Word> prepareTest(int numberOfQuestion, SetFlashcard setFlashcard) {
+        restateFlashcard();
+        if (setFlashcard == null) {
+            return getRandomListWordForTest(numberOfQuestion);
+        } else {
+            setUpListOfListFlashcardToMatchSet(setFlashcard);
+            return getRandomListWordForTest(numberOfQuestion);
+        }
+    }
+
+    private void setUpListOfListFlashcardToMatchSet(SetFlashcard setFlashcard) {
+        List<List<Word>> tmp = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            tmp.add(new ArrayList<Word>());
+        }
+        List<Long> wordID = setFlashcard.getWordID();
+        int state = 0;
+        for (List<Word> flashcardList : listOfListFlashcard) {
+            state++;
+            for (Word flashcard : flashcardList) {
+                if (wordID.contains((long) flashcard.getWordID())) {
+                    tmp.get(state).add(flashcard);
+                }
+            }
+        }
+        listOfListFlashcard = tmp;
     }
 }
