@@ -56,9 +56,16 @@ public class SetFlashcardController {
                 String onlineID = documentReference.getId();
                 setFlashcard.setOnlineID(onlineID);
                 setFlashcard.setPublic(true);
-                setFlashcardDAO.updateSetFlashcard(setFlashcard);
+                updateSetToSQL(setFlashcard);
                 new MyAccountController().increaseUserPoint(setFlashcard.getCreatorID(), 1);
                 Log.d("SF_CONTROLLER", "Upload set successfully");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                setFlashcard.setOnlineID("");
+                setFlashcard.setPublic(false);
+                updateSetToSQL(setFlashcard);
             }
         });
     }
@@ -211,9 +218,6 @@ public class SetFlashcardController {
         List<Long> listWordID = getListWordID(listOfWord);
         setFlashcard.setSetName(setName);
         setFlashcard.setWordID(listWordID);
-        setFlashcardDAO.updateSetFlashcard(setFlashcard);
-        insertNecessaryFlashcard(setFlashcard);
-        insertAssociationBetweenSetAndFlashcard(setFlashcard);
         if (setFlashcard.isPublic()) {
             if (newPublicStatus) {
                 updateSetToFireBase(setFlashcard);
@@ -223,15 +227,24 @@ public class SetFlashcardController {
         } else {
             if (newPublicStatus) {
                 uploadSetToFirebase(setFlashcard);
+            } else {
+                updateSetToSQL(setFlashcard);
             }
         }
     }
 
-    private void updateSetToFireBase(SetFlashcard setFlashcard) {
+    private void updateSetToSQL(SetFlashcard setFlashcard) {
+        setFlashcardDAO.updateSetFlashcard(setFlashcard);
+        insertNecessaryFlashcard(setFlashcard);
+        insertAssociationBetweenSetAndFlashcard(setFlashcard);
+    }
+
+    private void updateSetToFireBase(final SetFlashcard setFlashcard) {
         firebaseFirestore.collection(COLLECTION_PATH).document(setFlashcard.getOnlineID())
                 .update(mapping(setFlashcard)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                updateSetToSQL(setFlashcard);
                 Log.d("SF_CONTROLLER", "Update successfully");
             }
         }).addOnFailureListener(new OnFailureListener() {

@@ -2,6 +2,7 @@ package com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,13 @@ public class SetFlashCardOfflineTab extends Fragment {
     private void updateUI(List<SetFlashcard> setFlashcards) {
         SetFlashcardAdapter setFlashcardAdapter = new SetFlashcardAdapter(setFlashcards, getActivity(), SetFlashcardAdapter.OFFLINE_MODE);
         lvSetList.setAdapter(setFlashcardAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("RESUME", "Get here");
+        loadOfflineSet();
     }
 
     private void setupReferences(View view) {
