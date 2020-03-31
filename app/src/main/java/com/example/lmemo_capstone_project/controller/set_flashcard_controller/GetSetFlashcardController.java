@@ -57,8 +57,21 @@ public class GetSetFlashcardController {
         return listSetFlashcard;
     }
 
-    public void getOnlineSet() {
-
+    public void getOnlineSet(String keyword) {
+        listSet = new ArrayList<>();
+        firebaseFirestore.collection(COLLECTION_PATH)
+                .whereGreaterThan("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
+                .orderBy("name").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                for (DocumentSnapshot document : documents) {
+                    SetFlashcard setFlashcard = getSetFromSnapshot(document);
+                    listSet.add(setFlashcard);
+                }
+                getSetOwners();
+            }
+        });
     }
 
     public void getUserOnlineSet(User currentUser) {

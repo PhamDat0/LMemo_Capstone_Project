@@ -29,6 +29,7 @@ public class SetFlashCardOnlineTab extends Fragment {
     private ImageButton ibNextPage;
     private ListView lvOnlineNote;
     private User currentUser;
+    private GetSetFlashcardController controller;
 
     public SetFlashCardOnlineTab() {
         // Required empty public constructor
@@ -49,12 +50,19 @@ public class SetFlashCardOnlineTab extends Fragment {
     }
 
     private void setupActionForButton() {
-
+        ibSearchSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String keyword = etSearchSet.getText().toString();
+                controller.getOnlineSet(keyword);
+            }
+        });
     }
 
     private void loadYourOnlineSet() {
-        GetSetFlashcardController controller = new GetSetFlashcardController(this);
         controller.getUserOnlineSet(currentUser);
+        ibNextPage.setVisibility(View.GONE);
+        ibPrePage.setVisibility(View.GONE);
     }
 
     private void setupReferences(View inflate) {
@@ -64,10 +72,17 @@ public class SetFlashCardOnlineTab extends Fragment {
         ibNextPage = inflate.findViewById(R.id.ibNextPage);
         lvOnlineNote = inflate.findViewById(R.id.lvOnlineNote);
         currentUser = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
+        controller = new GetSetFlashcardController(this);
     }
 
     public void updateUI(List<SetFlashcard> listSet) {
         SetFlashcardAdapter setFlashcardAdapter = new SetFlashcardAdapter(listSet, getActivity(), SetFlashcardAdapter.ONLINE_MODE);
         lvOnlineNote.setAdapter(setFlashcardAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadYourOnlineSet();
     }
 }

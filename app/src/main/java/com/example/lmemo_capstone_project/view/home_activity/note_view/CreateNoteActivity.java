@@ -83,18 +83,13 @@ public class CreateNoteActivity extends AppCompatActivity {
                 switch (mode) {
                     case IN_ADDING_MODE:
                         addNoteHandle();
-                        Intent intent = new Intent();
-                        intent.putExtra("wordID", word.getWordID());
-                        setResult(HomeActivity.ADD_NOTE_REQUEST_CODE, intent);
                         break;
                     case IN_EDITING_MODE:
                         editNoteHandle();
-                        setResult(HomeActivity.EDIT_NOTE_REQUEST_CODE);
                         break;
                     default:
                         Toast.makeText(getApplicationContext(), "There's no such that mode", Toast.LENGTH_LONG).show();
                 }
-                finish();
             }
         });
         btnCancelAddNote.setOnClickListener(new View.OnClickListener() {
@@ -115,11 +110,13 @@ public class CreateNoteActivity extends AppCompatActivity {
             if (note.isPublic() || isNotePublic.isChecked()) {
                 if (InternetCheckingController.isOnline(getApplicationContext())) {
                     performEditNote();
+                    setRequestCodeAndFinish(HomeActivity.EDIT_NOTE_REQUEST_CODE);
                 } else {
                     Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
                 }
             } else {
                 performEditNote();
+                setRequestCodeAndFinish(HomeActivity.EDIT_NOTE_REQUEST_CODE);
             }
         } else {
             txtTakeNote.setError("Please enter note");
@@ -137,20 +134,27 @@ public class CreateNoteActivity extends AppCompatActivity {
                 if (!isNotePublic.isChecked()) {
                     addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
                     Toast.makeText(getApplicationContext(), "Add note successful", Toast.LENGTH_LONG).show();
+                    setRequestCodeAndFinish(HomeActivity.ADD_NOTE_REQUEST_CODE);
                 } else if (InternetCheckingController.isOnline(getApplicationContext())) {
                     addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
                     Toast.makeText(getApplicationContext(), "Add note successful", Toast.LENGTH_LONG).show();
+                    setRequestCodeAndFinish(HomeActivity.ADD_NOTE_REQUEST_CODE);
                 } else {
                     Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
                 }
             } else {
                 txtTakeNote.setError("Please enter note");
             }
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-        } catch (CannotPerformFirebaseRequest e) {
+        } catch (Exception | CannotPerformFirebaseRequest e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void setRequestCodeAndFinish(int addNoteRequestCode) {
+        Intent intent = new Intent();
+        intent.putExtra("wordID", word.getWordID());
+        setResult(addNoteRequestCode, intent);
+        finish();
     }
 
     private void setUpActionForEnterWord() {

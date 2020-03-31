@@ -83,7 +83,7 @@ public class SetFlashcardAdapter extends BaseAdapter {
     }
 
     private void setupContent(ViewHolder holder, SetFlashcard setFlashcard) {
-        holder.tvSetName.setText("Set Name: " + setFlashcard.getSetName());
+        holder.tvSetName.setText("Set Name: " + setFlashcard.getSetName() + "\nContain: " + setFlashcard.getWordID().size() + " words");
         holder.tvCreatorDisplayName.setText(setFlashcard.getCreator().getDisplayName());
         holder.tvCreatorReward.setText(LMemoDatabase.getInstance(aContext).rewardDAO().getBestReward(setFlashcard.getCreator().getContributionPoint())[0].getRewardName());
     }

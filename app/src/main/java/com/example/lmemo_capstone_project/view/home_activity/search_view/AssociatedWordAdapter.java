@@ -85,6 +85,9 @@ public class AssociatedWordAdapter extends BaseAdapter {
     private void deleteWordFromList(int position) {
         if (listWord.size() > 1) {
             listWord.remove(position);
+            if (listWord.size() < 10) {
+                aContext.findViewById(R.id.swPublic).setVisibility(View.INVISIBLE);
+            }
             notifyDataSetChanged();
         } else {
             Toast.makeText(aContext, "Cannot remove every association", Toast.LENGTH_LONG).show();

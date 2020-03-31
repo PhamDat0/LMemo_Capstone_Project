@@ -84,7 +84,6 @@ public class CreateSetActivity extends AppCompatActivity {
                     default:
                         Toast.makeText(getApplicationContext(), "There's no such that mode", Toast.LENGTH_LONG).show();
                 }
-                finish();
             }
         });
         btnCancelAddSet.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +117,7 @@ public class CreateSetActivity extends AppCompatActivity {
 
     private void performEditSet() {
         setFlashcardController.updateSet(setFlashcard, txtSetName.getText().toString(), isSetPublic.isChecked(), associatedWordAdapter.getListOfWord());
-
+        finish();
 //        NoteController editAndDeleteNoteController = new NoteController(this);
 //        editAndDeleteNoteController.updateNote(setFlashcard, txtSetName.getText().toString(), isSetPublic.isChecked(), associatedWordAdapter.getListOfWord());
     }
@@ -129,9 +128,11 @@ public class CreateSetActivity extends AppCompatActivity {
                 if (!isSetPublic.isChecked()) {
                     setFlashcardController.createNewSet(txtSetName.getText().toString(), associatedWordAdapter.getListOfWord(), isSetPublic.isChecked());
                     Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
+                    finish();
                 } else if (InternetCheckingController.isOnline(getApplicationContext())) {
                     setFlashcardController.createNewSet(txtSetName.getText().toString(), associatedWordAdapter.getListOfWord(), isSetPublic.isChecked());
                     Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
+                    finish();
                 } else {
                     Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
                 }
@@ -212,10 +213,10 @@ public class CreateSetActivity extends AppCompatActivity {
     private void addToListView(Word word) {
 //        Log.d("SetUpAdapter", "success");
         associatedWordAdapter.addWordToList(word);
-        if (associatedWordAdapter.getCount() >= 10) {
-            isSetPublic.setVisibility(View.VISIBLE);
-        } else {
-            isSetPublic.setVisibility(View.INVISIBLE);
+        if (!LMemoDatabase.getInstance(getApplicationContext()).userDAO().getLocalUser()[0].isGuest()) {
+            if (associatedWordAdapter.getCount() >= 10) {
+                isSetPublic.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -226,9 +227,9 @@ public class CreateSetActivity extends AppCompatActivity {
         btnAddSet = findViewById(R.id.btnAddNote);
         isSetPublic = findViewById(R.id.isNotePublic);
         btnCancelAddSet = findViewById(R.id.btnCancelAddNote);
-        ListView listAssocitatedWord = findViewById(R.id.listAssocitatedWord);
+        ListView listAssociatedWord = findViewById(R.id.listAssocitatedWord);
         associatedWordAdapter = new AssociatedWordAdapter(this, listWord);
-        listAssocitatedWord.setAdapter(associatedWordAdapter);
+        listAssociatedWord.setAdapter(associatedWordAdapter);
         WordDAO wordDAO = LMemoDatabase.getInstance(getApplicationContext()).wordDAO();
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
         if (LMemoDatabase.getInstance(getApplicationContext()).userDAO().getLocalUser()[0].isGuest() || listWord.size() < 10) {

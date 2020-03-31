@@ -15,6 +15,7 @@ import com.example.lmemo_capstone_project.controller.my_account_controller.MyAcc
 import com.example.lmemo_capstone_project.model.room_db_entity.Flashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.FlashcardBelongToSet;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
+import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,8 +133,11 @@ public class SetFlashcardController {
             setFlashcard.setSetID(getSetIDFromOnlineID(setFlashcard));
             deleteFromSQLite(setFlashcard);
         } else {
-            setFlashcard.setSetID(setFlashcardDAO.getLastSet()[0].getSetID());
+            setFlashcard.setSetID(setFlashcardDAO.getLastSet()[0].getSetID() + 1);
         }
+        User creator = setFlashcard.getCreator();
+        creator.setLoginTime(new Date(1));
+        userDAO.insertUser(creator);
         writeToSQLite(setFlashcard);
     }
 
@@ -174,11 +179,6 @@ public class SetFlashcardController {
 
     private boolean hasThisSetInSQLite(SetFlashcard setFlashcard) {
         return setFlashcardDAO.getSetWithOnlineID(setFlashcard.getOnlineID()).length != 0;
-    }
-
-    public void createNewSet(String setName) {
-        SetFlashcard setFlashcardFromUser = getSetFlashcardFromUser(setName);
-        setFlashcardDAO.insertSetFlashcard(setFlashcardFromUser);
     }
 
     private SetFlashcard getSetFlashcardFromUser(String name) {
