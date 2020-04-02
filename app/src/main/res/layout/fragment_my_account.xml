@@ -27,6 +27,7 @@
                 android:inputType="textPersonName"
                 android:textColor="#1B1616"
                 android:textSize="21sp"
+                android:textAlignment="center"
                 android:textStyle="bold"/>
         </LinearLayout>
 
@@ -80,6 +81,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rising Star"
+                        android:textAlignment="center"
                         android:textSize="20sp"
                         android:textColor="@color/endblue" />
                 </LinearLayout>
@@ -102,6 +104,7 @@
                         android:layout_height="wrap_content"
                         android:text="Expert"
                         android:textSize="20sp"
+                        android:textAlignment="center"
                         android:textColor="@color/endblue" />
                 </LinearLayout>
             </LinearLayout>
