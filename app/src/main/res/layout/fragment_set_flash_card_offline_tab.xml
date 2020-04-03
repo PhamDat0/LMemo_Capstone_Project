@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".view.home_activity.set_flashcard_view.SetFlashCardOfflineTab">
-
-    <Button
-        android:id="@+id/btAddSet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create new set" />
-
     <ListView
         android:id="@+id/lvSetList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btAddSet"/>
+    <Button
+        android:id="@+id/btAddSet"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/gradientbackground"
+        android:text="Create new set" />
+
+
+</RelativeLayout>

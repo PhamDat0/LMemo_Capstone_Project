@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         
         android:background="#FFFFFF">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/setFragmentToolBarTab"
             android:layout_width="match_parent"
@@ -24,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 app:tabSelectedTextColor="#000"
+                android:layout_marginEnd="15dp"
                 app:tabTextColor="#652B2B">
 
                 <com.google.android.material.tabs.TabItem

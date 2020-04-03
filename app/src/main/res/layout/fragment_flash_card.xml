@@ -9,24 +9,22 @@
         android:id="@+id/FrameFlashcard"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
+            android:layout_height="match_parent">
             <ListView
                 android:id="@+id/flashcardListView"
                 android:layout_width="match_parent"
-                android:layout_height="560dp" />
-
+                android:layout_height="match_parent"
+                android:layout_above="@+id/btReview"/>
             <Button
                 android:id="@+id/btReview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
                 android:background="@drawable/gradientbackground"
                 android:text="Review" />
-        </LinearLayout>
+        </RelativeLayout>
     </FrameLayout>
 
 </LinearLayout>
