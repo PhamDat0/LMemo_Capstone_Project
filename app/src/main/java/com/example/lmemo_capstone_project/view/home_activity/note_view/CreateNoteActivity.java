@@ -152,7 +152,9 @@ public class CreateNoteActivity extends AppCompatActivity {
 
     private void setRequestCodeAndFinish(int addNoteRequestCode) {
         Intent intent = new Intent();
-        intent.putExtra("wordID", word.getWordID());
+        if (word != null) {
+            intent.putExtra("wordID", word.getWordID());
+        }
         setResult(addNoteRequestCode, intent);
         finish();
     }

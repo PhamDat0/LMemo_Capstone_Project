@@ -133,7 +133,12 @@ public class SetFlashcardController {
             setFlashcard.setSetID(getSetIDFromOnlineID(setFlashcard));
             deleteFromSQLite(setFlashcard);
         } else {
-            setFlashcard.setSetID(setFlashcardDAO.getLastSet()[0].getSetID() + 1);
+            SetFlashcard[] lastSet = setFlashcardDAO.getLastSet();
+            if (lastSet.length != 0) {
+                setFlashcard.setSetID(lastSet[0].getSetID() + 1);
+            } else {
+                setFlashcard.setSetID(1);
+            }
         }
         User creator = setFlashcard.getCreator();
         creator.setLoginTime(new Date(1));
