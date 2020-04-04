@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.CreateSetActivity;
 
 import java.util.List;
 
@@ -86,7 +87,9 @@ public class AssociatedWordAdapter extends BaseAdapter {
         if (listWord.size() > 1) {
             listWord.remove(position);
             if (listWord.size() < 10) {
-                aContext.findViewById(R.id.swPublic).setVisibility(View.INVISIBLE);
+                if (aContext instanceof CreateSetActivity) {
+                    aContext.findViewById(R.id.swPublic).setVisibility(View.INVISIBLE);
+                }
             }
             notifyDataSetChanged();
         } else {
