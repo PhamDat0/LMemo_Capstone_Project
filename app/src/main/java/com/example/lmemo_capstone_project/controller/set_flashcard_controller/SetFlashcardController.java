@@ -141,8 +141,10 @@ public class SetFlashcardController {
             }
         }
         User creator = setFlashcard.getCreator();
-        creator.setLoginTime(new Date(1));
-        userDAO.insertUser(creator);
+        if (creator != null) {
+            creator.setLoginTime(new Date(1));
+            userDAO.insertUser(creator);
+        }
         writeToSQLite(setFlashcard);
     }
 
