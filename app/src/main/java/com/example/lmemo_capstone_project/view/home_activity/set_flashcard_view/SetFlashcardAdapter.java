@@ -107,13 +107,13 @@ public class SetFlashcardAdapter extends BaseAdapter {
                         setFlashcardController.makeSetPrivate(setFlashcard);
                         if (!isInOfflineMode()) {
                             setFlashcardList.remove(setFlashcard);
+                            notifyDataSetChanged();
                         }
                     }
                 } else {
                     holder.swPublic.setChecked(false);
                     notifyNoInternet();
                 }
-                notifyDataSetChanged();
             }
         });
 //        holder.swPublic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
