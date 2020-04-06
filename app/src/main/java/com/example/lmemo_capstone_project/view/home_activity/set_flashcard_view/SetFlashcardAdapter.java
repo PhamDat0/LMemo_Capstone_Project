@@ -112,7 +112,7 @@ public class SetFlashcardAdapter extends BaseAdapter {
                         }
                     }
                 } else {
-                    holder.swPublic.setChecked(false);
+                    holder.swPublic.setChecked(!holder.swPublic.isChecked());
                     notifyNoInternet();
                 }
             }
@@ -161,6 +161,7 @@ public class SetFlashcardAdapter extends BaseAdapter {
             public void onClick(View v) {
                 if (setFlashcard.isPublic() && isOwner(setFlashcard)) {
                     if (InternetCheckingController.isOnline(aContext)) {
+                        ProgressDialog.getInstance().show(aContext);
                         setFlashcardController.deleteSetFromFirebase(setFlashcard);
                         setFlashcardList.remove(setFlashcard);
                     } else {
