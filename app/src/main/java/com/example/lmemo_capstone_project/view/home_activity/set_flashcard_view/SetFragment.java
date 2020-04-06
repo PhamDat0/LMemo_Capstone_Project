@@ -1,17 +1,15 @@
 package com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toolbar;
 
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.example.lmemo_capstone_project.R;
-import com.example.lmemo_capstone_project.view.home_activity.note_view.NotesPager;
 import com.google.android.material.tabs.TabLayout;
 
 /**
@@ -24,7 +22,8 @@ public class SetFragment extends Fragment {
     public SetFragment() {
         // Required empty public constructor
     }
-    SetFragmentPager setFragmentPager;
+
+    private SetFragmentPager setFragmentPager;
     private Toolbar toolbartab;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -37,8 +36,10 @@ public class SetFragment extends Fragment {
         viewPager = (ViewPager) view.findViewById(R.id.setFragmentViewPager);
         tabLayout = (TabLayout) view.findViewById(R.id.setFragmentTabLayout);
         setFragmentPager = new SetFragmentPager(getParentFragmentManager());
-        setFragmentPager.addFragment(new SetFlashCardOfflineTab() , "Offline");
-        setFragmentPager.addFragment(new SetFlashCardOnlineTab(), "Online");
+        final SetFlashCardOfflineTab setFlashCardOfflineTab = new SetFlashCardOfflineTab();
+        final SetFlashCardOnlineTab setFlashCardOnlineTab = new SetFlashCardOnlineTab();
+        setFragmentPager.addFragment(setFlashCardOfflineTab, "Offline");
+        setFragmentPager.addFragment(setFlashCardOnlineTab, "Online");
         viewPager.setOffscreenPageLimit(2);
 
         viewPager.setAdapter(setFragmentPager);
@@ -47,12 +48,23 @@ public class SetFragment extends Fragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+//                viewPager.setCurrentItem(tab.getPosition());
+//                Log.i("SELECT_TAB", tab.getPosition() + "\n" + setFragmentPager.getItem(tab.getPosition()).toString());
+//                if (tab.getPosition() == 0) {
+//
+//                    LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getContext());
+//                    Intent i = new Intent("TAG_REFRESH");
+//                    lbm.sendBroadcast(i);
+//
+//                }
                 switch (tab.getPosition()) {
                     //Private note
                     case SET_FLASH_CARD_OFFLINE:
+                        setFlashCardOfflineTab.onResume();
                         break;
                     //Public note
                     case SET_FLASH_CARD_ONLINE:
+                        setFlashCardOnlineTab.onResume();
                         break;
                 }
             }

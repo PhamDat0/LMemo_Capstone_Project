@@ -7,6 +7,7 @@ import com.example.lmemo_capstone_project.controller.database_controller.room_da
 import com.example.lmemo_capstone_project.model.room_db_entity.FlashcardBelongToSet;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.SetFlashCardOnlineTab;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.Lists;
@@ -91,21 +92,26 @@ public class GetSetFlashcardController {
     }
 
     private void getSetOwners() {
-        for (final SetFlashcard setFlashcard : listSet) {
-            firebaseFirestore.collection("users").document(setFlashcard.getCreatorID())
-                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    User owner = getUserFromSnapshot(documentSnapshot);
-                    setFlashcard.setCreator(owner);
-                    updateInterfaceIfFinish();
-                }
-            });
+        if (listSet.isEmpty()) {
+            updateInterfaceIfFinish();
+        } else {
+            for (final SetFlashcard setFlashcard : listSet) {
+                firebaseFirestore.collection("users").document(setFlashcard.getCreatorID())
+                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User owner = getUserFromSnapshot(documentSnapshot);
+                        setFlashcard.setCreator(owner);
+                        updateInterfaceIfFinish();
+                    }
+                });
+            }
         }
     }
 
     private void updateInterfaceIfFinish() {
         if (isFinish()) {
+            ProgressDialog.getInstance().dismiss();
             setFlashCardFragment.updateUI(listSet);
         }
     }

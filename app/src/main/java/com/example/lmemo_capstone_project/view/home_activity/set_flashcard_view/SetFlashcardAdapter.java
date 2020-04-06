@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -25,6 +24,7 @@ import com.example.lmemo_capstone_project.controller.internet_checking_controlle
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.SetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.review_activity.MultipleChoiceTestActivity;
 import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.review_activity.WritingTestActivity;
@@ -90,26 +90,56 @@ public class SetFlashcardAdapter extends BaseAdapter {
 
     private void setActionForButtons(final SetFlashcard setFlashcard, final ViewHolder holder) {
         final SetFlashcardController setFlashcardController = new SetFlashcardController(aContext);
-        holder.swPublic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.swPublic.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onClick(View v) {
                 if (InternetCheckingController.isOnline(aContext)) {
-                    if (isChecked) {
+                    if (holder.swPublic.isChecked()) {
                         try {
+                            ProgressDialog.getInstance().show(aContext);
                             setFlashcardController.uploadSetToFirebase(setFlashcard);
                         } catch (UnsupportedOperationException e) {
                             holder.swPublic.setChecked(false);
                             Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     } else {
+                        ProgressDialog.getInstance().show(aContext);
                         setFlashcardController.makeSetPrivate(setFlashcard);
+                        if (!isInOfflineMode()) {
+                            setFlashcardList.remove(setFlashcard);
+                        }
                     }
                 } else {
                     holder.swPublic.setChecked(false);
                     notifyNoInternet();
                 }
+                notifyDataSetChanged();
             }
         });
+//        holder.swPublic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (InternetCheckingController.isOnline(aContext)) {
+//                    if (isChecked) {
+//                        try {
+//                            ProgressDialog.getInstance().show(aContext);
+//                            setFlashcardController.uploadSetToFirebase(setFlashcard);
+//                        } catch (UnsupportedOperationException e) {
+//                            holder.swPublic.setChecked(false);
+//                            Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
+//                        }
+//                    } else {
+//                        ProgressDialog.getInstance().show(aContext);
+//                        setFlashcardController.makeSetPrivate(setFlashcard);
+//                        setFlashcardList.remove(setFlashcard);
+//                    }
+//                } else {
+//                    holder.swPublic.setChecked(false);
+//                    notifyNoInternet();
+//                }
+//                notifyDataSetChanged();
+//            }
+//        });
         holder.ibChangeWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +158,7 @@ public class SetFlashcardAdapter extends BaseAdapter {
         holder.ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (setFlashcard.isPublic()) {
+                if (setFlashcard.isPublic() && isOwner(setFlashcard)) {
                     if (InternetCheckingController.isOnline(aContext)) {
                         setFlashcardController.deleteSetFromFirebase(setFlashcard);
                         setFlashcardList.remove(setFlashcard);
@@ -211,12 +241,13 @@ public class SetFlashcardAdapter extends BaseAdapter {
     private void setVisibleForButtons(SetFlashcard setFlashcard, ViewHolder holder) {
         boolean isOwner = isOwner(setFlashcard);
         boolean isGuest = isBelongToGuest(setFlashcard);
+        boolean isInOfflineMode = isInOfflineMode();
         holder.swPublic.setVisibility((isOwner && !isGuest) ? View.VISIBLE : View.INVISIBLE);
         holder.swPublic.setChecked(setFlashcard.isPublic());
         holder.ibChangeWord.setVisibility(isOwner ? View.VISIBLE : View.INVISIBLE);
-        holder.ibDelete.setVisibility(isOwner ? View.VISIBLE : View.INVISIBLE);
-        holder.ibReview.setVisibility((isInOfflineMode() && (numberOfFlashcards(setFlashcard) != 0)) ? View.VISIBLE : View.INVISIBLE);
-        holder.ibDownload.setVisibility((!isInOfflineMode() && !isOwner(setFlashcard)) ? View.VISIBLE : View.INVISIBLE);
+        holder.ibDelete.setVisibility((isOwner || isInOfflineMode) ? View.VISIBLE : View.INVISIBLE);
+        holder.ibReview.setVisibility((isInOfflineMode && (numberOfFlashcards(setFlashcard) != 0)) ? View.VISIBLE : View.INVISIBLE);
+        holder.ibDownload.setVisibility((!isInOfflineMode && !isOwner(setFlashcard)) ? View.VISIBLE : View.INVISIBLE);
     }
 
     private boolean isBelongToGuest(SetFlashcard setFlashcard) {

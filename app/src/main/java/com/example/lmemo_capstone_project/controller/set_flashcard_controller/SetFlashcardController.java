@@ -17,6 +17,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.FlashcardBelongTo
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -254,12 +255,14 @@ public class SetFlashcardController {
             @Override
             public void onSuccess(Void aVoid) {
                 updateSetToSQL(setFlashcard);
+                ProgressDialog.getInstance().dismiss();
                 Log.d("SF_CONTROLLER", "Update successfully");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("SF_CONTROLLER", "Update failed");
+                ProgressDialog.getInstance().dismiss();
             }
         });
     }

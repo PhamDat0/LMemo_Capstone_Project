@@ -35,6 +35,7 @@ import com.example.lmemo_capstone_project.controller.set_flashcard_controller.Se
 import com.example.lmemo_capstone_project.model.room_db_entity.FlashcardBelongToSet;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.AssociatedWordAdapter;
 
 import java.util.ArrayList;
@@ -100,18 +101,24 @@ public class CreateSetActivity extends AppCompatActivity {
     }
 
     private void editSetHandle() {
-        if (!txtSetName.getText().toString().isEmpty()) {
-            if (setFlashcard.isPublic() || isSetPublic.isChecked()) {
-                if (InternetCheckingController.isOnline(getApplicationContext())) {
-                    performEditSet();
+        List<Word> listOfWord = associatedWordAdapter.getListOfWord();
+        if (listOfWord.size() < 1) {
+            Toast.makeText(getApplicationContext(), "Set must have at least 1 card", Toast.LENGTH_LONG).show();
+        } else {
+            if (!txtSetName.getText().toString().isEmpty()) {
+                if (setFlashcard.isPublic() || isSetPublic.isChecked()) {
+                    if (InternetCheckingController.isOnline(getApplicationContext())) {
+                        ProgressDialog.getInstance().show(CreateSetActivity.this);
+                        performEditSet();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
+                    performEditSet();
                 }
             } else {
-                performEditSet();
+                txtSetName.setError("Please enter note");
             }
-        } else {
-            txtSetName.setError("Please enter note");
         }
     }
 
@@ -123,24 +130,30 @@ public class CreateSetActivity extends AppCompatActivity {
     }
 
     private void addSetHandle() {
-        try {
-            if (!txtSetName.getText().toString().isEmpty()) {
-                if (!isSetPublic.isChecked()) {
-                    setFlashcardController.createNewSet(txtSetName.getText().toString(), associatedWordAdapter.getListOfWord(), isSetPublic.isChecked());
-                    Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
-                    finish();
-                } else if (InternetCheckingController.isOnline(getApplicationContext())) {
-                    setFlashcardController.createNewSet(txtSetName.getText().toString(), associatedWordAdapter.getListOfWord(), isSetPublic.isChecked());
-                    Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
-                    finish();
+        List<Word> listOfWord = associatedWordAdapter.getListOfWord();
+        if (listOfWord.size() < 1) {
+            Toast.makeText(getApplicationContext(), "Set must have at least 1 card", Toast.LENGTH_LONG).show();
+        } else {
+            try {
+                if (!txtSetName.getText().toString().isEmpty()) {
+                    if (!isSetPublic.isChecked()) {
+                        setFlashcardController.createNewSet(txtSetName.getText().toString(), listOfWord, isSetPublic.isChecked());
+                        Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
+                        finish();
+                    } else if (InternetCheckingController.isOnline(getApplicationContext())) {
+                        ProgressDialog.getInstance().show(CreateSetActivity.this);
+                        setFlashcardController.createNewSet(txtSetName.getText().toString(), listOfWord, isSetPublic.isChecked());
+                        Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
+                    txtSetName.setError("Please enter note");
                 }
-            } else {
-                txtSetName.setError("Please enter note");
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -273,5 +286,13 @@ public class CreateSetActivity extends AppCompatActivity {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public void warningPublicSetLowerThan10Card() {
+        if (isSetPublic.isChecked()) {
+            Toast.makeText(getApplicationContext(), "Set lower than 10 cards is automatically change to private", Toast.LENGTH_LONG).show();
+            isSetPublic.setChecked(false);
+        }
+        isSetPublic.setVisibility(View.INVISIBLE);
     }
 }

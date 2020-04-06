@@ -102,4 +102,38 @@ public class SetFlashCardOfflineTab extends Fragment {
         lvSetList = view.findViewById(R.id.lvSetList);
         getSetFlashcardController = new GetSetFlashcardController(new SetFlashCardOnlineTab());
     }
+
+
+//    //Refresh when change tab
+//    private MyReceiver r;
+//    public void refresh() {
+//        loadOfflineSet();
+//        Log.i("Refresh", "YES");
+//    }
+//
+//    public void onPause() {
+//        super.onPause();
+//        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(r);
+//    }
+//
+//    public void onResume() {
+//        super.onResume();
+//        loadOfflineSet();
+//        r = new MyReceiver();
+//        LocalBroadcastManager.getInstance(getContext()).registerReceiver(r,
+//                new IntentFilter("TAG_REFRESH"));
+//    }
+//
+//    private class MyReceiver extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            SetFlashCardOfflineTab.this.refresh();
+//        }
+//    }
+//
+//    @NonNull
+//    @Override
+//    public String toString() {
+//        return "Offline";
+//    }
 }

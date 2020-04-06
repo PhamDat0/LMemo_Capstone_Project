@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.account_view.MyAccountFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -89,6 +90,7 @@ public class MyAccountController {
                 userRef.update("contributionPoint", contributionPoint).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        ProgressDialog.getInstance().dismiss();
                         Log.i("ContributionPoint", userID + " has " + finalContributionPoint);
                     }
                 });

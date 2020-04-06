@@ -7,14 +7,17 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
+import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.GetSetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 
 import java.util.List;
 
@@ -53,6 +56,7 @@ public class SetFlashCardOnlineTab extends Fragment {
         ibSearchSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProgressDialog.getInstance().show(getContext());
                 String keyword = etSearchSet.getText().toString();
                 controller.getOnlineSet(keyword);
             }
@@ -60,9 +64,14 @@ public class SetFlashCardOnlineTab extends Fragment {
     }
 
     private void loadYourOnlineSet() {
-        controller.getUserOnlineSet(currentUser);
-        ibNextPage.setVisibility(View.GONE);
-        ibPrePage.setVisibility(View.GONE);
+        if (InternetCheckingController.isOnline(getContext())) {
+            ProgressDialog.getInstance().show(getContext());
+            controller.getUserOnlineSet(currentUser);
+            ibNextPage.setVisibility(View.GONE);
+            ibPrePage.setVisibility(View.GONE);
+        } else {
+            Toast.makeText(getContext(), "There is no internet, online set may not function", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void setupReferences(View inflate) {
@@ -85,4 +94,37 @@ public class SetFlashCardOnlineTab extends Fragment {
         super.onResume();
         loadYourOnlineSet();
     }
+
+    //Refresh when change tab
+//    private MyReceiver r;
+//    public void refresh() {
+//        loadYourOnlineSet();
+//        Log.i("Refresh", "YES");
+//    }
+//
+//    public void onPause() {
+//        super.onPause();
+//        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(r);
+//    }
+//
+//    public void onResume() {
+//        super.onResume();
+//        loadYourOnlineSet();
+//        r = new MyReceiver();
+//        LocalBroadcastManager.getInstance(getContext()).registerReceiver(r,
+//                new IntentFilter("TAG_REFRESH"));
+//    }
+//
+//    private class MyReceiver extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            SetFlashCardOnlineTab.this.refresh();
+//        }
+//    }
+//
+//    @NonNull
+//    @Override
+//    public String toString() {
+//        return "Online";
+//    }
 }

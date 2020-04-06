@@ -88,7 +88,7 @@ public class AssociatedWordAdapter extends BaseAdapter {
             listWord.remove(position);
             if (listWord.size() < 10) {
                 if (aContext instanceof CreateSetActivity) {
-                    aContext.findViewById(R.id.swPublic).setVisibility(View.INVISIBLE);
+                    ((CreateSetActivity) aContext).warningPublicSetLowerThan10Card();
                 }
             }
             notifyDataSetChanged();
