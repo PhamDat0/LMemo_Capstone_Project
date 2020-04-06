@@ -100,6 +100,7 @@ public class SetFlashcardAdapter extends BaseAdapter {
                             setFlashcardController.uploadSetToFirebase(setFlashcard);
                         } catch (UnsupportedOperationException e) {
                             holder.swPublic.setChecked(false);
+                            ProgressDialog.getInstance().dismiss();
                             Toast.makeText(aContext, e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     } else {
