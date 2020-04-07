@@ -91,9 +91,22 @@ public class CreateSetActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 hideKeyboard(getThisActivity());
+                waitToFinish();
+            }
+        });
+    }
+
+    public void waitToFinish() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ProgressDialog instance = ProgressDialog.getInstance();
+                while (instance.isShowing()) {
+                }
                 finish();
             }
         });
+        thread.start();
     }
 
     private Activity getThisActivity() {
@@ -124,7 +137,7 @@ public class CreateSetActivity extends AppCompatActivity {
 
     private void performEditSet() {
         setFlashcardController.updateSet(setFlashcard, txtSetName.getText().toString(), isSetPublic.isChecked(), associatedWordAdapter.getListOfWord());
-        finish();
+        waitToFinish();
 //        NoteController editAndDeleteNoteController = new NoteController(this);
 //        editAndDeleteNoteController.updateNote(setFlashcard, txtSetName.getText().toString(), isSetPublic.isChecked(), associatedWordAdapter.getListOfWord());
     }
@@ -139,12 +152,12 @@ public class CreateSetActivity extends AppCompatActivity {
                     if (!isSetPublic.isChecked()) {
                         setFlashcardController.createNewSet(txtSetName.getText().toString(), listOfWord, isSetPublic.isChecked());
                         Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
-                        finish();
+                        waitToFinish();
                     } else if (InternetCheckingController.isOnline(getApplicationContext())) {
                         ProgressDialog.getInstance().show(CreateSetActivity.this);
                         setFlashcardController.createNewSet(txtSetName.getText().toString(), listOfWord, isSetPublic.isChecked());
                         Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
-                        finish();
+                        waitToFinish();
                     } else {
                         Toast.makeText(getApplicationContext(), "There is no internet", Toast.LENGTH_LONG).show();
                     }

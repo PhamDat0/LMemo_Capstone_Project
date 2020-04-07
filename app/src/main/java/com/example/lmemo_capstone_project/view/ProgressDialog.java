@@ -33,4 +33,8 @@ public class ProgressDialog {
             dialog.dismiss();
         }
     }
+
+    public boolean isShowing() {
+        return dialog != null && dialog.isShowing();
+    }
 }

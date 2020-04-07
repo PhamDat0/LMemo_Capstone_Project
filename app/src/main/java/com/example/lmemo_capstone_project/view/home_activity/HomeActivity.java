@@ -297,8 +297,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case ADD_NOTE_REQUEST_CODE:
                 loadWord(data);
                 break;
-            case EDIT_NOTE_REQUEST_CODE:
-                break;
         }
     }
 
