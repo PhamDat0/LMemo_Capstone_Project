@@ -15,7 +15,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.home_activity.set_flashcard_view.CreateSetActivity"></activity>
+        <receiver
+            android:name=".controller.flashcard_reminder_controller.FlashcardReminderReceiver"
+            android:enabled="true"
+            android:exported="true">
+
+        </receiver>
+
+        <activity android:name=".view.home_activity.set_flashcard_view.CreateSetActivity" />
         <activity android:name=".view.home_activity.comment_view.CommentActivity" />
         <activity android:name=".view.home_activity.comment_view.AddCommentActivity" />
         <activity
@@ -32,8 +39,7 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".controller.word_of_day_controller.WordOfDayReceiver"
-            />
+        <receiver android:name=".controller.word_of_day_controller.WordOfDayReceiver" />
 
         <service
             android:name=".controller.word_of_day_controller.WordService"

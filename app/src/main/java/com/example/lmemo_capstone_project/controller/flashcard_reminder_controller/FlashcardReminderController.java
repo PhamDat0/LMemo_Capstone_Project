@@ -1,4 +1,4 @@
-package com.example.lmemo_capstone_project.controller.word_of_day_controller;
+package com.example.lmemo_capstone_project.controller.flashcard_reminder_controller;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -11,17 +11,16 @@ import android.os.SystemClock;
 
 import java.util.Calendar;
 
-public class WordOfTheDayController {
-    private String CHANNEL_ID = "channel1";
-    private Activity activity;
+public class FlashcardReminderController {
+    private String CHANNEL_ID = "channel2";
 
-    public WordOfTheDayController() {
+    public FlashcardReminderController() {
 
     }
 
     public void createNotificationChannel(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Channel 1", NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Channel 2", NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("This is channel 1");
             NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
@@ -50,7 +49,7 @@ public class WordOfTheDayController {
         PendingIntent pendingIntent;
 
 
-        myIntent = new Intent(activity.getApplicationContext(), WordOfDayReceiver.class);
+        myIntent = new Intent(activity.getApplicationContext(), FlashcardReminderReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(activity.getApplicationContext(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (isNotification) {

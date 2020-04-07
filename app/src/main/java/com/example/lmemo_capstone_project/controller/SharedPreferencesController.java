@@ -47,7 +47,7 @@ public class SharedPreferencesController {
         editor.commit();
 
     }
-    public static boolean ReminderIsOn(Context context){
+    public static boolean reminderIsOn(Context context){
         return getSharedPreferences(context).getBoolean(
                 context.getString(R.string.reminder_state), false);
     }

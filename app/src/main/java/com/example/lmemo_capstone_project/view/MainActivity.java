@@ -27,19 +27,20 @@ public class MainActivity extends AppCompatActivity {
 //        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
 //        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
         Log.i("SHARE_PRE", SharedPreferencesController.hasDictionaryData(getApplicationContext()) + "");
-
+//        wordOfTheDayController = new WordOfTheDayController();
+//        wordOfTheDayController.createNotificationChannel(this);
+//        WordOfTheDayController.startAlarm(
+//                SharedPreferencesController.dailyWordIsOn(getApplicationContext()), true, this,
+//                SharedPreferencesController.getDailyWordTime(getApplicationContext()));
         loadDictionaryDatabase();
-        wordOfTheDayController = new WordOfTheDayController();
-        wordOfTheDayController.createNotificationChannel(this);
+
     }
 
     @Override
     public void onStart() {
 
         super.onStart();
-        wordOfTheDayController.startAlarm(
-                SharedPreferencesController.dailyWordIsOn(getApplicationContext()), true, this,
-                SharedPreferencesController.getDailyWordTime(getApplicationContext()));
+
     }
 
 

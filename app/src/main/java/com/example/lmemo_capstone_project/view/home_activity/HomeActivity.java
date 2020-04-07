@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        changeToFlashcardFragment();
         DefaultFragment();
         setRewardData();
 
@@ -80,9 +80,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        changeToFlashcardFragment();
         loadWord(intent);
     }
+    private void changeToFlashcardFragment(){
+        Log.w("Exchange to Flashcard", "run to this function successful");
+        Bundle extras = getIntent().getExtras();
 
+        if (extras != null && extras.containsKey("flashcardReminderNotification")) {
+
+                boolean isExist = extras.getBoolean("flashcardReminderNotification");
+            Log.w("Exchange to Flashcard", "run to this function successful"+ isExist);
+                FlashCardFragment flashCardFragment = new FlashCardFragment();
+
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.mainFrameLayout, flashCardFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+        }
+    }
     private void loadWord(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras != null) {

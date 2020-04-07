@@ -19,7 +19,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.SharedPreferencesController;
+import com.example.lmemo_capstone_project.controller.flashcard_reminder_controller.FlashcardReminderController;
 import com.example.lmemo_capstone_project.controller.setting_controller.SettingController;
+import com.example.lmemo_capstone_project.controller.word_of_day_controller.WordOfTheDayController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +41,13 @@ public class SettingsFragment extends Fragment {
     private Spinner reminderMin;
     private Button btnSave;
     private Button btnCancel;
+    WordOfTheDayController wordOfTheDayController;
+    FlashcardReminderController flashcardReminderController;
+
     public SettingsFragment() {
         // Required empty public constructor
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,17 +65,26 @@ public class SettingsFragment extends Fragment {
         final SettingController settingController = new SettingController();
         settingController.setDailyWordSwitch(getContext(), dailyWordSwitch);
         settingController.setReminderSwitch(getContext(), reminderSwitch);
-        settingController.addValueToTimeSpinner(dailyWordHour,dailyWordMin,getContext());
-        settingController.addValueToTimeSpinner(reminderHour,reminderMin,getContext());
-        settingController.setDailyWordTimeSpinner(getContext(),dailyWordHour,dailyWordMin);
-        settingController.setReminderTimeSpinner(getContext(),reminderHour,reminderMin);
-        settingController.setDailyWordDismissSwitch(getContext(),dailyWordDismissSwitch);
-        settingController.setReminderDismissSwitch(getContext(),reminderDismissSwitch);
+        settingController.addValueToTimeSpinner(dailyWordHour, dailyWordMin, getContext());
+        settingController.addValueToTimeSpinner(reminderHour, reminderMin, getContext());
+        settingController.setDailyWordTimeSpinner(getContext(), dailyWordHour, dailyWordMin);
+        settingController.setReminderTimeSpinner(getContext(), reminderHour, reminderMin);
+        settingController.setDailyWordDismissSwitch(getContext(), dailyWordDismissSwitch);
+        settingController.setReminderDismissSwitch(getContext(), reminderDismissSwitch);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    settingController.controlOnClickEvent(getContext(),dailyWordSwitch,dailyWordDismissSwitch,dailyWordHour,dailyWordMin,
-                            reminderSwitch,reminderDismissSwitch,reminderHour,reminderMin);
+                settingController.controlOnClickEvent(getContext(), dailyWordSwitch, dailyWordDismissSwitch, dailyWordHour, dailyWordMin,
+                        reminderSwitch, reminderDismissSwitch, reminderHour, reminderMin);
+                flashcardReminderController = new FlashcardReminderController();
+                flashcardReminderController.createNotificationChannel(getActivity());
+                flashcardReminderController.startAlarm(SharedPreferencesController.reminderIsOn(getActivity().getApplicationContext()), true, getActivity(),
+                        SharedPreferencesController.getReminderTime(getActivity().getApplicationContext()));
+                wordOfTheDayController = new WordOfTheDayController();
+                wordOfTheDayController.createNotificationChannel(getActivity());
+                WordOfTheDayController.startAlarm(
+                        SharedPreferencesController.dailyWordIsOn(getActivity().getApplicationContext()), true, getActivity(),
+                        SharedPreferencesController.getDailyWordTime(getActivity().getApplicationContext()));
             }
         });
         return view;
