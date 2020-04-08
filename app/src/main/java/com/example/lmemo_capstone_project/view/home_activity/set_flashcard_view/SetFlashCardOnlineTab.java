@@ -7,13 +7,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.GetSetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
@@ -47,7 +45,7 @@ public class SetFlashCardOnlineTab extends Fragment {
         View inflate = inflater.inflate(R.layout.fragment_set_flash_card_online_tab, container, false);
 
         setupReferences(inflate);
-        loadYourOnlineSet();
+//        loadYourOnlineSet();
         setupActionForButton();
 
         return inflate;
@@ -64,16 +62,16 @@ public class SetFlashCardOnlineTab extends Fragment {
         });
     }
 
-    private void loadYourOnlineSet() {
-        if (InternetCheckingController.isOnline(getContext())) {
-            ProgressDialog.getInstance().show(getContext());
-            controller.getUserOnlineSet(currentUser);
-            ibNextPage.setVisibility(View.GONE);
-            ibPrePage.setVisibility(View.GONE);
-        } else {
-            Toast.makeText(getContext(), "There is no internet, online set may not function", Toast.LENGTH_LONG).show();
-        }
-    }
+//    private void loadYourOnlineSet() {
+//        if (InternetCheckingController.isOnline(getContext())) {
+//            ProgressDialog.getInstance().show(getContext());
+//            controller.getUserOnlineSet(currentUser);
+//            ibNextPage.setVisibility(View.GONE);
+//            ibPrePage.setVisibility(View.GONE);
+//        } else {
+//            Toast.makeText(getContext(), "There is no internet, online set may not function", Toast.LENGTH_LONG).show();
+//        }
+//    }
 
     private void setupReferences(View inflate) {
         etSearchSet = inflate.findViewById(R.id.etSearchSet);
@@ -105,7 +103,7 @@ public class SetFlashCardOnlineTab extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadYourOnlineSet();
+//        loadYourOnlineSet();
     }
 
     //Refresh when change tab

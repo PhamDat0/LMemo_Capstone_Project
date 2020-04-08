@@ -65,7 +65,8 @@ public class GetSetFlashcardController {
         listSet = new ArrayList<>();
         firebaseFirestore.collection(COLLECTION_PATH)
                 .whereGreaterThanOrEqualTo("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
-                .orderBy("name", Query.Direction.ASCENDING).limit(RECORD_PER_PAGE).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .orderBy("name", Query.Direction.ASCENDING).orderBy(FieldPath.documentId()).limit(RECORD_PER_PAGE)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
@@ -98,21 +99,21 @@ public class GetSetFlashcardController {
         });
     }
 
-    public void getUserOnlineSet(User currentUser) {
-        listSet = new ArrayList<>();
-        firebaseFirestore.collection(COLLECTION_PATH).whereEqualTo("userID", currentUser.getUserID())
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                for (DocumentSnapshot document : documents) {
-                    SetFlashcard setFlashcard = getSetFromSnapshot(document);
-                    listSet.add(setFlashcard);
-                }
-                getSetOwners();
-            }
-        });
-    }
+//    public void getUserOnlineSet(User currentUser) {
+//        listSet = new ArrayList<>();
+//        firebaseFirestore.collection(COLLECTION_PATH).whereEqualTo("userID", currentUser.getUserID())
+//                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//            @Override
+//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+//                for (DocumentSnapshot document : documents) {
+//                    SetFlashcard setFlashcard = getSetFromSnapshot(document);
+//                    listSet.add(setFlashcard);
+//                }
+//                getSetOwners();
+//            }
+//        });
+//    }
 
     private void getSetOwners() {
         if (listSet.isEmpty()) {
