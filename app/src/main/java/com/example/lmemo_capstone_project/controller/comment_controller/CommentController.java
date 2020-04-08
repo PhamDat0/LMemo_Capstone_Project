@@ -73,6 +73,7 @@ public class CommentController {
     /**
      * @param comment        元のコメント
      * @param commentContent 更新した内容
+     * この関数はコメントを更新します。内容だけ返信します。
      */
     public void editComment(Comment comment, String commentContent) {
         db.collection("comments").document(comment.getCommentID())
@@ -84,9 +85,8 @@ public class CommentController {
             }
         });
     }
-    private void getAllDataOfComment(){
 
-    }
+
     public void deleteCommentFromFB(Comment comment) {
         String commentID = comment.getCommentID();
         Log.w("AddCommentActivity", "OnlineID controller 2" + comment.getCommentID());

@@ -33,6 +33,7 @@ public class SetFlashCardOnlineTab extends Fragment {
     private ListView lvOnlineNote;
     private User currentUser;
     private GetSetFlashcardController controller;
+    private List<SetFlashcard> currentListSet;
 
     public SetFlashCardOnlineTab() {
         // Required empty public constructor
@@ -85,8 +86,20 @@ public class SetFlashCardOnlineTab extends Fragment {
     }
 
     public void updateUI(List<SetFlashcard> listSet) {
+        currentListSet = listSet;
         SetFlashcardAdapter setFlashcardAdapter = new SetFlashcardAdapter(listSet, getActivity(), SetFlashcardAdapter.ONLINE_MODE);
         lvOnlineNote.setAdapter(setFlashcardAdapter);
+        if (listSet.size() != 0) {
+            ibNextPage.setVisibility(View.VISIBLE);
+            ibNextPage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProgressDialog.getInstance().show(getContext());
+                    String keyword = etSearchSet.getText().toString();
+                    controller.getMoreOnlineSet(keyword, currentListSet);
+                }
+            });
+        }
     }
 
     @Override

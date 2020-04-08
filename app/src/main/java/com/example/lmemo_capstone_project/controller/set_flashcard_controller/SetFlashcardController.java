@@ -51,8 +51,8 @@ public class SetFlashcardController {
     }
 
     public void uploadSetToFirebase(final SetFlashcard setFlashcard) {
-
         Map<String, Object> setToAdd = mapping(setFlashcard);
+//        setToAdd.put("CreatedDate", new Date());
         firebaseFirestore.collection(COLLECTION_PATH).add(setToAdd).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {

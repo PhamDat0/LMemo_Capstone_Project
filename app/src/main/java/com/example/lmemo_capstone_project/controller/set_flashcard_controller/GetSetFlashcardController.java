@@ -12,7 +12,9 @@ import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.Lists;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.Map;
 public class GetSetFlashcardController {
 
     private static final String COLLECTION_PATH = "setFlashCards";
+    private static final long RECORD_PER_PAGE = 1;
 
     private UserDAO userDAO;
     private FlashcardBelongToSetDAO flashcardBelongToSetDAO;
@@ -61,8 +64,28 @@ public class GetSetFlashcardController {
     public void getOnlineSet(String keyword) {
         listSet = new ArrayList<>();
         firebaseFirestore.collection(COLLECTION_PATH)
-                .whereGreaterThan("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
-                .orderBy("name").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .whereGreaterThanOrEqualTo("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
+                .orderBy("name", Query.Direction.ASCENDING).limit(RECORD_PER_PAGE).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                for (DocumentSnapshot document : documents) {
+                    SetFlashcard setFlashcard = getSetFromSnapshot(document);
+                    listSet.add(setFlashcard);
+                }
+                getSetOwners();
+            }
+        });
+    }
+
+    public void getMoreOnlineSet(String keyword, List<SetFlashcard> baseList) {
+        listSet = baseList;
+        SetFlashcard lastSetInList = baseList.get(baseList.size() - 1);
+        firebaseFirestore.collection(COLLECTION_PATH)
+                .whereGreaterThanOrEqualTo("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
+                .orderBy("name", Query.Direction.ASCENDING).orderBy(FieldPath.documentId())
+                .startAfter(lastSetInList.getSetName(), lastSetInList.getOnlineID()).limit(RECORD_PER_PAGE)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
