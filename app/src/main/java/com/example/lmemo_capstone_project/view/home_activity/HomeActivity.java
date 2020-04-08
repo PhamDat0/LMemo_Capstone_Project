@@ -55,7 +55,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("Open_successful", "Error is really in DB");
-        onNewIntent(getIntent());
+
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,10 +69,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
-        changeToFlashcardFragment();
-        DefaultFragment();
+//        changeToFlashcardFragment();
+//        DefaultFragment();
         setRewardData();
-
+        onNewIntent(getIntent());
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -80,8 +80,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        changeToFlashcardFragment();
-        loadWord(intent);
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null && extras.containsKey("flashcardReminderNotification")) {
+
+            boolean isExist = extras.getBoolean("flashcardReminderNotification");
+            Log.w("Exchange to Flashcard", "run to this function successful" + isExist);
+            showSetFlashcardFragment();
+        } else {
+//            changeToFlashcardFragment();
+            loadWord(intent);
+        }
     }
     private void changeToFlashcardFragment(){
         Log.w("Exchange to Flashcard", "run to this function successful");
