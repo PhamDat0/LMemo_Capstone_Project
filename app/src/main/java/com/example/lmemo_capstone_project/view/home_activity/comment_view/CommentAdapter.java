@@ -77,7 +77,7 @@ public class CommentAdapter extends BaseAdapter {
         User userComment = listUserMap.get(comment.getUserID());
         List<String> upvoterList = comment.getUpvoters() == null ? new ArrayList<String>() : comment.getUpvoters();
         List<String> downvoterList = comment.getDownvoters() == null ? new ArrayList<String>() : comment.getDownvoters();
-        Log.d("debug",userComment.getContributionPoint()+"");
+        Log.d("debug", userComment.getContributionPoint() + "");
         Reward reward = rewardDAO.getBestReward(Math.max(userComment.getContributionPoint(), 1))[0];
         boolean isCreator = userComment.getUserID().equalsIgnoreCase(currentUser.getUserID());
 //        String reward = "aaaaaa";
@@ -140,10 +140,12 @@ public class CommentAdapter extends BaseAdapter {
             }
         });
     }
+
     private void updateUI(Comment comment) {
         commentList.remove(comment);
         this.notifyDataSetChanged();
     }
+
     private void setTextForCommentInfo(ViewHolder holder, User creator, Reward reward, Comment comment) {
         if (creator.isGender()) {
             holder.tvUser.setText(creator.getDisplayName());
@@ -221,7 +223,9 @@ public class CommentAdapter extends BaseAdapter {
 
     private void voteComment(int mode, Comment comment) {
         User currentUser = LMemoDatabase.getInstance(aContext).userDAO().getLocalUser()[0];
-        if (InternetCheckingController.isOnline(aContext)) {
+        if (currentUser.isGuest()) {
+            Toast.makeText(aContext, "You must login first!", Toast.LENGTH_LONG).show();
+        } else if (InternetCheckingController.isOnline(aContext)) {
             Log.i("Vote_success", "Has internet");
             CommentController commentController = new CommentController(aContext);
             ProgressDialog instance = ProgressDialog.getInstance();

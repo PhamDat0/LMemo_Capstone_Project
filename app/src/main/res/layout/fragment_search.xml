@@ -6,8 +6,6 @@
     android:orientation="vertical"
     tools:context=".view.home_activity.search_view.SearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -15,37 +13,56 @@
 
         <AutoCompleteTextView
             android:id="@+id/txtSearch"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="日本,Japan"
             android:imeOptions="actionSearch"
             android:singleLine="true" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/tabWord"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Word"
-            />
-        <Button
-            android:id="@+id/tabKanji"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Kanji"
-            />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/tabWord"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Word" />
+
+                    <Button
+                        android:id="@+id/tabKanji"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Kanji" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/searchFrameLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"></FrameLayout>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/searchFrameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
-
-
+    <!--        </LinearLayout>-->
+    <!--    </ScrollView>-->
 </LinearLayout>

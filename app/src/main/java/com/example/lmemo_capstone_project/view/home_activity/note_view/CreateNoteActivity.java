@@ -37,6 +37,7 @@ import com.example.lmemo_capstone_project.controller.search_controller.WordNotFo
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.AssociatedWordAdapter;
 
@@ -109,6 +110,7 @@ public class CreateNoteActivity extends AppCompatActivity {
         if (!txtTakeNote.getText().toString().isEmpty()) {
             if (note.isPublic() || isNotePublic.isChecked()) {
                 if (InternetCheckingController.isOnline(getApplicationContext())) {
+                    ProgressDialog.getInstance().show(CreateNoteActivity.this);
                     performEditNote();
                     setRequestCodeAndFinish(HomeActivity.EDIT_NOTE_REQUEST_CODE);
                 } else {
@@ -136,6 +138,7 @@ public class CreateNoteActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Add note successful", Toast.LENGTH_LONG).show();
                     setRequestCodeAndFinish(HomeActivity.ADD_NOTE_REQUEST_CODE);
                 } else if (InternetCheckingController.isOnline(getApplicationContext())) {
+                    ProgressDialog.getInstance().show(CreateNoteActivity.this);
                     addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
                     Toast.makeText(getApplicationContext(), "Add note successful", Toast.LENGTH_LONG).show();
                     setRequestCodeAndFinish(HomeActivity.ADD_NOTE_REQUEST_CODE);
@@ -150,13 +153,26 @@ public class CreateNoteActivity extends AppCompatActivity {
         }
     }
 
+    public void waitToFinish() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ProgressDialog instance = ProgressDialog.getInstance();
+                while (instance.isShowing()) {
+                }
+                finish();
+            }
+        });
+        thread.start();
+    }
+
     private void setRequestCodeAndFinish(int addNoteRequestCode) {
         Intent intent = new Intent();
         if (word != null) {
             intent.putExtra("wordID", word.getWordID());
         }
         setResult(addNoteRequestCode, intent);
-        finish();
+        waitToFinish();
     }
 
     private void setUpActionForEnterWord() {

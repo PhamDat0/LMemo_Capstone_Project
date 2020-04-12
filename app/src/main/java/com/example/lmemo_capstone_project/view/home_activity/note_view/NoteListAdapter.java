@@ -282,6 +282,7 @@ public class NoteListAdapter extends BaseAdapter {
                             Log.i("Vote_success", "Start perform");
                             noteController.upvote(note);
                         } catch (CannotPerformFirebaseRequest cannotPerformFirebaseRequest) {
+                            instance.dismiss();
                             Toast.makeText(aContext, cannotPerformFirebaseRequest.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -293,6 +294,7 @@ public class NoteListAdapter extends BaseAdapter {
                             Log.i("Vote_success", "Start perform");
                             noteController.downvote(note);
                         } catch (CannotPerformFirebaseRequest cannotPerformFirebaseRequest) {
+                            instance.dismiss();
                             Toast.makeText(aContext, cannotPerformFirebaseRequest.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }

@@ -42,6 +42,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private Bundle bundle = new Bundle();
     private int wordID = -1;
     private SearchController searchController;
+    private View resultFragment;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -64,6 +65,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             }
         });
         performSuggestion();
+        resultFragment = view.findViewById(R.id.searchFrameLayout);
+
 
         //Make "Search" keyboard
         edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -114,6 +117,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
     private void getDailyWord() {
         if (wordID != -1) {
+            resultFragment.setVisibility(View.VISIBLE);
             Word dailyWord = wordDAO.getOneWord(wordID);
             searchController.addWordToFlashcard(dailyWord);
             fragmentDataTransfer(dailyWord);
@@ -178,6 +182,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 fragmentTransaction.replace(R.id.searchFrameLayout, kanjiFragment, "SearchKanji");
                 fragmentTransaction.commit();
                 hideKeyboard(getActivity());
+                resultFragment.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -200,5 +205,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         fragmentDataTransfer(word);
         edtSearch.dismissDropDown();
         hideKeyboard(getActivity());
+        resultFragment.setVisibility(View.VISIBLE);
     }
 }

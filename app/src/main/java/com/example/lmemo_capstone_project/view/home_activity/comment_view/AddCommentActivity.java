@@ -16,6 +16,7 @@ import com.example.lmemo_capstone_project.controller.internet_checking_controlle
 import com.example.lmemo_capstone_project.model.Comment;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 
 public class AddCommentActivity extends AppCompatActivity {
     public static final int IN_ADDING_MODE = 0;
@@ -43,6 +44,7 @@ public class AddCommentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (InternetCheckingController.isOnline(getApplicationContext())) {
+                    ProgressDialog.getInstance().show(AddCommentActivity.this);
                     String commentContent = etCommentContent.getText().toString();
                     CommentController commentController = new CommentController(getApplicationContext());
                     if (commentContent.trim().length() != 0) {
@@ -60,7 +62,7 @@ public class AddCommentActivity extends AppCompatActivity {
                             default:
                                 Toast.makeText(getApplicationContext(), "There is no such mode.", Toast.LENGTH_LONG).show();
                         }
-                        finish();
+                        waitToFinish();
                     } else {
                         etCommentContent.setError("This must not be empty");
                     }
@@ -75,6 +77,19 @@ public class AddCommentActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void waitToFinish() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ProgressDialog instance = ProgressDialog.getInstance();
+                while (instance.isShowing()) {
+                }
+                finish();
+            }
+        });
+        thread.start();
     }
 
     private void setupReferences() {
