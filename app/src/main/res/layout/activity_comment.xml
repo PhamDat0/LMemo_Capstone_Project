@@ -147,11 +147,18 @@
                 android:textColor="#000000"
                 android:textSize="20sp" />
         </LinearLayout>
-
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#9FA3AA"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp" />
     <ListView
         android:id="@+id/commentListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
 
 </LinearLayout>
