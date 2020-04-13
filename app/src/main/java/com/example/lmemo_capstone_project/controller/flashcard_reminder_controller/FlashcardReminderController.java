@@ -61,6 +61,11 @@ public class FlashcardReminderController {
 //                manager.setRepeating(AlarmManager.RTC_WAKEUP, dailyTime, AlarmManager.INTERVAL_DAY,pendingIntent);
             }
         }
+        else{
+            AlarmManager manager = (AlarmManager) activity.getApplicationContext().getSystemService(activity.getApplicationContext().ALARM_SERVICE);
+            manager.cancel(pendingIntent);
+            pendingIntent.cancel();
+        }
     }
 
     private static boolean timeHasNotCome(Calendar calendar, int hour, int minute) {
