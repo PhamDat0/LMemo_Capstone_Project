@@ -16,6 +16,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -123,11 +124,13 @@ public class NoteController {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("EditNoteController", "DocumentSnapshot was successfully updated!");
+                        ProgressDialog.getInstance().dismiss();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("EditNoteController", "DocumentSnapshot update fails!");
+                ProgressDialog.getInstance().dismiss();
             }
         });
     }

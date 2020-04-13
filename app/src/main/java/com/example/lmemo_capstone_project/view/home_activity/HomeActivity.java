@@ -45,6 +45,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static final int TEST_FLASHCARD_REQUEST_CODE = 100;
     public static final int ADD_NOTE_REQUEST_CODE = 101;
     public static final int EDIT_NOTE_REQUEST_CODE = 102;
+    public static final int NOTI_FOR_WORD = 110;
+    public static final int NOTI_FOR_FC = 120;
 
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
@@ -82,7 +84,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onNewIntent(intent);
         Bundle extras = getIntent().getExtras();
 
-        if (extras != null && extras.containsKey("flashcardReminderNotification")) {
+        if (extras != null && ((int) extras.get("mode")) == NOTI_FOR_FC) {
 
             boolean isExist = extras.getBoolean("flashcardReminderNotification");
             Log.w("Exchange to Flashcard", "run to this function successful" + isExist);
@@ -137,7 +139,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Reward[] getRewards = rewardDAO.getRewards();
         if (getRewards.length == 0) {
             reward.setRewardName("User");
-            reward.setMinimumReachPoint(0);
+            reward.setMinimumReachPoint(-99);
             rewardDAO.insertReward(reward);
 
             reward1.setRewardName("First contribution");

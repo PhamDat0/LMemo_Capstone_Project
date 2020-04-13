@@ -10,9 +10,9 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.SharedPreferencesController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
-import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
@@ -32,6 +32,7 @@ public class WordOfDayReceiver extends BroadcastReceiver {
         Intent myIntent = new Intent(context, HomeActivity.class);
         wordID = word.getWordID();
         myIntent.putExtra("wordID", wordID);
+        myIntent.putExtra("mode", HomeActivity.NOTI_FOR_WORD);
         Log.w("HomeActivity", "Got Something from broadcast"+word.getWordID());
         myIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(

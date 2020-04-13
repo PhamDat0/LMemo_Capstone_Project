@@ -12,7 +12,6 @@ import androidx.core.app.NotificationCompat;
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.SharedPreferencesController;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
-import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.FlashCardFragment;
 
 public class FlashcardReminderReceiver extends BroadcastReceiver {
     private String contentText;
@@ -22,6 +21,7 @@ public class FlashcardReminderReceiver extends BroadcastReceiver {
         contentText = "It's time to study baby";
         Intent myIntent = new Intent(context, HomeActivity.class);
         myIntent.putExtra("flashcardReminderNotification", true);
+        myIntent.putExtra("mode", HomeActivity.NOTI_FOR_FC);
         myIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context,
