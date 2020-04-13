@@ -52,7 +52,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     ActionBarDrawerToggle mDrawerToggle;
     private FirebaseAuth mAuth;
     private int wordID = -1;
-
+    private boolean reminderIsExist = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,31 +82,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Bundle extras = getIntent().getExtras();
-
-        if (extras != null && ((int) extras.get("mode")) == NOTI_FOR_FC) {
-
-            boolean isExist = extras.getBoolean("flashcardReminderNotification");
-            Log.w("Exchange to Flashcard", "run to this function successful" + isExist);
-            showSetFlashcardFragment();
-        } else {
-//            changeToFlashcardFragment();
             loadWord(intent);
-        }
     }
     private void loadWord(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            if (extras.containsKey("wordID")) {
+            if (extras.containsKey("wordID") && ((int) extras.get("mode")) == NOTI_FOR_WORD) {
 
                 wordID = extras.getInt("wordID");
                 Log.w("HomeActivity", "Got Something: " + wordID + " blo bla: " + extras.getInt("wordID") + " exists: " + extras.containsKey("wordID"));
             }
-
+            else if (extras.containsKey("flashcardReminderNotification") && ((int) extras.get("mode")) == NOTI_FOR_FC){
+                reminderIsExist = extras.getBoolean("flashcardReminderNotification");
+            }
         } else {
             Log.w("HomeActivity", "Nothing found ");
         }
         DefaultFragment();
+        reminderIsExist= false;
         wordID = -1;
     }
 
@@ -184,21 +177,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     //Default cho man hinh home la search
     public void DefaultFragment() {
-
-        SearchFragment fragment = new SearchFragment();
-
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-        fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "searchHome");
-        WordSearchingFragment wordFragment = new WordSearchingFragment();
-        if (wordID != -1) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("wordID", wordID);
-            fragment.setArguments(bundle);
-            Log.w("HomeActivity", "Run at HomeActivity" + bundle.toString());
+        if (reminderIsExist){
+            showSetFlashcardFragment();
         }
-        fragmentTransaction.replace(R.id.searchFrameLayout, wordFragment, "SearchWord");
-        fragmentTransaction.commit();
+        else {
+            SearchFragment fragment = new SearchFragment();
+
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "searchHome");
+            WordSearchingFragment wordFragment = new WordSearchingFragment();
+            if (wordID != -1) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("wordID", wordID);
+                fragment.setArguments(bundle);
+                Log.w("HomeActivity", "Run at HomeActivity" + bundle.toString());
+            }
+            fragmentTransaction.replace(R.id.searchFrameLayout, wordFragment, "SearchWord");
+            fragmentTransaction.commit();
+        }
+
 
     }
 
