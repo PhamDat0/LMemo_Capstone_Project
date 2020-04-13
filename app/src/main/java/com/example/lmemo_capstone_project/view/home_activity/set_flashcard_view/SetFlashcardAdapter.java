@@ -22,6 +22,7 @@ import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.SetFlashcardController;
+import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
@@ -85,7 +86,11 @@ public class SetFlashcardAdapter extends BaseAdapter {
     private void setupContent(ViewHolder holder, SetFlashcard setFlashcard) {
         holder.tvSetName.setText("Set Name: " + setFlashcard.getSetName() + "\nContain: " + setFlashcard.getWordID().size() + " words");
         holder.tvCreatorDisplayName.setText(setFlashcard.getCreator().getDisplayName());
-        holder.tvCreatorReward.setText(LMemoDatabase.getInstance(aContext).rewardDAO().getBestReward(setFlashcard.getCreator().getContributionPoint())[0].getRewardName());
+        Log.e("Contribution_Point:", "" + setFlashcard.getCreator().getContributionPoint());
+        Reward[] bestReward = LMemoDatabase.getInstance(aContext).rewardDAO().getBestReward(setFlashcard.getCreator().getContributionPoint());
+        Reward reward = bestReward[0];
+        String rewardName = reward.getRewardName();
+        holder.tvCreatorReward.setText(rewardName);
     }
 
     private void setActionForButtons(final SetFlashcard setFlashcard, final ViewHolder holder) {
