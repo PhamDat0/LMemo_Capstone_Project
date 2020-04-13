@@ -13,20 +13,11 @@
                 android:title="Sign in"
                 android:icon="@drawable/ic_enter"
                 android:visible="true" />
-            <item
-                android:id="@+id/createAcc"
-                android:title="Create Account"
-                android:icon="@drawable/ic_createaccount"
-                android:visible="true" />
+
             <item
                 android:id="@+id/myAccount"
                 android:title="My Account"
                 android:icon="@drawable/ic_myaccount"
-                android:visible="true"/>
-            <item
-                android:id="@+id/settings"
-                android:title="Settings"
-                android:icon="@drawable/ic_settings"
                 android:visible="true"/>
 
             <item
@@ -43,6 +34,12 @@
                 android:title="Notes"
                 android:icon="@drawable/ic_note"
                 android:visible="true" />
+            <item
+                android:id="@+id/settings"
+                android:title="Settings"
+                android:icon="@drawable/ic_settings"
+                android:visible="true"/>
+
             <item
                 android:id="@+id/signOut"
                 android:title="Sign out"

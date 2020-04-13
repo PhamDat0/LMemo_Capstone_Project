@@ -23,8 +23,10 @@
         </receiver>
 
         <activity android:name=".view.home_activity.set_flashcard_view.CreateSetActivity" />
-        <activity android:name=".view.home_activity.comment_view.CommentActivity" />
-        <activity android:name=".view.home_activity.comment_view.AddCommentActivity" />
+        <activity android:name=".view.home_activity.comment_view.CommentActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".view.home_activity.comment_view.AddCommentActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".view.home_activity.note_view.CreateNoteActivity"
             android:theme="@style/AppTheme.NoActionBar" />

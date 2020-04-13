@@ -65,7 +65,7 @@ public class CommentAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(aContext).inflate(R.layout.activity_note_list_adapter, null);
+            convertView = LayoutInflater.from(aContext).inflate(R.layout.activity_comment_list_adapter, null);
             holder = getHolder(convertView);
             convertView.setTag(holder);
         } else {
@@ -194,11 +194,7 @@ public class CommentAdapter extends BaseAdapter {
         holder.ibtUpvote = convertView.findViewById(R.id.btUpvote);
         holder.tvLikeNumbers = convertView.findViewById(R.id.tvlikeNumbers);
         holder.tvDislikeNumbers = convertView.findViewById(R.id.tvdislikeNumbers);
-        holder.tvComment = convertView.findViewById(R.id.tvComment);
         holder.ibtDownvote = convertView.findViewById(R.id.btDownvote);
-        holder.btViewComment = convertView.findViewById(R.id.btViewComment);
-        holder.btViewComment.setVisibility(View.INVISIBLE);
-        holder.tvComment.setVisibility(View.INVISIBLE);
         return holder;
     }
 
@@ -213,12 +209,10 @@ public class CommentAdapter extends BaseAdapter {
         TextView tvCommentContent;
         TextView tvLikeNumbers;
         TextView tvDislikeNumbers;
-        TextView tvComment;
         ImageButton ibDelete;
         ImageButton ibEdit;
         ImageButton ibtUpvote;
         ImageButton ibtDownvote;
-        ImageButton btViewComment;
     }
 
     private void voteComment(int mode, Comment comment) {

@@ -230,8 +230,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "signIn");
             fragmentTransaction.commit();
-        } else if (id == R.id.createAcc) {
-
         } else if (id == R.id.myAccount) {
             Fragment fragment = LMemoDatabase.getInstance(getApplicationContext()).userDAO().
                     getLocalUser()[0].isGuest() ? new SignInFragment() : new MyAccountFragment();
