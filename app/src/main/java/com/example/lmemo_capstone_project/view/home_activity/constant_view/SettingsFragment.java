@@ -81,7 +81,7 @@ public class SettingsFragment extends Fragment {
                 flashcardReminderController.startAlarm(SharedPreferencesController.reminderIsOn(getActivity().getApplicationContext()), true, getActivity(),
                         SharedPreferencesController.getReminderTime(getActivity().getApplicationContext()));
                 wordOfTheDayController = new WordOfTheDayController();
-                wordOfTheDayController.createNotificationChannel(getActivity());
+//                wordOfTheDayController.createNotificationChannel(getActivity());
                 WordOfTheDayController.startAlarm(
                         SharedPreferencesController.dailyWordIsOn(getActivity().getApplicationContext()), true, getActivity(),
                         SharedPreferencesController.getDailyWordTime(getActivity().getApplicationContext()));

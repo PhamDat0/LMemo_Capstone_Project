@@ -13,12 +13,13 @@ import com.example.lmemo_capstone_project.controller.SharedPreferencesController
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.DictionaryFileReader;
 import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.KanjiFileReader;
+import com.example.lmemo_capstone_project.controller.flashcard_reminder_controller.FlashcardReminderController;
 import com.example.lmemo_capstone_project.controller.word_of_day_controller.WordOfTheDayController;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 
 public class MainActivity extends AppCompatActivity {
     WordOfTheDayController wordOfTheDayController;
-
+    FlashcardReminderController flashcardReminderController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,11 +28,15 @@ public class MainActivity extends AppCompatActivity {
 //        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
 //        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
         Log.i("SHARE_PRE", SharedPreferencesController.hasDictionaryData(getApplicationContext()) + "");
-//        wordOfTheDayController = new WordOfTheDayController();
-//        wordOfTheDayController.createNotificationChannel(this);
-//        WordOfTheDayController.startAlarm(
-//                SharedPreferencesController.dailyWordIsOn(getApplicationContext()), true, this,
-//                SharedPreferencesController.getDailyWordTime(getApplicationContext()));
+        flashcardReminderController = new FlashcardReminderController();
+        flashcardReminderController.createNotificationChannel(this);
+        flashcardReminderController.startAlarm(SharedPreferencesController.reminderIsOn(getApplicationContext()), true, this,
+                SharedPreferencesController.getReminderTime(getApplicationContext()));
+        wordOfTheDayController = new WordOfTheDayController();
+//                wordOfTheDayController.createNotificationChannel(getActivity());
+        WordOfTheDayController.startAlarm(
+                SharedPreferencesController.dailyWordIsOn(getApplicationContext()), true, this,
+                SharedPreferencesController.getDailyWordTime(getApplicationContext()));
         loadDictionaryDatabase();
 
     }

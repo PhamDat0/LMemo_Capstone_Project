@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.SystemClock;
+import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 
 import java.util.Calendar;
 
@@ -51,7 +52,8 @@ public class WordOfTheDayController {
 
 
         myIntent = new Intent(activity.getApplicationContext(), WordOfDayReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(activity.getApplicationContext(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        myIntent.putExtra("mode", HomeActivity.NOTI_FOR_WORD);
+        pendingIntent = PendingIntent.getBroadcast(activity.getApplicationContext(), HomeActivity.NOTI_FOR_WORD, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (isNotification) {
             AlarmManager manager = (AlarmManager) activity.getApplicationContext().getSystemService(activity.getApplicationContext().ALARM_SERVICE);

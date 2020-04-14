@@ -8,11 +8,11 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.SystemClock;
-
+import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 import java.util.Calendar;
 
 public class FlashcardReminderController {
-    private String CHANNEL_ID = "channel2";
+    private String CHANNEL_ID = "channel1";
 
     public FlashcardReminderController() {
 
@@ -20,7 +20,7 @@ public class FlashcardReminderController {
 
     public void createNotificationChannel(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Channel 2", NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Channel 1", NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("This is channel 1");
             NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
@@ -50,7 +50,8 @@ public class FlashcardReminderController {
 
 
         myIntent = new Intent(activity.getApplicationContext(), FlashcardReminderReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(activity.getApplicationContext(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        myIntent.putExtra("mode", HomeActivity.NOTI_FOR_FC);
+        pendingIntent = PendingIntent.getBroadcast(activity.getApplicationContext(), HomeActivity.NOTI_FOR_FC, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (isNotification) {
             AlarmManager manager = (AlarmManager) activity.getApplicationContext().getSystemService(activity.getApplicationContext().ALARM_SERVICE);
