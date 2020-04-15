@@ -95,7 +95,8 @@ public class CommentController {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("EditCommentController", "DocumentSnapshot successfully deleted!");
-                        updateUserContributionPoint(-1);
+                        MyAccountController myAccountController = new MyAccountController();
+                        myAccountController.increaseUserPoint(user.getUserID(), -1);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -106,12 +107,6 @@ public class CommentController {
         comment.setCommentID(null);
     }
 
-    private void updateUserContributionPoint(int addPoint) {
-        user.setContributionPoint(user.getContributionPoint() + addPoint);
-        MyAccountController myAccountController = new MyAccountController();
-        myAccountController.updateUser(user);
-        userDAO.updateUser(user);
-    }
     public void upvoteComment(Comment comment){
         if (!comment.getUpvoters().contains(user.getUserID())) {
             int pointForOwner = comment.getUpvoters().contains(user.getUserID()) ? 2 : 1;
