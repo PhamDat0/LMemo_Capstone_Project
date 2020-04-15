@@ -53,7 +53,7 @@ public class FlashCardFragment extends Fragment {
         btnReview = view.findViewById(R.id.btReview);
         getAllFlashcard();
         flashcardListView = view.findViewById(R.id.flashcardListView);
-        FlashcardListAdapter flashcardAdapter = new FlashcardListAdapter(getActivity(), listFlashcard);
+        FlashcardListAdapter flashcardAdapter = new FlashcardListAdapter(getActivity(), listFlashcard, this);
         flashcardListView.setAdapter(flashcardAdapter);
 //        flashcardAdapter.notifyDataSetChanged();
 //        getFragmentManager().beginTransaction()

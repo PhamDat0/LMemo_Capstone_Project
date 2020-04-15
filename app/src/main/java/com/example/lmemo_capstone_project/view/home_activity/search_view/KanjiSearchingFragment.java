@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
 
@@ -41,6 +43,7 @@ public class KanjiSearchingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_kanji_searching, container, false);
         kanjiListView = view.findViewById(R.id.kanjiListView);
         kanjiListView.setAdapter(new KanjiListAdapter(getActivity(), listKanji));
+        setDynamicHeight(kanjiListView);
         return view;
     }
 
@@ -53,5 +56,27 @@ public class KanjiSearchingFragment extends Fragment {
         KanjiDAO kanjiDAO = LMemoDatabase.getInstance(getContext()).kanjiDAO();
         SearchController searchController = new SearchController(kanjiDAO);
         listKanji = searchController.searchForKanji(enteredWord);
+    }
+
+    private void setDynamicHeight(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        int totalHeight = listView.getPaddingTop() + listView.getPaddingBottom();
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+
+            if (listItem != null) {
+                listItem.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                totalHeight += listItem.getMeasuredHeight();
+            }
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }

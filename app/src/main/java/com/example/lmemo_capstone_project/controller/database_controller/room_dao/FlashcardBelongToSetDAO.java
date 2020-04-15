@@ -7,6 +7,8 @@ import androidx.room.Query;
 
 import com.example.lmemo_capstone_project.model.room_db_entity.FlashcardBelongToSet;
 
+import java.util.List;
+
 @Dao
 public interface FlashcardBelongToSetDAO {
     @Insert
@@ -20,4 +22,7 @@ public interface FlashcardBelongToSetDAO {
 
     @Query("DELETE FROM FlashcardBelongToSet WHERE SetID=:setID")
     void deleteAllAssociationWithSet(int setID);
+
+    @Query("SELECT FlashcardID FROM FlashcardBelongToSet WHERE SetID=:setID")
+    List<Long> getFlashcardsBySetID(int setID);
 }

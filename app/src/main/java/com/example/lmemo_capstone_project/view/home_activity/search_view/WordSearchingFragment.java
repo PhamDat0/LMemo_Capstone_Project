@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
@@ -29,6 +30,7 @@ import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.example.lmemo_capstone_project.view.home_activity.HomeActivity;
 import com.example.lmemo_capstone_project.view.home_activity.note_view.CreateNoteActivity;
 import com.example.lmemo_capstone_project.view.home_activity.note_view.NoteListAdapter;
+import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.AddToSetDialog;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -40,6 +42,7 @@ import java.util.Map;
  */
 public class WordSearchingFragment extends Fragment {
     private ImageButton btnOpenTakeNoteDialog;
+    private ImageButton btAddWordToSet;
     private ListView noteListView;
     private int wordID;
     private TextToSpeech textToSpeech;
@@ -55,6 +58,7 @@ public class WordSearchingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_word_searching, container, false);
         noteListView = view.findViewById(R.id.NoteListView);
         btnOpenTakeNoteDialog = view.findViewById(R.id.btnOpenTakeNoteDialog);
+        btAddWordToSet = view.findViewById(R.id.ibAddToSet);
         addListenerOnSpinnerItemSelection(view);
         setUpSpinner();
         wordSearchResult(view);
@@ -73,8 +77,20 @@ public class WordSearchingFragment extends Fragment {
                 showAddNoteDialog(v);
             }
         });
+        btAddWordToSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddToSetDialog();
+            }
+        });
 //        loadPublicNote();
         return view;
+    }
+
+    private void showAddToSetDialog() {
+        FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+        AddToSetDialog addToSetDialog = AddToSetDialog.newInstance(getWord());
+        addToSetDialog.show(ft, "dialog");
     }
 
     private void setUpSpinner() {
@@ -176,7 +192,7 @@ public class WordSearchingFragment extends Fragment {
         spinnerSort.setAdapter(adapter);
     }
 
-    public void setDynamicHeight(ListView listView) {
+    private void setDynamicHeight(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             return;

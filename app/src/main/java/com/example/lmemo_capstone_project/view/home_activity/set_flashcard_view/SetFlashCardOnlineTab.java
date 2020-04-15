@@ -103,7 +103,8 @@ public class SetFlashCardOnlineTab extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        loadYourOnlineSet();
+        ProgressDialog.getInstance().show(getContext());
+        controller.getOnlineSet("");
     }
 
     //Refresh when change tab

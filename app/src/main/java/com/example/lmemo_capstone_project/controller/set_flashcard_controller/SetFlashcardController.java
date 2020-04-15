@@ -79,6 +79,7 @@ public class SetFlashcardController {
         for (FlashcardBelongToSet flashcard : flashcards) {
             flashcardIDList.add((long) flashcard.getFlashcardID());
         }
+        flashcardIDList = setFlashcard.getWordID();
         if (flashcardIDList.size() < 10) {
             throw new UnsupportedOperationException("Public set must have at least 10 flashcards");
         }
@@ -103,7 +104,8 @@ public class SetFlashcardController {
                     case NOT_DELETE:
                         setFlashcard.setPublic(false);
                         setFlashcard.setOnlineID("");
-                        setFlashcardDAO.updateSetFlashcard(setFlashcard);
+                        updateSetToSQL(setFlashcard);
+//                        setFlashcardDAO.updateSetFlashcard(setFlashcard);
                         Log.d("SF_CONTROLLER", "Make set private successfully");
                         break;
                     case DELETE:
@@ -223,7 +225,6 @@ public class SetFlashcardController {
         }
         return listWordID;
     }
-
     public void updateSet(SetFlashcard setFlashcard, String setName, boolean newPublicStatus, List<Word> listOfWord) {
         List<Long> listWordID = getListWordID(listOfWord);
         setFlashcard.setSetName(setName);

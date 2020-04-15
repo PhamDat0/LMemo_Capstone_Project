@@ -17,19 +17,22 @@ import com.example.lmemo_capstone_project.controller.database_controller.LMemoDa
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.flashcard_controller.FlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
+import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.AddToSetDialog;
 
 import java.util.ArrayList;
 
 public class FlashcardListAdapter extends BaseAdapter {
 
+    private final FlashCardFragment flashCardFragment;
     private Activity aContext;
     private ArrayList<Word> listFlashcard;
     private FlashcardDAO flashcardDAO;
     private FlashcardController flashcardController;
 
-    public FlashcardListAdapter(Activity aContext, ArrayList<Word> listFlashcard) {
+    public FlashcardListAdapter(Activity aContext, ArrayList<Word> listFlashcard, FlashCardFragment flashCardFragment) {
         this.aContext = aContext;
         this.listFlashcard = listFlashcard;
+        this.flashCardFragment = flashCardFragment;
         flashcardDAO = LMemoDatabase.getInstance(aContext).flashcardDAO();
 //        LayoutInflater layoutInflater = LayoutInflater.from(aContext);
     }
@@ -59,6 +62,7 @@ public class FlashcardListAdapter extends BaseAdapter {
             holder.tvKanji = convertView.findViewById(R.id.tvKanji);
             holder.tvKana = convertView.findViewById(R.id.tvKana);
             holder.btnDelete = convertView.findViewById(R.id.btnDelete);
+            holder.ibAddToSet = convertView.findViewById(R.id.ibAddToSet);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -92,7 +96,22 @@ public class FlashcardListAdapter extends BaseAdapter {
             }
         });
 
+        holder.ibAddToSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Word word = new Word();
+                word.setWordID(listFlashcard.get(position).getWordID());
+                showAddToSetDialog(word);
+            }
+        });
+
         return convertView;
+    }
+
+    private void showAddToSetDialog(Word word) {
+        FragmentTransaction ft = flashCardFragment.getParentFragmentManager().beginTransaction();
+        AddToSetDialog addToSetDialog = AddToSetDialog.newInstance(word);
+        addToSetDialog.show(ft, "dialog");
     }
 
     /**
@@ -119,5 +138,6 @@ public class FlashcardListAdapter extends BaseAdapter {
         TextView tvKanji;
         TextView tvKana;
         ImageButton btnDelete;
+        ImageButton ibAddToSet;
     }
 }

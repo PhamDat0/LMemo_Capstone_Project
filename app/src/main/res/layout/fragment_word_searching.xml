@@ -69,6 +69,13 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
                 android:src="@drawable/ic_addnote" />
+
+            <ImageButton
+                android:id="@+id/ibAddToSet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".1"
+                android:src="@drawable/ic_enter" />
         </LinearLayout>
             <TextView
                 android:id="@+id/tvPartOfSpeech"
