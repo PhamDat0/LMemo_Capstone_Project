@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
+import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.GetSetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
@@ -97,14 +98,18 @@ public class SetFlashCardOnlineTab extends Fragment {
                     controller.getMoreOnlineSet(keyword, currentListSet);
                 }
             });
+        } else {
+            ibNextPage.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ProgressDialog.getInstance().show(getContext());
-        controller.getOnlineSet("");
+        if (InternetCheckingController.isOnline(getContext())) {
+            ProgressDialog.getInstance().show(getContext());
+            controller.getOnlineSet("");
+        }
     }
 
     //Refresh when change tab

@@ -78,7 +78,7 @@ public class SignInFragment extends Fragment {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        controller = new UserAuthenticationController(getActivity());
+        controller = new UserAuthenticationController(getContext());
 
         googleCreateSignInOption();
     }

@@ -44,10 +44,10 @@ public class AddCommentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (InternetCheckingController.isOnline(getApplicationContext())) {
-                    ProgressDialog.getInstance().show(AddCommentActivity.this);
                     String commentContent = etCommentContent.getText().toString();
                     CommentController commentController = new CommentController(getApplicationContext());
                     if (commentContent.trim().length() != 0) {
+                        ProgressDialog.getInstance().show(AddCommentActivity.this);
                         switch (mode) {
                             case IN_ADDING_MODE:
                                 if (!currentUser.getUserID().equalsIgnoreCase("GUEST")) {

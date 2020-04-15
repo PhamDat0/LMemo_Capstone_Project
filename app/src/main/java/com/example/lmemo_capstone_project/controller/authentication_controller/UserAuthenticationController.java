@@ -1,7 +1,7 @@
 package com.example.lmemo_capstone_project.controller.authentication_controller;
 
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -35,10 +35,10 @@ public class UserAuthenticationController {
     private NoteController addNoteController;
     private List<String> listFUID;
 
-    public UserAuthenticationController(Activity activity) {
+    public UserAuthenticationController(Context aContext) {
         db = FirebaseFirestore.getInstance();
-        userDAO = LMemoDatabase.getInstance(activity.getApplicationContext()).userDAO();
-        addNoteController = new NoteController(activity);
+        userDAO = LMemoDatabase.getInstance(aContext).userDAO();
+        addNoteController = new NoteController(aContext);
         listFUID = new ArrayList<>();
     }
 

@@ -177,6 +177,9 @@ public class SetFlashcardAdapter extends BaseAdapter {
                     setFlashcardList.remove(setFlashcard);
                 }
                 notifyDataSetChanged();
+                if (setFlashcardList.size() == 0) {
+                    aContext.findViewById(R.id.ibNextPage).setVisibility(View.INVISIBLE);
+                }
             }
         });
         holder.ibDownload.setOnClickListener(new View.OnClickListener() {
