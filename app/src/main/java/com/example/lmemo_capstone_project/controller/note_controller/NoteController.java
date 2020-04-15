@@ -157,7 +157,7 @@ public class NoteController {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("EditNoteController", "DocumentSnapshot successfully deleted!");
-                        updateUserContributionPoint(-1);
+                        new MyAccountController().increaseUserPoint(user.getUserID(), -1);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -166,13 +166,6 @@ public class NoteController {
             }
         });
         note.setOnlineID(null);
-    }
-
-    private void updateUserContributionPoint(int addPoint) {
-        user.setContributionPoint(user.getContributionPoint() + addPoint);
-        MyAccountController myAccountController = new MyAccountController();
-        myAccountController.updateUser(user);
-        userDAO.updateUser(user);
     }
 
     public void deleteNote(Note note) {
