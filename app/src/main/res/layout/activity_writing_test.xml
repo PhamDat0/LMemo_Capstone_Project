@@ -30,7 +30,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLength="60"
-                android:maxLines="3"
                 android:text="Question"
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/colorPrimary"
@@ -39,11 +38,12 @@
 
             <EditText
                 android:id="@+id/etAnswer"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
+                android:textAlignment="center"
                 android:autoSizeMinTextSize="10sp"
                 android:autoSizeMaxTextSize="15sp"
                 android:hint="Answer kana reading here"
