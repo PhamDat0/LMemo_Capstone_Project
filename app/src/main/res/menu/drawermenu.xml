@@ -28,6 +28,7 @@
             <item
                 android:id="@+id/setFlashcard"
                 android:title="Set Flash Card"
+                android:icon="@drawable/ic_set_flash_card"
                 android:visible="true" />
             <item
                 android:id="@+id/myNote"

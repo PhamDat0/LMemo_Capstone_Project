@@ -136,7 +136,7 @@
                 android:id="@+id/tvComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
+                android:textColor="@color/colorPrimary"
                 android:textSize="20sp"
                 android:text="Comment"/>
         </LinearLayout>

@@ -52,30 +52,14 @@
             <TextView
                 android:id="@+id/tvKanji"
                 android:layout_width="300dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="15dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
                 android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="20sp"
-                android:autoSizeMaxTextSize="22sp"
+                android:textSize="20sp"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 android:layout_marginRight="10dp"
                 android:layout_weight=".1"/>
-            <ImageButton
-                android:id="@+id/btnOpenTakeNoteDialog"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:src="@drawable/ic_addnote" />
-
-            <ImageButton
-                android:id="@+id/ibAddToSet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".1"
-                android:src="@drawable/ic_enter" />
         </LinearLayout>
             <TextView
                 android:id="@+id/tvPartOfSpeech"
@@ -96,7 +80,35 @@
                 android:textColor="@color/endblue"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnOpenTakeNoteDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30sp"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_addnote"
+                android:text="add a note"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/ibAddToSet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginRight="10dp"
+                android:text="add to set"
+                android:drawableLeft="@drawable/ic_add_to_set"
+                android:textColor="@color/colorPrimary"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_weight="1" />
 
+        </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
