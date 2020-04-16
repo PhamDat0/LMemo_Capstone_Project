@@ -280,6 +280,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     private void setUpNoteForEdit() {
+        ((TextView) findViewById(R.id.tvCreateANoteTitle)).setText(R.string.EditNoteTitle);
         txtTakeNote.setText(note.getNoteContent());
         NoteOfWordDAO noteOfWordDAO = LMemoDatabase.getInstance(getApplicationContext()).noteOfWordDAO();
         NoteOfWord[] notesOfWord = noteOfWordDAO.getNoteOfWord(note.getNoteID());

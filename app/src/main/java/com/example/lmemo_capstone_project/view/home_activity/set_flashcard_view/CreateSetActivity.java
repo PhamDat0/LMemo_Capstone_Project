@@ -279,6 +279,7 @@ public class CreateSetActivity extends AppCompatActivity {
     }
 
     private void setUpSetForEdit() {
+        ((TextView) findViewById(R.id.tvEditSet)).setText("Edit a set");
         txtSetName.setText(setFlashcard.getSetName());
         FlashcardBelongToSetDAO flashcardBelongToSetDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardBelongToSetDAO();
         FlashcardBelongToSet[] flashcardBelongToSets = flashcardBelongToSetDAO.getFlashcardBySetID(setFlashcard.getSetID());
