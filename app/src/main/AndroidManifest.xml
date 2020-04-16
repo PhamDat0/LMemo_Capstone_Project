@@ -22,7 +22,8 @@
 
         </receiver>
 
-        <activity android:name=".view.home_activity.set_flashcard_view.CreateSetActivity" />
+        <activity android:name=".view.home_activity.set_flashcard_view.CreateSetActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".view.home_activity.comment_view.CommentActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".view.home_activity.comment_view.AddCommentActivity"
@@ -49,8 +50,10 @@
             android:exported="true" />
 
         <activity android:name=".view.home_activity.flashcard_view.FlashcardListAdapter" />
-        <activity android:name=".view.home_activity.flashcard_view.review_activity.WritingTestActivity" />
-        <activity android:name=".view.home_activity.flashcard_view.review_activity.MultipleChoiceTestActivity" />
+        <activity android:name=".view.home_activity.flashcard_view.review_activity.WritingTestActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".view.home_activity.flashcard_view.review_activity.MultipleChoiceTestActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".view.home_activity.search_view.KanjiListAdapter" />
 
         <meta-data
