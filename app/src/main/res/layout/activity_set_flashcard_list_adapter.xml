@@ -4,27 +4,44 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp"
     android:orientation="vertical">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|left"
-        android:layout_marginLeft="10dp"
-        android:orientation="horizontal">
-        <ImageView
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_toLeftOf="@id/rightCB"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_reward"/>
+            <TextView
+                android:id="@+id/tvCreatorReward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/darkGray"
+                android:text="CreatorReward" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/rightCB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_reward"/>
-        <TextView
-            android:id="@+id/tvCreatorReward"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/darkGray"
-            android:text="CreatorReward" />
-    </LinearLayout>
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true">
+            <Switch
+                android:id="@+id/swPublic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +55,6 @@
             android:text="Creator Name" />
 
     </LinearLayout>
-
     <TextView
         android:id="@+id/tvSetName"
         android:layout_width="match_parent"
@@ -53,40 +69,15 @@
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">
-        <Switch
-            android:id="@+id/swPublic"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Public"
             android:layout_weight="1"/>
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-            <ImageButton
-                android:id="@+id/ibReview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/white"
-                app:srcCompat="@drawable/ic_test_svgrepo_com" />
-
-            <ImageButton
-                android:id="@+id/ibChangeWord"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/white"
-                app:srcCompat="@drawable/ic_edit" />
-
-            <ImageButton
-                android:id="@+id/ibDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/white"
-                app:srcCompat="@drawable/ic_trash" />
-
             <ImageButton
                 android:id="@+id/ibDownload"
                 android:layout_width="wrap_content"
@@ -94,6 +85,27 @@
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:src="@drawable/ic_download" />
+            <ImageButton
+                android:id="@+id/ibChangeWord"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                app:srcCompat="@drawable/ic_edit" />
+            <ImageButton
+                android:id="@+id/ibReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/white"
+                app:srcCompat="@drawable/ic_test_svgrepo_com" />
+            <ImageButton
+                android:id="@+id/ibDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                app:srcCompat="@drawable/ic_trash" />
         </LinearLayout>
 
     </LinearLayout>

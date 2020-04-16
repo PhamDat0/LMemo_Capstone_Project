@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/tvSetName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="TextView" />
-
-    <CheckBox
-        android:id="@+id/cbFlashcardBelongToSet"
+        android:orientation="horizontal"
+        android:layout_toLeftOf="@id/rightCB"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/tvSetName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:layout_marginLeft="10sp"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:gravity="left|center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/rightCB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
-</LinearLayout>
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true">
+        <CheckBox
+            android:id="@+id/cbFlashcardBelongToSet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="10sp" />
+    </LinearLayout>
+</RelativeLayout>

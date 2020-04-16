@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -41,8 +42,8 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class WordSearchingFragment extends Fragment {
-    private ImageButton btnOpenTakeNoteDialog;
-    private ImageButton btAddWordToSet;
+    private Button btnOpenTakeNoteDialog;
+    private Button btAddWordToSet;
     private ListView noteListView;
     private int wordID;
     private TextToSpeech textToSpeech;
