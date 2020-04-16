@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.home_activity.constant_view.ContactUsFragment"
     android:orientation="vertical"
-    >
+    tools:context=".view.home_activity.constant_view.ContactUsFragment">
 
-    <Button
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="fk you"/>
+        android:text="Copyright Notices" />
 
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LMemo Japanese-English Dictionary based on FreeDict JPN-ENG Version 0.10 9 September 2011" />
 
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LMemo Kanji Stroke is displayed using the Kanji Stroke Order Font" />
 
-
-</FrameLayout>
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kanji information is based on KanjiDict Version 1.6 - April 2008" />
+</LinearLayout>
