@@ -1,6 +1,6 @@
 package com.example.lmemo_capstone_project.controller.set_flashcard_controller;
 
-import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -21,7 +21,9 @@ import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +42,7 @@ public class SetFlashcardController {
     private FlashcardBelongToSetDAO flashcardBelongToSetDAO;
     private UserDAO userDAO;
 
-    public SetFlashcardController(Activity aContext) {
+    public SetFlashcardController(Context aContext) {
         firebaseFirestore = FirebaseFirestore.getInstance();
         LMemoDatabase instance = LMemoDatabase.getInstance(aContext);
         setFlashcardDAO = instance.setFlashcardDAO();
@@ -144,7 +146,7 @@ public class SetFlashcardController {
             }
         }
         User creator = setFlashcard.getCreator();
-        if (creator != null) {
+        if (creator != null && !creator.getUserID().equalsIgnoreCase(userDAO.getLocalUser()[0].getUserID())) {
             creator.setLoginTime(new Date(1));
             userDAO.insertUser(creator);
         }
@@ -266,5 +268,37 @@ public class SetFlashcardController {
                 ProgressDialog.getInstance().dismiss();
             }
         });
+    }
+
+    public void getUserOnlineSet(User currentUser) {
+        firebaseFirestore.collection(COLLECTION_PATH).whereEqualTo("userID", currentUser.getUserID())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                for (DocumentSnapshot document : documents) {
+                    SetFlashcard setFlashcard = getSetFromSnapshot(document);
+                }
+            }
+        });
+    }
+
+    private SetFlashcard getSetFromSnapshot(DocumentSnapshot document) {
+        SetFlashcard setFlashcard = new SetFlashcard();
+        setFlashcard.setSetName((String) document.get("name"));
+        setFlashcard.setPublic(true);
+        setFlashcard.setWordID((List<Long>) document.get("flashcards"));
+        setFlashcard.setCreatorID((String) document.get("userID"));
+        setFlashcard.setCreator(null);
+        setFlashcard.setOnlineID(document.getId());
+        updateOfflineSetIfNecessary(setFlashcard);
+        return setFlashcard;
+    }
+
+    private void updateOfflineSetIfNecessary(SetFlashcard setFlashcard) {
+        if (setFlashcard.getCreatorID().equalsIgnoreCase(userDAO.getLocalUser()[0].getUserID())) {
+            setFlashcard.setCreator(userDAO.getLocalUser()[0]);
+            downloadSet(setFlashcard);
+        }
     }
 }

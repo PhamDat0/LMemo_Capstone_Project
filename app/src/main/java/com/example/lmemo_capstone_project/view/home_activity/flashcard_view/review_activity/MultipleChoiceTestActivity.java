@@ -114,6 +114,8 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
         ((TextView) container.findViewById(R.id.tvMeaning)).setText(" . " + currentWord.getMeaning().replace("\n", "\n . "));
         ((TextView) container.findViewById(R.id.tvPartOfSpeech)).setText(" * " + currentWord.getPartOfSpeech());
+        container.findViewById(R.id.btnOpenTakeNoteDialog).setVisibility(View.GONE);
+        container.findViewById(R.id.ibAddToSet).setVisibility(View.GONE);
         ImageButton btPronunciation = container.findViewById(R.id.btPronunciation);
         btPronunciation.setVisibility(View.VISIBLE);
         btPronunciation.findViewById(R.id.btPronunciation).setOnClickListener(new View.OnClickListener() {
@@ -122,6 +124,7 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
                 textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
             }
         });
+
         //ユーザーがこのダイアログを消したら、他の質問を始めます。
         container.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override

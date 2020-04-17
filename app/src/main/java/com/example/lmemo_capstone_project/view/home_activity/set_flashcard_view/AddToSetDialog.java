@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -75,11 +76,16 @@ public class AddToSetDialog extends DialogFragment {
     private void loadListSet() {
         LMemoDatabase instance = LMemoDatabase.getInstance(getContext());
         List<SetFlashcard> setFlashcards = instance.setFlashcardDAO().getOwnerFlashcard(instance.userDAO().getLocalUser()[0].getUserID());
-        for (SetFlashcard setFlashcard : setFlashcards) {
-            setFlashcard.setWordID(instance.flashcardBelongToSetDAO().getFlashcardsBySetID(setFlashcard.getSetID()));
+        if (setFlashcards.size() == 0) {
+            Toast.makeText(getContext(), "You doesn't have any set", Toast.LENGTH_LONG).show();
+            this.dismiss();
+        } else {
+            for (SetFlashcard setFlashcard : setFlashcards) {
+                setFlashcard.setWordID(instance.flashcardBelongToSetDAO().getFlashcardsBySetID(setFlashcard.getSetID()));
+            }
+            ListAdapter adapter = new ListSetForAddDeleteAdapter(getActivity(), setFlashcards, word);
+            lvListSet.setAdapter(adapter);
         }
-        ListAdapter adapter = new ListSetForAddDeleteAdapter(getActivity(), setFlashcards, word);
-        lvListSet.setAdapter(adapter);
     }
 
     private void setAction() {

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.controller.note_controller.NoteController;
+import com.example.lmemo_capstone_project.controller.set_flashcard_controller.SetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,12 +34,14 @@ public class UserAuthenticationController {
     private final FirebaseFirestore db;
     private UserDAO userDAO;
     private NoteController addNoteController;
+    private SetFlashcardController setFlashcardController;
     private List<String> listFUID;
 
     public UserAuthenticationController(Context aContext) {
         db = FirebaseFirestore.getInstance();
         userDAO = LMemoDatabase.getInstance(aContext).userDAO();
         addNoteController = new NoteController(aContext);
+        setFlashcardController = new SetFlashcardController(aContext);
         listFUID = new ArrayList<>();
     }
 
@@ -108,8 +111,13 @@ public class UserAuthenticationController {
                 addUserToSQLite(user);
                 Log.w(TAG, "Logged in after add to sqlite with updated" + user.getDisplayName() + "at time " + user.getLoginTime() + " gender " + user.isGender());
                 getAllPublicNotes(user);
+                getAllPublicSetFlashcard(user);
             }
         });
+    }
+
+    private void getAllPublicSetFlashcard(User user) {
+        setFlashcardController.getUserOnlineSet(user);
     }
 
     private void getAllPublicNotes(User user) {
