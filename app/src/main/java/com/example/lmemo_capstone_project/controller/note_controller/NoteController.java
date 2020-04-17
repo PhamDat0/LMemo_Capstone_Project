@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -150,19 +151,33 @@ public class NoteController {
     }
 
     private void deleteNoteFromFB(Note note) {
-        String noteOnlineID = note.getOnlineID();
+        final String noteOnlineID = note.getOnlineID();
         Log.w("AddNoteActivity", "OnlineID controller 2" + note.getOnlineID());
         db.collection("notes").document(noteOnlineID).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("EditNoteController", "DocumentSnapshot successfully deleted!");
-                        new MyAccountController().increaseUserPoint(user.getUserID(), -1);
+                        db.collection("comment").whereEqualTo("noteOnlineID", noteOnlineID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                    db.collection("comment").document(document.getId()).delete();
+                                }
+                                new MyAccountController().increaseUserPoint(user.getUserID(), -1);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                new MyAccountController().increaseUserPoint(user.getUserID(), -1);
+                            }
+                        });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                ProgressDialog.getInstance().dismiss();
+                throw new UnsupportedOperationException("An unknown error occurs");
             }
         });
         note.setOnlineID(null);
