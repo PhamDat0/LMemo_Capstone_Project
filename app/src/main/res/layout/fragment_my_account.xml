@@ -27,8 +27,6 @@
                 android:textColor="#1B1616"
                 android:textSize="21sp"
                 android:textAlignment="center"
-                android:focusable="false"
-                android:enabled="false"
                 android:textStyle="bold"/>
         </LinearLayout>
         <androidx.cardview.widget.CardView

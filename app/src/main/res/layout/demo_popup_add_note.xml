@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="Create a note"
-            android:textColor="@color/white"
+            android:textColor="#000000"
             android:textSize="20sp" />
     </LinearLayout>
     <LinearLayout
@@ -37,7 +37,7 @@
             android:imeOptions="actionSearch"
             android:singleLine="true"
             android:textStyle="bold"
-            android:textColorHint="@color/white"
+            android:textColorHint="#000000"
             tools:layout_editor_absoluteX="46dp"
             tools:layout_editor_absoluteY="31dp" />
         <LinearLayout
@@ -57,7 +57,7 @@
                     android:background="@drawable/gradient_add_note_edittext"
                     android:gravity="top|left"
                     android:textColor="@color/lightorange"
-                    android:textColorHint="#CDCED8"
+                    android:textColorHint="#000000"
                     android:hint=" Enter your note" />
             </LinearLayout>
         </LinearLayout>

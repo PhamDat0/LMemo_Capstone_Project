@@ -62,7 +62,7 @@
                     android:hint=" Enter setName"
                     android:inputType="textMultiLine|textPersonName"
                     android:textColor="@color/lightorange"
-                    android:textColorHint="#CDCED8" />
+                    android:textColorHint="#000000" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

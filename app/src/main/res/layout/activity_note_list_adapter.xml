@@ -11,12 +11,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="15dp"
             android:layout_gravity="center|left"
             android:orientation="horizontal">
             <ImageView
@@ -66,17 +66,18 @@
             android:id="@+id/tvUser"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10sp"
+            android:layout_marginStart="15dp"
             android:autoSizeMaxTextSize="15sp"
             android:autoSizeMinTextSize="10sp"
             android:textSize="20sp" />
+
         <TextView
             android:id="@+id/tvNoteContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:textColor="@color/colorPrimary"
+            android:layout_marginStart="30dp"
             android:scrollbars="vertical"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
     </LinearLayout>
     <LinearLayout
@@ -87,7 +88,7 @@
         <LinearLayout
             android:layout_width="190dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp">
+            android:layout_marginStart="30dp">
             <ImageButton
                 android:id="@+id/btUpvote"
                 android:layout_width="wrap_content"
@@ -137,7 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:text="Comment"/>
         </LinearLayout>
     </LinearLayout>
