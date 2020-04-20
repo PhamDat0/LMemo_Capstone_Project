@@ -2,7 +2,6 @@ package com.example.lmemo_capstone_project.controller.authentication_controller;
 
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -184,14 +183,15 @@ public class UserAuthenticationController {
     }
 
     private void addUserToSQLite(final User user) {
+        userDAO.insertUser(user);
         // initialize new thread to add to sqlite, because sqlite doesn't allow to run command in Activity
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                userDAO.insertUser(user);
-                Log.w(TAG, "local user is: " + userDAO.getLocalUser()[0].getDisplayName());
-            }
-        });
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                userDAO.insertUser(user);
+//                Log.w(TAG, "local user is: " + userDAO.getLocalUser()[0].getDisplayName());
+//            }
+//        });
 
     }
 

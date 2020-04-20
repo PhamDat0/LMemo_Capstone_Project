@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.CannotPerformFirebaseRequest;
+import com.example.lmemo_capstone_project.controller.StringProcessUtilities;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteOfWordDAO;
@@ -107,7 +108,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     }
 
     private void editNoteHandle() {
-        if (!txtTakeNote.getText().toString().isEmpty()) {
+        if (!StringProcessUtilities.isEmpty(txtTakeNote.getText().toString())) {
             if (note.isPublic() || isNotePublic.isChecked()) {
                 if (InternetCheckingController.isOnline(getApplicationContext())) {
                     ProgressDialog.getInstance().show(CreateNoteActivity.this);
@@ -132,7 +133,7 @@ public class CreateNoteActivity extends AppCompatActivity {
 
     private void addNoteHandle() {
         try {
-            if (!txtTakeNote.getText().toString().isEmpty()) {
+            if (!StringProcessUtilities.isEmpty(txtTakeNote.getText().toString())) {
                 if (!isNotePublic.isChecked()) {
                     addNoteController.getNoteFromUI(associatedWordAdapter.getListOfWord(), txtTakeNote.getText().toString(), isNotePublic.isChecked());
                     Toast.makeText(getApplicationContext(), "Add note successful", Toast.LENGTH_LONG).show();
