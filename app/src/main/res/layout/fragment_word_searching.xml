@@ -110,21 +110,24 @@
 
         </LinearLayout>
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_gravity="right"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp">
 
                 <Spinner
                     android:id="@+id/spinnerSort"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_marginStart="15dp"/>
             </LinearLayout>
 
             <ListView
                 android:id="@+id/NoteListView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:dividerHeight="10dp"/>
 
         </LinearLayout>
 
