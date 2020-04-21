@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.StringProcessUtilities;
 import com.example.lmemo_capstone_project.controller.comment_controller.CommentController;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
@@ -46,7 +47,7 @@ public class AddCommentActivity extends AppCompatActivity {
                 if (InternetCheckingController.isOnline(getApplicationContext())) {
                     String commentContent = etCommentContent.getText().toString();
                     CommentController commentController = new CommentController(getApplicationContext());
-                    if (commentContent.trim().length() != 0) {
+                    if (!StringProcessUtilities.isEmpty(commentContent)) {
                         ProgressDialog.getInstance().show(AddCommentActivity.this);
                         switch (mode) {
                             case IN_ADDING_MODE:

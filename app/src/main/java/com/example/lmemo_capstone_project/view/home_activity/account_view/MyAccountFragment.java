@@ -15,15 +15,18 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.StringProcessUtilities;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
 import com.example.lmemo_capstone_project.controller.my_account_controller.MyAccountController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
+import java.util.Date;
 
 
 /**
@@ -89,8 +92,11 @@ public class MyAccountFragment extends Fragment {
      */
     private void updateUserInformation(View container) {
         User user = getUserInformationFromView(container);
-        updateUserToFirebase(user);
-        updateUserToSQLite(user);
+        if (user.isGuest()) {
+            ProgressDialog.getInstance().show(getContext());
+            updateUserToFirebase(user);
+            updateUserToSQLite(user);
+        }
     }
 
     /**
@@ -100,13 +106,31 @@ public class MyAccountFragment extends Fragment {
      * この関数はcontainerからユーザーの情報を取ります。
      */
     private User getUserInformationFromView(View container) {
-        String email = ((EditText) container.findViewById(R.id.etEmail)).getText().toString().toLowerCase();
-        String displayName = ((EditText) container.findViewById(R.id.etDisplayName)).getText().toString();
+        EditText etMail = container.findViewById(R.id.etEmail);
+        String email = (etMail).getText().toString().toLowerCase();
+        if (StringProcessUtilities.isEmpty(email)) {
+            setEmptyError(etMail);
+            return getGuestUser();
+        }
+        EditText etDisplayName = container.findViewById(R.id.etDisplayName);
+        String displayName = (etDisplayName).getText().toString();
+        if (StringProcessUtilities.isEmpty(displayName)) {
+            setEmptyError(etDisplayName);
+            return getGuestUser();
+        }
         int checkedRadioButtonId = ((RadioGroup) container.findViewById(R.id.rgGender)).getCheckedRadioButtonId();
         boolean gender = ((RadioButton) container.findViewById(checkedRadioButtonId)).getText().equals("Male");
         UserDAO userDAO = LMemoDatabase.getInstance(getContext()).userDAO();
         User currentUser = userDAO.getLocalUser()[0];
         return new User(currentUser.getUserID(), email, displayName, gender, currentUser.getContributionPoint(), currentUser.getLoginTime());
+    }
+
+    private void setEmptyError(EditText xEditText) {
+        xEditText.setError("This must not be empty");
+    }
+
+    private User getGuestUser() {
+        return new User("GUEST", "GUEST", "GUEST", true, 0, new Date());
     }
 
     /**

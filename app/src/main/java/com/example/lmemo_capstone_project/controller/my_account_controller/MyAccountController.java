@@ -41,12 +41,14 @@ public class MyAccountController {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        ProgressDialog.getInstance().dismiss();
                         Log.d("Firebase_User_Update", "User successfully updated!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        ProgressDialog.getInstance().dismiss();
                         Log.w("Firebase_User_Update", "Error updating document", e);
                     }
                 });

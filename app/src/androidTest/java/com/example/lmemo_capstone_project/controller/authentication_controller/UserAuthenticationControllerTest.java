@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class UserAuthenticationControllerTest {
 
-    private static final String GUEST_ID = "GUEST";
+    private static final String GUEST_ID_EXPECTED = "GUEST";
     private UserAuthenticationController userAuthenticationController;
     private UserDAO userDAO;
 
@@ -30,6 +30,6 @@ public class UserAuthenticationControllerTest {
     public void useAppAsGuestTest() {
         userAuthenticationController.useAppAsGuest();
         User user = userDAO.getLocalUser()[0];
-        assertTrue(user.getUserID().equalsIgnoreCase(GUEST_ID));
+        assertTrue(user.getUserID().equalsIgnoreCase(GUEST_ID_EXPECTED));
     }
 }

@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.StringProcessUtilities;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardBelongToSetDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
@@ -118,7 +119,7 @@ public class CreateSetActivity extends AppCompatActivity {
         if (listOfWord.size() < 1) {
             Toast.makeText(getApplicationContext(), "Set must have at least 1 card", Toast.LENGTH_LONG).show();
         } else {
-            if (!txtSetName.getText().toString().isEmpty()) {
+            if (!StringProcessUtilities.isEmpty(txtSetName.getText().toString())) {
                 if (setFlashcard.isPublic() || isSetPublic.isChecked()) {
                     if (InternetCheckingController.isOnline(getApplicationContext())) {
                         ProgressDialog.getInstance().show(CreateSetActivity.this);
@@ -130,7 +131,7 @@ public class CreateSetActivity extends AppCompatActivity {
                     performEditSet();
                 }
             } else {
-                txtSetName.setError("Please enter note");
+                txtSetName.setError("Please enter set name");
             }
         }
     }
@@ -148,7 +149,7 @@ public class CreateSetActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Set must have at least 1 card", Toast.LENGTH_LONG).show();
         } else {
             try {
-                if (!txtSetName.getText().toString().isEmpty()) {
+                if (!StringProcessUtilities.isEmpty(txtSetName.getText().toString())) {
                     if (!isSetPublic.isChecked()) {
                         setFlashcardController.createNewSet(txtSetName.getText().toString(), listOfWord, isSetPublic.isChecked());
                         Toast.makeText(getApplicationContext(), "Add set successful", Toast.LENGTH_LONG).show();
