@@ -105,7 +105,8 @@ public class SearchController {
 
 
     /**
-     * @param word この関数はフラッシュカードをSQLiteに追加します
+     * @param word 追加する言葉IDを持っているオブジェクト
+     * この関数はフラッシュカードをSQLiteに追加します
      */
     public void addWordToFlashcard(Word word) {
         Flashcard flashcard = new Flashcard();
@@ -145,6 +146,11 @@ public class SearchController {
         return listKanji;
     }
 
+    /**
+     * @param listKanji 現在のリスト
+     * @param kanji     あるかどうか確認する漢字
+     * @return 現在のリストの中にはその漢字があれば、trueを返します。
+     */
     private boolean alreadyHasThatKanji(List<Kanji> listKanji, Kanji kanji) {
         for (Kanji k : listKanji) {
             if (k.getKanji().equalsIgnoreCase(kanji.getKanji())) {

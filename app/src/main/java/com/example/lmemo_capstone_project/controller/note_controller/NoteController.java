@@ -10,7 +10,6 @@ import com.example.lmemo_capstone_project.controller.database_controller.LMemoDa
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteOfWordDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
-import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
 import com.example.lmemo_capstone_project.controller.my_account_controller.MyAccountController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
@@ -38,7 +37,6 @@ public class NoteController {
     private static final int UPVOTE = 1;
     private static final int DOWNVOTE = 2;
 
-    private WordDAO wordDAO;
     private NoteDAO noteDAO;
     private UserDAO userDAO;
     private NoteOfWordDAO noteOfWordDAO;
@@ -47,7 +45,6 @@ public class NoteController {
 
     public NoteController(Context context) {
         LMemoDatabase lMemoDatabase = LMemoDatabase.getInstance(context);
-        wordDAO = lMemoDatabase.wordDAO();
         noteDAO = lMemoDatabase.noteDAO();
         userDAO = lMemoDatabase.userDAO();
         noteOfWordDAO = lMemoDatabase.noteOfWordDAO();
@@ -70,6 +67,13 @@ public class NoteController {
         updateNoteInSQLite(note, noteContent, noteStatus, words);
     }
 
+    /**
+     * @param note        ノートのオブジェクト。ユーザーのIDを持っているオブジェクト
+     * @param noteContent ノートの内容
+     * @param noteStatus  公開か秘密か
+     * @param words       ノートに添付された言葉のリスト
+     *                    この関数はノートをFireStoreにアップロードします。
+     */
     private void addNoteToCloudFireStore(final Note note, String noteContent, boolean noteStatus, List<Word> words) {
         List<Long> listWordID = new ArrayList<>();
         for (Word word : words) {
@@ -80,6 +84,11 @@ public class NoteController {
         addNoteToCloudFireStore(note, listWordID);
     }
 
+    /**
+     * @param note ノートの情報を持っているオブジェクト
+     * @param wordID ノートに添付された言葉のIDのリスト
+     * この関数はノートをFireStoreにアップロードします。
+     */
     private void addNoteToCloudFireStore(final Note note, final List<Long> wordID) {
         Map<String, Object> addNote = new HashMap<>();
         addNote.put("noteContent", note.getNoteContent());
@@ -109,11 +118,19 @@ public class NoteController {
             public void onFailure(@NonNull Exception e) {
 //                note.setPublic(false);
 //                noteDAO.updateNote(note);
+                ProgressDialog.getInstance().dismiss();
                 Log.w("AddNoteActivity", "Error writing document");
             }
         });
     }
 
+    /**
+     * @param note 編集するノート
+     * @param noteContent 新しい内容
+     * @param noteStatus 新しい状態。公開か秘密か
+     * @param words ノートに添付された言葉のリスト
+     * この関数はnoteContentとnoteStatusとwordsでFireStoreにある１つのノートを編集します。
+     */
     private void updateNoteOnFirebase(Note note, String noteContent, boolean noteStatus, List<Word> words) {
         List<Integer> listWordID = new ArrayList<>();
         for (Word word : words) {
@@ -137,6 +154,13 @@ public class NoteController {
     }
 
 
+    /**
+     * @param note 編集するノート
+     * @param noteContent 新しい内容
+     * @param noteStatus 新しい状態。公開か秘密か
+     * @param words ノートに添付された言葉のリスト
+     * この関数はnoteContentとnoteStatusとwordsでSQLiteにある１つのノートを編集します。
+     */
     private void updateNoteInSQLite(Note note, String noteContent, boolean noteStatus, List<Word> words) {
         noteOfWordDAO.deleteAllAssociationOfOneNote(note.getNoteID());
         List<Long> listWordID = new ArrayList<>();
@@ -150,6 +174,9 @@ public class NoteController {
         noteDAO.updateNote(note);
     }
 
+    /**
+     * @param note
+     */
     private void deleteNoteFromFB(Note note) {
         final String noteOnlineID = note.getOnlineID();
         Log.w("AddNoteActivity", "OnlineID controller 2" + note.getOnlineID());

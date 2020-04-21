@@ -32,4 +32,10 @@ public interface FlashcardDAO {
 
     @Query("SELECT COUNT(*) FROM Flashcard WHERE LastState <> 99")
     int getNumberOfVisibleFlashcards();
+
+    @Query("DELETE FROM Flashcard WHERE FlashcardID=:id_of_not_existed")
+    void deleteUsingID(int id_of_not_existed);
+
+    @Query("UPDATE Flashcard SET LastState = 99 WHERE FlashcardID=:id_of_existed_with_last_state_of_99")
+    void changeLastStateTo99(int id_of_existed_with_last_state_of_99);
 }
