@@ -39,19 +39,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:orientation="horizontal">
-
                     <Button
                         android:id="@+id/tabWord"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:background="#EAE9E9"
+                        android:textColor="@color/colorPrimary"
                         android:text="Word" />
-
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="#555151"/>
                     <Button
                         android:id="@+id/tabKanji"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:background="#EAE9E9"
+                        android:textColor="@color/colorPrimary"
                         android:text="Kanji" />
                 </LinearLayout>
 

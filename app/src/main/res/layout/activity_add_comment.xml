@@ -18,13 +18,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/mainColor"
+                android:gravity="center">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Comment"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+            </LinearLayout>
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/darkGray"
+                android:textSize="20sp"
                 android:text="You are commenting to this note" />
 
             <TextView
@@ -32,6 +46,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/colorPrimary"
                 android:text="DisplayNoteContent" />
 
             <EditText
@@ -42,25 +58,47 @@
                 android:layout_margin="10dp"
                 android:gravity="start|top"
                 android:hint="Comment here"
-                android:background="#f2f3f5"
+                android:background="@drawable/gradient_add_note_edittext"
+                android:textColor="@color/lightorange"
+                android:textColorHint="#000000"
                 android:inputType="textMultiLine"
                 android:lines="5" />
-
-            <Button
-                android:id="@+id/btSaveComment"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:text="Save" />
-
-            <Button
-                android:id="@+id/btCancel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:text="Cancel" />
+                android:weightSum=".2"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight=".1">
+                    <Button
+                        android:id="@+id/btSaveComment"
+                        android:layout_width="190dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/round_add_button"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:text="Save" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight=".1">
+                    <Button
+                        android:id="@+id/btCancel"
+                        android:layout_width="190dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/round_add_button"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:text="Cancel" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

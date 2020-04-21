@@ -32,4 +32,8 @@
         <!--        <item name="fontFamily">@font/yumindb</item>-->
         <!--        <item name="fontFamily">@font/yuminl</item>-->
     </style>
+    <style name="TitleColorMenu">
+        <item name="android:textColor">@color/lightorange</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>

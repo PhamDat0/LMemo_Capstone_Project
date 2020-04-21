@@ -2,7 +2,10 @@ package com.example.lmemo_capstone_project.view.home_activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.TextAppearanceSpan;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -25,11 +28,8 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.home_activity.account_view.MyAccountFragment;
 import com.example.lmemo_capstone_project.view.home_activity.account_view.SignInFragment;
-import com.example.lmemo_capstone_project.view.home_activity.constant_view.ContactUsFragment;
-import com.example.lmemo_capstone_project.view.home_activity.constant_view.PrivacyFragment;
 import com.example.lmemo_capstone_project.view.home_activity.constant_view.SettingsFragment;
-import com.example.lmemo_capstone_project.view.home_activity.constant_view.TermsofUseFragment;
-import com.example.lmemo_capstone_project.view.home_activity.constant_view.WhatsNewFragment;
+import com.example.lmemo_capstone_project.view.home_activity.constant_view.CopyrightFragment;
 import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.FlashCardFragment;
 import com.example.lmemo_capstone_project.view.home_activity.note_view.NotesFragment;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.SearchFragment;
@@ -69,6 +69,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         mDrawerToggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.navigationView);
+        Menu menu = navigationView.getMenu();
+
+        MenuItem account= menu.findItem(R.id.account);
+        MenuItem resources= menu.findItem(R.id.resources);
+        SpannableString s1 = new SpannableString(account.getTitle());
+        SpannableString s2 = new SpannableString(resources.getTitle());
+        s1.setSpan(new TextAppearanceSpan(this, R.style.TitleColorMenu), 0, s1.length(), 0);
+        account.setTitle(s1);
+        s2.setSpan(new TextAppearanceSpan(this, R.style.TitleColorMenu), 0, s2.length(), 0);
+        resources.setTitle(s2);
         navigationView.setNavigationItemSelectedListener(this);
 
 //        changeToFlashcardFragment();
@@ -230,25 +240,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "Settings");
             fragmentTransaction.commit();
-        } else if (id == R.id.contact) {
-            ContactUsFragment fragment = new ContactUsFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "Contact");
-            fragmentTransaction.commit();
-        } else if (id == R.id.newInfo) {
-            WhatsNewFragment fragment = new WhatsNewFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "whatNew");
-            fragmentTransaction.commit();
-        } else if (id == R.id.terms) {
-            TermsofUseFragment fragment = new TermsofUseFragment();
+        } else if (id == R.id.copyright) {
+            CopyrightFragment fragment = new CopyrightFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "termsOfUse");
-            fragmentTransaction.commit();
-        } else if (id == R.id.privacy) {
-            PrivacyFragment fragment = new PrivacyFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "privacy");
             fragmentTransaction.commit();
         } else if (id == R.id.signOut) {
             final SignInFragment fragment = new SignInFragment();

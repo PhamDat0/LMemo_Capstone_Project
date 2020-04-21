@@ -4,12 +4,29 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
-    android:background="@drawable/headerbackground"
-    android:padding="25dp">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:background="@drawable/headerbackground">
-    </LinearLayout>
+    android:layout_height="170dp"
+    android:background="@drawable/backgroundheader"
+    android:fitsSystemWindows="true">
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="25sp"
+        android:src="@drawable/ic_user" />
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginStart="25sp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorPrimary"
+        android:text="Name"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_marginStart="25sp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/darkGray"
+        android:text="Email Address"/>
 </LinearLayout>
