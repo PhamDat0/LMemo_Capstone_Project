@@ -2,6 +2,7 @@ package com.example.lmemo_capstone_project.controller.search_controller;
 
 import android.database.MatrixCursor;
 
+import com.example.lmemo_capstone_project.controller.StringProcessUtilities;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.KanjiDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.WordDAO;
@@ -60,7 +61,7 @@ public class SearchController {
      */
     public Word performSearch(String searchWord) throws WordNotFoundException {
         Word word;
-        if (searchWord.trim().length() == 0)
+        if (StringProcessUtilities.isEmpty(searchWord))
             throw new WordNotFoundException("You didn't enter anything.");
         try {
             Word[] words = wordDAO.getWords(searchWord);
@@ -117,7 +118,7 @@ public class SearchController {
                 flashcard.setLastState(1);
                 flashcard.setKanaLength(word.getKana().split("/")[0].trim().length());
                 flashcardDAO.insertFlashcard(flashcard);
-            } else if (checkingID.length != 0 && checkingID[0].getLastState() == 99) {
+            } else if (checkingID[0].getLastState() == 99) {
                 flashcard.setFlashcardID(checkingID[0].getFlashcardID());
                 flashcard.setAccuracy(checkingID[0].getAccuracy());
                 flashcard.setSpeedPerCharacter(checkingID[0].getSpeedPerCharacter());
@@ -134,16 +135,23 @@ public class SearchController {
      *                    この関数は漢字を検索し、結果のリストに漢字の情報を追加します。
      */
     public List<Kanji> searchForKanji(String enteredWord) {
-        int count = 0;
         List<Kanji> listKanji = new ArrayList<>();
-        for (int i = 0; i < enteredWord.length() && count < 5; i++) {
+        for (int i = 0; i < enteredWord.length(); i++) {
             Kanji[] kanji = kanjiDAO.getKanji(enteredWord.charAt(i) + "");
-            if (kanji.length != 0) {
+            if (kanji.length != 0 && !alreadyHasThatKanji(listKanji, kanji[0])) {
                 listKanji.add(kanji[0]);
-                count++;
             }
         }
         return listKanji;
+    }
+
+    private boolean alreadyHasThatKanji(List<Kanji> listKanji, Kanji kanji) {
+        for (Kanji k : listKanji) {
+            if (k.getKanji().equalsIgnoreCase(kanji.getKanji())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
