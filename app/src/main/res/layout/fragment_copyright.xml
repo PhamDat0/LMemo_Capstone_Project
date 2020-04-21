@@ -1,32 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".view.home_activity.constant_view.ContactUsFragment">
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    tools:context=".view.home_activity.constant_view.CopyrightFragment">
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25sp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorPrimary"
         android:text="Copyright Notices" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:layout_below="@id/textView9"
+        android:textSize="18sp"
         android:text="LMemo Japanese-English Dictionary based on FreeDict JPN-ENG Version 0.10 9 September 2011" />
 
     <TextView
         android:id="@+id/textView11"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:textSize="18sp"
+        android:layout_below="@id/textView10"
         android:text="LMemo Kanji Stroke is displayed using the Kanji Stroke Order Font" />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:textSize="18sp"
+        android:layout_below="@id/textView11"
         android:text="Kanji information is based on KanjiDict Version 1.6 - April 2008" />
-</LinearLayout>
+
+</RelativeLayout>

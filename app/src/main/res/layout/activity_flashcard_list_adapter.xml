@@ -12,21 +12,21 @@
         android:background="@color/white"
         android:layout_toLeftOf="@+id/right"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="5dp"
         android:orientation="horizontal">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical">
             <TextView
                 android:id="@+id/tvKana"
-                android:layout_width="150dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:autoSizeMinTextSize="10sp"
                 android:autoSizeMaxTextSize="15sp"
                 android:layout_marginStart="5sp"
+                android:layout_marginEnd="5sp"
                 android:textColor="#DA0F0F" />
         </LinearLayout>
         <View
@@ -36,17 +36,18 @@
             android:layout_marginBottom="5dp"
             android:background="#555151"/>
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical">
             <TextView
                 android:id="@+id/tvKanji"
-                android:layout_width="150dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10sp"
                 android:autoSizeMaxTextSize="15sp"
                 android:autoSizeMinTextSize="10sp"
+                android:layout_marginStart="5sp"
+                android:layout_marginEnd="5sp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp" />
         </LinearLayout>

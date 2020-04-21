@@ -132,6 +132,7 @@
         android:background="#9FA3AA"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -139,22 +140,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
+
             <Button
                 android:id="@+id/btnSaveSetting"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Save"
-                android:textColor="@color/white"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary" />
+                android:background="@color/mainColor"
+                android:text="Save"
+                android:textColor="@color/colorPrimary" />
+
             <Button
                 android:id="@+id/btnCancelSetting"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Cancel"
-                android:textColor="@color/white"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"/>
+                android:background="@color/mainColor"
+                android:text="Cancel"
+                android:textColor="@color/colorPrimary" />
         </LinearLayout>
 
     </RelativeLayout>

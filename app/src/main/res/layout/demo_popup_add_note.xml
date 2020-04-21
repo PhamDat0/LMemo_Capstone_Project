@@ -3,13 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
->
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fe978e"
+        android:background="@color/mainColor"
         android:gravity="center">
 
         <TextView
@@ -18,7 +17,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="Create a note"
-            android:textColor="#000000"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
     </LinearLayout>
     <LinearLayout
@@ -37,7 +36,7 @@
             android:imeOptions="actionSearch"
             android:singleLine="true"
             android:textStyle="bold"
-            android:textColorHint="#000000"
+            android:textColorHint="@color/graylight"
             tools:layout_editor_absoluteX="46dp"
             tools:layout_editor_absoluteY="31dp" />
         <LinearLayout
