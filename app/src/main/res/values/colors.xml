@@ -10,4 +10,7 @@
     <color name="endblue">#8DDEE8</color>
     <color name="startblue">#1CD6EF</color>
     <color name="lightorange">#e96c5d</color>
+    <color name="lightpurple">#A8B2E4</color>
+<!--    <color name="mainColor">#fe978e</color>-->
+    <color name="mainColor">#626bc2</color>
 </resources>

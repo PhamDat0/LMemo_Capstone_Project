@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -42,8 +43,12 @@ public class KanjiSearchingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_kanji_searching, container, false);
         kanjiListView = view.findViewById(R.id.kanjiListView);
-        kanjiListView.setAdapter(new KanjiListAdapter(getActivity(), listKanji));
-        setDynamicHeight(kanjiListView);
+        if (listKanji.size() == 0) {
+            Toast.makeText(getContext(), "Cannot detect any Kanji", Toast.LENGTH_LONG).show();
+        } else {
+            kanjiListView.setAdapter(new KanjiListAdapter(getActivity(), listKanji));
+            setDynamicHeight(kanjiListView);
+        }
         return view;
     }
 

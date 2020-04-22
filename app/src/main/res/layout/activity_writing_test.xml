@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:paddingStart="68dp"
     android:paddingEnd="68dp"
-    android:background="#A8B2E4"
+    android:background="@color/mainColor"
     tools:context=".view.home_activity.flashcard_view.review_activity.WritingTestActivity">
 
     <androidx.cardview.widget.CardView

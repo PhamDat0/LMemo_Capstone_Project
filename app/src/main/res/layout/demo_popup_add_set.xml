@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fe978e"
+        android:background="@color/mainColor"
         android:gravity="center">
 
         <TextView
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="Create a set"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -55,11 +55,11 @@
                 <EditText
                     android:id="@+id/txtTakeNote"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="50dp"
                     android:background="@drawable/gradient_add_note_edittext"
                     android:ems="10"
                     android:gravity="top|left"
-                    android:hint=" Enter setName"
+                    android:hint=" Enter set name"
                     android:inputType="textMultiLine|textPersonName"
                     android:textColor="@color/lightorange"
                     android:textColorHint="#000000" />

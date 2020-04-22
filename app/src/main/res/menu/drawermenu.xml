@@ -6,7 +6,8 @@
         android:title="Search"
         android:icon="@drawable/ic_search"
         android:visible="true" />
-    <item android:title="Account">
+    <item android:title="Account"
+        android:id="@+id/account">
         <menu>
             <item
                 android:id="@+id/login"
@@ -50,32 +51,13 @@
 
     </item>
 
-    <item android:title="Connect">
+    <item android:title="Resources"
+        android:id="@+id/resources">
         <menu>
             <item
-                android:id="@+id/contact"
-                android:title="Contact Us"
-                android:icon="@drawable/ic_contact"
-                />
-            <item
-                android:id="@+id/newInfo"
-                android:title="What's New"
-                android:icon="@drawable/ic_whatsnew"
-                />
-        </menu>
-
-    </item>
-    <item android:title="Resources">
-        <menu>
-            <item
-                android:id="@+id/terms"
-                android:title="Terms of Use"
+                android:id="@+id/copyright"
+                android:title="Copyright"
                 android:icon="@drawable/ic_termofuse"
-                />
-            <item
-                android:id="@+id/privacy"
-                android:title="Privacy"
-                android:icon="@drawable/ic_privacy"
                 />
         </menu>
     </item>

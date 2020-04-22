@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroundmain"
+    android:orientation="vertical"
+    android:weightSum="2"
     tools:context=".view.MainActivity">
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="WAIT FOR LOADING DATA"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="525dp"
-        android:textColor="@color/colorPrimary" />
-
-    <ProgressBar
-        android:id="@+id/LOAD_DATA_PROGRESS"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="300dp"
-        android:layout_height="35dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/textView2"
-        />
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WAIT FOR LOADING DATA"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@id/LOAD_DATA_PROGRESS"
+            android:textColor="@color/colorPrimary" />
+        <ProgressBar
+            android:id="@+id/LOAD_DATA_PROGRESS"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="300dp"
+            android:layout_height="35dp"
+            />
+    </LinearLayout>
+</LinearLayout>

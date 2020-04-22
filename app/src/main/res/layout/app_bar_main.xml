@@ -8,15 +8,13 @@
 <com.google.android.material.appbar.AppBarLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/AppTheme.AppBarOverLay"
-    >
+    android:theme="@style/AppTheme.AppBarOverLay">
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="50dp"
         android:id="@+id/toolbar"
         app:layout_collapseMode="pin"
-        app:layout_scrollFlags="scroll|enterAlways"
-        android:background="@drawable/gradientbackground"
+        android:background="@color/mainColor"
         app:popupTheme="@style/AppTheme.PopupOverLay"
         />
 </com.google.android.material.appbar.AppBarLayout>
