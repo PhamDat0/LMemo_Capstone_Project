@@ -186,6 +186,7 @@ public class SetFlashcardAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 setFlashcardController.downloadSet(setFlashcard);
+                Toast.makeText(aContext,"Download set successfully!",Toast.LENGTH_LONG).show();
             }
         });
     }
