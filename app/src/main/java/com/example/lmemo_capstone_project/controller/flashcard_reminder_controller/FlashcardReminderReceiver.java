@@ -35,7 +35,7 @@ public class FlashcardReminderReceiver extends BroadcastReceiver {
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.dictionicon)
+                .setSmallIcon(R.drawable.mainic1)
                 .setContentTitle("Flashcard Reminder")
                 .setContentIntent(pendingIntent)
                 .setOngoing(SharedPreferencesController.dismissReminderIsOn(context))

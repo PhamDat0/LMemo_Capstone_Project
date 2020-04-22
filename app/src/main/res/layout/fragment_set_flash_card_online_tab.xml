@@ -42,8 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
-
         <ImageButton
             android:id="@+id/ibPrePage"
             android:layout_width="wrap_content"
@@ -51,7 +51,8 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:src="@drawable/ic_back"
-            android:visibility="gone"/>
+            android:visibility="invisible"
+            />
         <ImageButton
             android:id="@+id/ibNextPage"
             android:layout_width="wrap_content"
@@ -59,7 +60,7 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:src="@drawable/ic_next"
-            android:visibility="gone"
+            android:visibility="invisible"
            />
     </LinearLayout>
 </RelativeLayout>
