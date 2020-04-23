@@ -56,6 +56,7 @@ public class CreateSetActivity extends AppCompatActivity {
     private SearchController searchController;
     private AssociatedWordAdapter associatedWordAdapter;
     private SetFlashcardController setFlashcardController;
+    private TextView tvAssociateWord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,6 +241,7 @@ public class CreateSetActivity extends AppCompatActivity {
     private void addToListView(Word word) {
 //        Log.d("SetUpAdapter", "success");
         associatedWordAdapter.addWordToList(word);
+        updateNumberOfCards();
         if (!LMemoDatabase.getInstance(getApplicationContext()).userDAO().getLocalUser()[0].isGuest()) {
             if (associatedWordAdapter.getCount() >= 10) {
                 isSetPublic.setVisibility(View.VISIBLE);
@@ -254,6 +256,7 @@ public class CreateSetActivity extends AppCompatActivity {
         btnAddSet = findViewById(R.id.btnAddNote);
         isSetPublic = findViewById(R.id.isNotePublic);
         btnCancelAddSet = findViewById(R.id.btnCancelAddNote);
+        tvAssociateWord = findViewById(R.id.tvAssociateWord);
         ListView listAssociatedWord = findViewById(R.id.listAssocitatedWord);
         associatedWordAdapter = new AssociatedWordAdapter(this, listWord);
         listAssociatedWord.setAdapter(associatedWordAdapter);
@@ -277,6 +280,7 @@ public class CreateSetActivity extends AppCompatActivity {
             default:
                 throw new UnsupportedOperationException("Wrong mode");
         }
+        updateNumberOfCards();
     }
 
     private void setUpSetForEdit() {
@@ -309,5 +313,9 @@ public class CreateSetActivity extends AppCompatActivity {
             isSetPublic.setChecked(false);
         }
         isSetPublic.setVisibility(View.INVISIBLE);
+    }
+
+    public void updateNumberOfCards() {
+        tvAssociateWord.setText("Associate words: " + associatedWordAdapter.getListOfWord().size());
     }
 }

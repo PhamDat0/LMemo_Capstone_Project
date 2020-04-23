@@ -89,6 +89,7 @@ public class AssociatedWordAdapter extends BaseAdapter {
             if (listWord.size() < 10) {
                 if (aContext instanceof CreateSetActivity) {
                     ((CreateSetActivity) aContext).warningPublicSetLowerThan10Card();
+                    ((CreateSetActivity) aContext).updateNumberOfCards();
                 }
             }
             notifyDataSetChanged();

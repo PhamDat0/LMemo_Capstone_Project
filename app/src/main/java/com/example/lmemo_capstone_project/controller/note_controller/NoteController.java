@@ -175,7 +175,8 @@ public class NoteController {
     }
 
     /**
-     * @param note
+     * @param note 削除するノート
+     * noteをFireStoreから削除し、
      */
     private void deleteNoteFromFB(Note note) {
         final String noteOnlineID = note.getOnlineID();

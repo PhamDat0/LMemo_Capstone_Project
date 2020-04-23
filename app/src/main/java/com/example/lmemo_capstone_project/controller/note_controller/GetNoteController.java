@@ -60,8 +60,9 @@ public class GetNoteController {
         isProcessing = false;
     }
 
-    public GetNoteController(NoteDAO noteDAO) {
+    public GetNoteController(NoteDAO noteDAO, NoteOfWordDAO noteOfWordDAO) {
         this.noteDAO = noteDAO;
+        this.noteOfWordDAO = noteOfWordDAO;
     }
 
     public static GetNoteController getInstance(WordSearchingFragment wordSearchingFragment) {
@@ -76,7 +77,7 @@ public class GetNoteController {
     /**
      * @param wordID 検索する言葉のID
      * @param sortMode 順序のモード
-     * この関数はファイアベースからノートを取ります
+     * この関数はファイアベースからノートを取り、UIを更新します。
      */
     public void getAllNotesFromFirebase(int wordID, final int sortMode) {
         isProcessing = false;
@@ -119,6 +120,12 @@ public class GetNoteController {
                 });
     }
 
+    /**
+     * @param documentSnapshot ノートの情報を持っているオブジェクト
+     * @return そのノートのオブジェクト
+     * この関数はスナップショットでノートのオブジェクトを作成するだけでなく、そのノートは現在のユーザーのかどうか、
+     * SQLiteにあるかどうか確認し、現在のユーザーのノートで、SQLiteにある場合にはそのノートを更新します。
+     */
     private Note processSnapshot(QueryDocumentSnapshot documentSnapshot) {
         Note note = documentSnapshot.toObject(Note.class);
         Map<String, Object> noteMap = documentSnapshot.getData();
@@ -153,6 +160,11 @@ public class GetNoteController {
         return note;
     }
 
+    /**
+     * @param note   ノートの情報を持っているオブジェクト
+     * @param wordID ノートに添付する言葉のIDのリスト
+     *               この関数はノートと言葉をSQLiteに追加します。
+     */
     private void addNoteOfWord(Note note, List<Long> wordID) {
         noteOfWordDAO.deleteAllAssociationOfOneNote(note.getNoteID());
         NoteOfWord noteOfWord = new NoteOfWord();
@@ -165,6 +177,9 @@ public class GetNoteController {
     }
 
 
+    /**
+     * すべてのノートの作者の情報を取り、UIを更新します。
+     */
     private void getUserList() {
         Log.d("myApp", "How many times userlist is call");
         listUser = new ArrayList<>();
@@ -195,6 +210,9 @@ public class GetNoteController {
         }
     }
 
+    /**
+     * ノートの数はユーザーの数と同じになれば、ノートと作者を取り終わり、UIを更新します。
+     */
     private void compareTwoListSize() {
         Log.d("compare_size", listNote.size() + " / " + listUser.size());
         if (listNote.size() == listUser.size()) {
@@ -207,11 +225,36 @@ public class GetNoteController {
         }
     }
 
+    /**
+     * @param mode 公開かプライベートか
+     * @param userID ユーザーのID
+     * @return SQLiteにあって、modeであるすべてのノートのリスト
+     */
     public List<Note> getOfflineNote(boolean mode, String userID) {
         Note[] notesOfUser = noteDAO.getNotesOfUser(mode, userID);
+        for (Note note : notesOfUser) {
+            note.setWordList(getWordList(note.getNoteID()));
+        }
         return Lists.newArrayList(notesOfUser);
     }
 
+    /**
+     * @param noteID ノートのID
+     * @return ノートに添付した言葉のID
+     */
+    private List<Long> getWordList(int noteID) {
+        NoteOfWord[] noteOfWordList = noteOfWordDAO.getNoteOfWord(noteID);
+        List<Long> listWordID = new ArrayList<>();
+        for (NoteOfWord noteOfWord : noteOfWordList) {
+            listWordID.add((long) noteOfWord.getWordID());
+        }
+        return listWordID;
+    }
+
+
+    /**
+     * ノートが変化するかを観察するのをやめる。
+     */
     public void stopListening() {
         if (registration != null) {
             registration.remove();

@@ -12,6 +12,10 @@ public class StringProcessUtilitiesTest {
     private final String TEST_FULL_NORMAL_SPACE2 = "     ";
     private final String TEST_FULL_JP_SPACE1 = "　　";
     private final String TEST_FULL_JP_SPACE2 = "　　　　　";
+    private final String TEST_FULL_NEWLINE1 = "\n\n";
+    private final String TEST_FULL_NEWLINE2 = "\n\n\n\n\n";
+    private final String TEST_FULL_TAB1 = "\t\t";
+    private final String TEST_FULL_TAB2 = "\t\t\t\t\t";
     //Normal JP
     private final String TEST_JP_SP_AND_NORMAL_SP1 = " 　";
     //JP Normal
@@ -24,6 +28,9 @@ public class StringProcessUtilitiesTest {
     private final String TEST_JP_SP_AND_NORMAL_SP5 = "     　　　　　";
     //5 JP and 5 normal
     private final String TEST_JP_SP_AND_NORMAL_SP6 = "　　　　　     ";
+    //JP and normal and newline
+    private final String TEST_JP_NORMAL_NL1 = " 　\n";
+    private final String TEST_JP_NORMAL_NL2 = " 　\n 　\n\n　 ";
 
     @Test
     public void isEmpty() {
@@ -39,5 +46,11 @@ public class StringProcessUtilitiesTest {
         assertTrue(StringProcessUtilities.isEmpty(TEST_JP_SP_AND_NORMAL_SP4));
         assertTrue(StringProcessUtilities.isEmpty(TEST_JP_SP_AND_NORMAL_SP5));
         assertTrue(StringProcessUtilities.isEmpty(TEST_JP_SP_AND_NORMAL_SP6));
+        assertTrue(StringProcessUtilities.isEmpty(TEST_FULL_NEWLINE1));
+        assertTrue(StringProcessUtilities.isEmpty(TEST_FULL_NEWLINE2));
+        assertTrue(StringProcessUtilities.isEmpty(TEST_FULL_TAB1));
+        assertTrue(StringProcessUtilities.isEmpty(TEST_FULL_TAB2));
+        assertTrue(StringProcessUtilities.isEmpty(TEST_JP_NORMAL_NL1));
+        assertTrue(StringProcessUtilities.isEmpty(TEST_JP_NORMAL_NL2));
     }
 }

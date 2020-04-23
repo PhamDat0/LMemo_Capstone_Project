@@ -50,7 +50,7 @@ public class PrivateNoteTab extends Fragment {
         ListView noteListView = view.findViewById(R.id.noteViewer);
         NoteDAO noteDAO = LMemoDatabase.getInstance(getContext()).noteDAO();
         UserDAO userDAO = LMemoDatabase.getInstance(getContext()).userDAO();
-        GetNoteController getNoteController = new GetNoteController(noteDAO);
+        GetNoteController getNoteController = new GetNoteController(noteDAO, LMemoDatabase.getInstance(getContext()).noteOfWordDAO());
         User user = userDAO.getLocalUser()[0];
         List<Note> listNote = getNoteController.getOfflineNote(GetNoteController.GET_OFFLINE_NOTE_PRIVATE, user.getUserID());
         Map<String, User> listUserMap = new HashMap<>();

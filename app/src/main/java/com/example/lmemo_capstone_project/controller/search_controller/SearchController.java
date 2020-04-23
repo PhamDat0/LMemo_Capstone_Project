@@ -133,7 +133,7 @@ public class SearchController {
     /**
      * @param enteredWord A string contains the kanji that the application needs to search
      *                    検索する漢字を持っている文字列です。
-     *                    この関数は漢字を検索し、結果のリストに漢字の情報を追加します。
+     * この関数は漢字を検索し、結果のリストに漢字の情報を追加します。
      */
     public List<Kanji> searchForKanji(String enteredWord) {
         List<Kanji> listKanji = new ArrayList<>();

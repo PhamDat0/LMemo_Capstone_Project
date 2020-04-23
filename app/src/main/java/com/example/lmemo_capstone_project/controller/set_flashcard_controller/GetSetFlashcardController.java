@@ -81,9 +81,10 @@ public class GetSetFlashcardController {
 
     public void getMoreOnlineSet(String keyword, List<SetFlashcard> baseList) {
         listSet = baseList;
-        SetFlashcard lastSetInList = baseList.get(baseList.size() - 1);
+        reverseList(listSet);
+        SetFlashcard lastSetInList = listSet.get(listSet.size() - 1);
         firebaseFirestore.collection(COLLECTION_PATH)
-                .whereGreaterThanOrEqualTo("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
+                .whereGreaterThan("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
                 .orderBy("name", Query.Direction.ASCENDING).orderBy(FieldPath.documentId())
                 .startAfter(lastSetInList.getSetName(), lastSetInList.getOnlineID()).limit(RECORD_PER_PAGE)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -136,8 +137,13 @@ public class GetSetFlashcardController {
     private void updateInterfaceIfFinish() {
         if (isFinish()) {
             ProgressDialog.getInstance().dismiss();
+            reverseList(listSet);
             setFlashCardFragment.updateUI(listSet);
         }
+    }
+
+    private void reverseList(List<SetFlashcard> listSet) {
+        this.listSet = Lists.reverse(listSet);
     }
 
     private boolean isFinish() {
