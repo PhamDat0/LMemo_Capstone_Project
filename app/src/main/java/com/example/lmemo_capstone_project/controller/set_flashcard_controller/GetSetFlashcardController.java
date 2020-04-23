@@ -24,7 +24,7 @@ import java.util.Map;
 public class GetSetFlashcardController {
 
     private static final String COLLECTION_PATH = "setFlashCards";
-    private static final long RECORD_PER_PAGE = 1;
+    private static final long RECORD_PER_PAGE = 10;
 
     private UserDAO userDAO;
     private FlashcardBelongToSetDAO flashcardBelongToSetDAO;
