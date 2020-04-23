@@ -84,7 +84,7 @@ public class GetSetFlashcardController {
         reverseList(listSet);
         SetFlashcard lastSetInList = listSet.get(listSet.size() - 1);
         firebaseFirestore.collection(COLLECTION_PATH)
-                .whereGreaterThan("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
+                .whereGreaterThanOrEqualTo("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
                 .orderBy("name", Query.Direction.ASCENDING).orderBy(FieldPath.documentId())
                 .startAfter(lastSetInList.getSetName(), lastSetInList.getOnlineID()).limit(RECORD_PER_PAGE)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
