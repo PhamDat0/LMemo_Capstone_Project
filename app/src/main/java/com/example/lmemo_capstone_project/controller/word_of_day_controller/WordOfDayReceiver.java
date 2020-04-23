@@ -46,7 +46,7 @@ public class WordOfDayReceiver extends BroadcastReceiver {
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.dictionicon)
+                .setSmallIcon(R.drawable.mainic1)
                 .setContentTitle("Word Of The Day")
                 .setContentIntent(pendingIntent)
                 .setOngoing(SharedPreferencesController.dismissDailyWordIsOn(context))
