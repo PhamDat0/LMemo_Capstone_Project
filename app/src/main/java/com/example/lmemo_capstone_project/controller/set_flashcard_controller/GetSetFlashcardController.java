@@ -1,5 +1,7 @@
 package com.example.lmemo_capstone_project.controller.set_flashcard_controller;
 
+import android.content.Context;
+
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardBelongToSetDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.SetFlashcardDAO;
@@ -35,8 +37,12 @@ public class GetSetFlashcardController {
 
 
     public GetSetFlashcardController(SetFlashCardOnlineTab setFlashCardFragment) {
+        this(setFlashCardFragment.getContext());
         this.setFlashCardFragment = setFlashCardFragment;
-        LMemoDatabase dbInstance = LMemoDatabase.getInstance(setFlashCardFragment.getContext());
+    }
+
+    GetSetFlashcardController(Context context) {
+        LMemoDatabase dbInstance = LMemoDatabase.getInstance(context);
         setFlashcardDAO = dbInstance.setFlashcardDAO();
         userDAO = dbInstance.userDAO();
         flashcardBelongToSetDAO = dbInstance.flashcardBelongToSetDAO();
@@ -74,6 +80,7 @@ public class GetSetFlashcardController {
                     SetFlashcard setFlashcard = getSetFromSnapshot(document);
                     listSet.add(setFlashcard);
                 }
+//                reverseList(listSet);
                 getSetOwners();
             }
         });
@@ -95,6 +102,7 @@ public class GetSetFlashcardController {
                     SetFlashcard setFlashcard = getSetFromSnapshot(document);
                     listSet.add(setFlashcard);
                 }
+//                reverseList(listSet);
                 getSetOwners();
             }
         });
@@ -117,7 +125,7 @@ public class GetSetFlashcardController {
 //    }
 
     private void getSetOwners() {
-        if (listSet.isEmpty()) {
+        if (listSet.isEmpty() || isFinish()) {
             updateInterfaceIfFinish();
         } else {
             for (final SetFlashcard setFlashcard : listSet) {
