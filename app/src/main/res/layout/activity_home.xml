@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/home_layout"
-    android:fitsSystemWindows="true"
     tools:context=".view.home_activity.HomeActivity">
     <include
         layout="@layout/app_bar_main"
