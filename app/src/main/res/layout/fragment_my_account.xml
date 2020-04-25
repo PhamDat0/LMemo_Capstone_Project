@@ -31,9 +31,11 @@
                 android:textStyle="bold"/>
         </LinearLayout>
         <androidx.cardview.widget.CardView
-            android:layout_width="400dp"
+            android:layout_width="match_parent"
             android:layout_height="120dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginTop="215dp">
 
             <LinearLayout
