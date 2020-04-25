@@ -12,7 +12,8 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="350dp"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
+        android:minHeight="400dp"
         android:background="@color/white"
         android:layout_centerHorizontal="true"
         android:orientation="vertical">
