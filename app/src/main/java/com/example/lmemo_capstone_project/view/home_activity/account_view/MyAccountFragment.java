@@ -92,7 +92,7 @@ public class MyAccountFragment extends Fragment {
      */
     private void updateUserInformation(View container) {
         User user = getUserInformationFromView(container);
-        if (user.isGuest()) {
+        if (!user.isGuest()) {
             ProgressDialog.getInstance().show(getContext());
             updateUserToFirebase(user);
             updateUserToSQLite(user);
