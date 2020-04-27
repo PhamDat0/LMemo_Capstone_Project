@@ -17,7 +17,7 @@
         android:id="@+id/btSaveSet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#A8B2E4"
+        android:background="@color/mainColor"
         android:text="SAVE" />
 
 </LinearLayout>

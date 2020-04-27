@@ -40,13 +40,12 @@
             tools:layout_editor_absoluteX="46dp"
             tools:layout_editor_absoluteY="31dp" />
         <LinearLayout
-            android:layout_width="375dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginStart="20sp"
+            android:layout_marginEnd="20sp"
             android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
                 <EditText
                     android:id="@+id/txtTakeNote"
                     android:layout_width="match_parent"
@@ -58,7 +57,6 @@
                     android:textColor="@color/lightorange"
                     android:textColorHint="#000000"
                     android:hint=" Enter your note" />
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -69,48 +67,47 @@
         android:gravity="center">
         <Switch
             android:id="@+id/isNotePublic"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Set to public"
-            android:textSize="20sp"
             android:layout_marginTop="10dp"
+            android:layout_marginStart="80sp"
+            android:layout_marginEnd="80sp"
             android:gravity="center"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:text="Set to public"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum=".2"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20sp"
             android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_weight=".1">
                 <Button
                     android:id="@+id/btnAddNote"
-                    android:layout_width="190dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".1"
                     android:background="@drawable/round_add_button"
+                    android:text="Save"
                     android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:text="Save" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_weight=".1">
+                    android:layout_marginRight="10dp"
+                    android:textSize="15sp" />
+
+
                 <Button
                     android:id="@+id/btnCancelAddNote"
-                    android:layout_width="190dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/round_add_button"
+                    android:layout_weight=".1"
+                    android:text="Cancel"
                     android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:text="Cancel" />
-            </LinearLayout>
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15sp" />
+
         </LinearLayout>
     </LinearLayout>
     <LinearLayout

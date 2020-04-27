@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="40dp"
-    android:paddingEnd="40dp"
-    android:background="@color/mainColor"
+    android:paddingStart="30dp"
+    android:paddingEnd="30dp"
+    android:background="@color/lightpurple"
     tools:context=".view.home_activity.flashcard_view.review_activity.MultipleChoiceTestActivity">
 
     <androidx.cardview.widget.CardView

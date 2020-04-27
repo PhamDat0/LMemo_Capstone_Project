@@ -18,7 +18,7 @@
             android:padding="10dp"
             android:text="Create a set"
             android:textColor="@color/colorPrimary"
-            android:textSize="20sp" />
+            android:textSize="30sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,14 +43,12 @@
             tools:layout_editor_absoluteY="31dp" />
 
         <LinearLayout
-            android:layout_width="375dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginStart="20sp"
+            android:layout_marginEnd="20sp"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/txtTakeNote"
@@ -63,7 +61,6 @@
                     android:inputType="textMultiLine|textPersonName"
                     android:textColor="@color/lightorange"
                     android:textColorHint="#000000" />
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -76,9 +73,11 @@
 
         <Switch
             android:id="@+id/isNotePublic"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginStart="80sp"
+            android:layout_marginEnd="80sp"
             android:gravity="center"
             android:text="Set to public"
             android:textColor="@color/colorPrimaryDark"
@@ -89,40 +88,31 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20sp"
             android:orientation="horizontal"
             android:weightSum=".2">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".1"
-                android:gravity="center">
-
                 <Button
                     android:id="@+id/btnAddNote"
-                    android:layout_width="190dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".1"
                     android:background="@drawable/round_add_button"
                     android:text="Save"
                     android:textColor="@color/white"
+                    android:layout_marginRight="10dp"
                     android:textSize="15sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".1"
-                android:gravity="center">
-
                 <Button
                     android:id="@+id/btnCancelAddNote"
-                    android:layout_width="190dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/round_add_button"
+                    android:layout_weight=".1"
                     android:text="Cancel"
                     android:textColor="@color/white"
+                    android:layout_marginLeft="10dp"
                     android:textSize="15sp" />
-            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
