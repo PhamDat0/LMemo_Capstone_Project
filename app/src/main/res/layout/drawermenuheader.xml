@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="170dp"
+    android:gravity="center_vertical"
     android:background="@drawable/backgroundheader"
     android:fitsSystemWindows="true">
     <ImageView
@@ -12,21 +13,5 @@
         android:layout_height="50dp"
         android:layout_marginStart="25sp"
         android:src="@drawable/ic_user" />
-    <TextView
-        android:id="@+id/userName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginStart="25sp"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/colorPrimary"
-        android:text="Name"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:layout_marginStart="25sp"
-        android:layout_marginTop="5dp"
-        android:textColor="@color/darkGray"
-        android:text="Email Address"/>
+
 </LinearLayout>

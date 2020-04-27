@@ -42,13 +42,7 @@ public class WritingTestActivity extends AppCompatActivity {
     private Word currentWord;
     private Date startTime;
     private TestController testController;
-    private LinearLayout belowLayout;
-    private CardView aboveLayout, btAnswerCheck;
-    private int height;
-    private boolean isFlipped = false;
-    private OvershootInterpolator interpolator = new OvershootInterpolator();
-    private int duration = 300;
-    private TextView txname;
+    private CardView btAnswerCheck;
     private TextToSpeech textToSpeech;
     private SetFlashcard setFlashcard;
 
@@ -76,59 +70,11 @@ public class WritingTestActivity extends AppCompatActivity {
         WordDAO wordDAO = LMemoDatabase.getInstance(getApplicationContext()).wordDAO();
         FlashcardDAO flashcardDAO = LMemoDatabase.getInstance(getApplicationContext()).flashcardDAO();
         testController = new TestController(wordDAO, flashcardDAO, TestController.WRITING_MODE);
-        belowLayout = findViewById(R.id.belowLayout);
-        aboveLayout = findViewById(R.id.aboveLayout);
         btAnswerCheck = findViewById(R.id.btAnswerCheck);
-        txname = findViewById(R.id.txname);
-
-        aboveLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                //fetch height
-                height = (aboveLayout.getHeight()) / 2;
-            }
-        });
-
-        flipAnimation();
         loadQuestion();
     }
 
     //Question and answer flip
-    private void flipAnimation() {
-        btAnswerCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                aboveLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(height).start();
-                belowLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(-1 * height)
-                        .withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                if (!isFlipped) {
-                                    aboveLayout.setTranslationZ(-50);
-                                    belowLayout.setTranslationZ(0);
-                                    answer(v);
-                                    txname.setText("Next");
-                                } else {
-                                    aboveLayout.setTranslationZ(0);
-                                    belowLayout.setTranslationZ(-50);
-                                    txname.setText("Check Answer");
-                                }
-
-                                aboveLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(0).start();
-                                belowLayout.animate().setDuration(duration).setInterpolator(interpolator).translationY(0).start();
-                                btAnswerCheck.animate().setInterpolator(interpolator).translationY(0).start();
-
-
-                                isFlipped = !isFlipped;
-                            }
-                        })
-                        .start();
-            }
-        });
-
-    }
-
     /**
      * @param v ビューオブジェクト。ユーザーの答えを持っているボタン
      *          この関数はフラッシュカードの練習情報を更新し、言葉情報を表示します。

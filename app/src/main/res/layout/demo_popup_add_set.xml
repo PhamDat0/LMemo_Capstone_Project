@@ -53,11 +53,13 @@
                 <EditText
                     android:id="@+id/txtTakeNote"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="75dp"
                     android:background="@drawable/gradient_add_note_edittext"
                     android:ems="10"
                     android:gravity="top|left"
                     android:hint=" Enter set name"
+                    android:padding="10dp"
                     android:inputType="textMultiLine|textPersonName"
                     android:textColor="@color/lightorange"
                     android:textColorHint="#000000" />

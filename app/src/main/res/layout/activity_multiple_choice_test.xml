@@ -23,7 +23,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="400dp"
+            android:minHeight="500dp"
             android:gravity="center"
             android:orientation="vertical">
             <LinearLayout
@@ -51,6 +51,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/buttonstyle3"
                     android:textColor="@color/white"
+                    android:padding="10dp"
                     android:text="Answer 1" />
 
                 <Button
@@ -60,6 +61,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/buttonstyle3"
                     android:textColor="@color/white"
+                    android:padding="10dp"
                     android:text="Answer2" />
 
                 <Button
@@ -69,6 +71,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/buttonstyle3"
                     android:textColor="@color/white"
+                    android:padding="10dp"
                     android:text="Answer3" />
 
                 <Button
@@ -78,6 +81,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/buttonstyle3"
                     android:textColor="@color/white"
+                    android:padding="10dp"
                     android:text="Answer4" />
 
             </LinearLayout>

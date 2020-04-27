@@ -54,6 +54,7 @@
                     android:inputType="textMultiLine|textPersonName"
                     android:background="@drawable/gradient_add_note_edittext"
                     android:gravity="top|left"
+                    android:padding="10dp"
                     android:textColor="@color/lightorange"
                     android:textColorHint="#000000"
                     android:hint=" Enter your note" />

@@ -32,43 +32,52 @@
                     android:textColor="#000000"
                     android:textSize="20sp" />
             </LinearLayout>
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="@color/darkGray"
-                android:textSize="20sp"
-                android:text="You are commenting to this note" />
-
-            <TextView
-                android:id="@+id/tvNoteContent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="20sp"
-                android:textColor="@color/colorPrimary"
-                android:text="DisplayNoteContent" />
-
-            <EditText
-                android:id="@+id/etCommentContent"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:layout_margin="10dp"
-                android:gravity="start|top"
-                android:hint="Comment here"
-                android:background="@drawable/gradient_add_note_edittext"
-                android:textColor="@color/lightorange"
-                android:textColorHint="#000000"
-                android:inputType="textMultiLine"
-                android:lines="5" />
+                android:background="@drawable/gradient_add_note2"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="30dp">
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20sp"
+                    android:text="You are commenting to this note" />
+
+                <TextView
+                    android:id="@+id/tvNoteContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="DisplayNoteContent" />
+                <EditText
+                    android:id="@+id/etCommentContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:layout_margin="10dp"
+                    android:gravity="start|top"
+                    android:padding="10dp"
+                    android:hint="Comment here"
+                    android:background="@drawable/gradient_add_note_edittext"
+                    android:textColor="@color/lightorange"
+                    android:textColorHint="#000000"
+                    android:inputType="textMultiLine"
+                    android:lines="5" />
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:weightSum=".2"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/gradient_add_note"
                 android:orientation="horizontal">
                 <LinearLayout
                     android:layout_width="wrap_content"
