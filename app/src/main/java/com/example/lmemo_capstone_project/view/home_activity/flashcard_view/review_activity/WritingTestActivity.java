@@ -156,6 +156,9 @@ public class WritingTestActivity extends AppCompatActivity {
         final Dialog container = new Dialog(WritingTestActivity.this);
         container.setContentView(R.layout.fragment_word_searching);
         container.setTitle("Word information:");
+        container.findViewById(R.id.spinnerSort).setVisibility(View.GONE);
+        container.findViewById(R.id.nGrey).setVisibility(View.GONE);
+        container.findViewById(R.id.nSpace).setVisibility(View.GONE);
         container.findViewById(R.id.btnOpenTakeNoteDialog).setVisibility(View.GONE);
         container.findViewById(R.id.ibAddToSet).setVisibility(View.GONE);
         ImageButton btPronunciation = container.findViewById(R.id.btPronunciation);

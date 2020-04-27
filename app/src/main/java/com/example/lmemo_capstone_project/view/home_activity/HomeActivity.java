@@ -28,8 +28,8 @@ import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.home_activity.account_view.MyAccountFragment;
 import com.example.lmemo_capstone_project.view.home_activity.account_view.SignInFragment;
-import com.example.lmemo_capstone_project.view.home_activity.constant_view.SettingsFragment;
 import com.example.lmemo_capstone_project.view.home_activity.constant_view.CopyrightFragment;
+import com.example.lmemo_capstone_project.view.home_activity.constant_view.SettingsFragment;
 import com.example.lmemo_capstone_project.view.home_activity.flashcard_view.FlashCardFragment;
 import com.example.lmemo_capstone_project.view.home_activity.note_view.NotesFragment;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.SearchFragment;
@@ -94,6 +94,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onNewIntent(intent);
             loadWord(intent);
     }
+
     private void loadWord(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras != null) {
@@ -294,7 +295,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         switch (requestCode) {
             case TEST_FLASHCARD_REQUEST_CODE:
                 Toast.makeText(getApplicationContext(), "Test complete", Toast.LENGTH_LONG).show();
-                showFlashcardFragment();
+//                showFlashcardFragment();
                 break;
             case ADD_NOTE_REQUEST_CODE:
                 loadWord(data);
@@ -308,6 +309,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction.replace(R.id.mainFrameLayout, fragment, "Notes");
         fragmentTransaction.commit();
     }
+
 
 }
 

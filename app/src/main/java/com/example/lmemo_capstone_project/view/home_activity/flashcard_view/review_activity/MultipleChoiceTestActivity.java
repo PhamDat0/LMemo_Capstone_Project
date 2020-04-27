@@ -109,6 +109,9 @@ public class MultipleChoiceTestActivity extends AppCompatActivity {
         final Dialog container = new Dialog(MultipleChoiceTestActivity.this);
         container.setContentView(R.layout.fragment_word_searching);
         container.setTitle("Word information:");
+        container.findViewById(R.id.spinnerSort).setVisibility(View.GONE);
+        container.findViewById(R.id.nGrey).setVisibility(View.GONE);
+        container.findViewById(R.id.nSpace).setVisibility(View.GONE);
         textToSpeech.speak(currentWord.getKana().split("/")[0].trim(), TextToSpeech.QUEUE_FLUSH, null, null);
         ((TextView) container.findViewById(R.id.tvKana)).setText("[ " + currentWord.getKana() + " ]");
         ((TextView) container.findViewById(R.id.tvKanji)).setText("  " + currentWord.getKanjiWriting());
