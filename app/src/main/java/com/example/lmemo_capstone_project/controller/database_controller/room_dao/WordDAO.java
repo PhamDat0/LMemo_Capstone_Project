@@ -59,4 +59,7 @@ public interface WordDAO {
             "WHERE WordID=FlashcardID AND WordID = :correctID)) " +
             "ORDER BY random() LIMIT 4")
     Word[] getRandomWord(int correctID);
+
+    @Query("SELECT * From Word WHERE Kana LIKE :s1 AND Kanji LIKE :s")
+    Word[] getWords(String s, String s1);
 }

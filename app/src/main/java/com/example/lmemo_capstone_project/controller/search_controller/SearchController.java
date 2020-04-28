@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchController {
+    private final String SYMBOL_KANA_KANJI = "　>>　";
     private KanjiDAO kanjiDAO;
     private WordDAO wordDAO;
     private FlashcardDAO flashcardDAO;
@@ -48,7 +49,10 @@ public class SearchController {
             //this matrix cursor will be returned and the contents will be displayed
             Word[] kanji = wordDAO.getSuggestion(constrain);
             for (int i = 0; i < kanji.length; i++) {
-                c.newRow().add(i).add(kanji[i].getKanjiWriting().length() == 0 ? kanji[i].getKana() : kanji[i].getKanjiWriting());
+                String autoComplete = "";
+                autoComplete += kanji[i].getKanjiWriting().length() == 0 ? "" : (kanji[i].getKanjiWriting() + SYMBOL_KANA_KANJI);
+                autoComplete += kanji[i].getKana();
+                c.newRow().add(i).add(autoComplete);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,13 +68,30 @@ public class SearchController {
         if (StringProcessUtilities.isEmpty(searchWord))
             throw new WordNotFoundException("You didn't enter anything.");
         try {
-            Word[] words = wordDAO.getWords(searchWord);
-            word = bestFit(words, searchWord);
+            if (searchWord.contains(SYMBOL_KANA_KANJI)) {
+                String[] kanjiAndKana = searchWord.split(SYMBOL_KANA_KANJI);
+                Word[] word1 = wordDAO.getWords(kanjiAndKana[0], kanjiAndKana[1]);
+                word = word1[0];
+            } else {
+                Word[] words = wordDAO.getWords(searchWord);
+                word = bestFit(words, searchWord);
+            }
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new WordNotFoundException("That word does not exist.");
         }
         return word;
     }
+
+//    private Word findMatch(Word[] word1, Word[] word2) {
+//        for (Word w1 : word1) {
+//            for (Word w2 : word2) {
+//                if (w1.getWordID() == w2.getWordID()) {
+//                    return w2;
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     private Word bestFit(Word[] words, String searchWord) {
         Word result = words[0];
