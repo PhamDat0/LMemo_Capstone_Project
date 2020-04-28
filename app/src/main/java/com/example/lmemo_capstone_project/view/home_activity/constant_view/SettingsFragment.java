@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -29,14 +30,15 @@ public class SettingsFragment extends Fragment {
 
     private Switch dailyWordSwitch;
     private Switch dailyWordDismissSwitch;
-    private Spinner dailyWordHour;
-    private Spinner dailyWordMin;
+    private NumberPicker dailyWordHour;
+    private NumberPicker dailyWordMin;
     private Switch reminderSwitch;
     private Switch reminderDismissSwitch;
-    private Spinner reminderHour;
-    private Spinner reminderMin;
+    private NumberPicker reminderHour;
+    private NumberPicker reminderMin;
     private Button btnSave;
     private Button btnCancel;
+
     WordOfTheDayController wordOfTheDayController;
     FlashcardReminderController flashcardReminderController;
 
@@ -62,10 +64,10 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 settingController.saveSettingToSharePreferences(getContext(), dailyWordSwitch.isChecked(),
-                        dailyWordDismissSwitch.isChecked(), dailyWordHour.getSelectedItem().toString(),
-                        dailyWordMin.getSelectedItem().toString(), reminderSwitch.isChecked(),
-                        reminderDismissSwitch.isChecked(), reminderHour.getSelectedItem().toString(),
-                        reminderMin.getSelectedItem().toString());
+                        dailyWordDismissSwitch.isChecked(), dailyWordHour.getValue(),
+                        dailyWordMin.getValue(), reminderSwitch.isChecked(),
+                        reminderDismissSwitch.isChecked(), reminderHour.getValue(),
+                        reminderMin.getValue());
                 Toast.makeText(getContext(), "Save Setting Successful!", Toast.LENGTH_LONG).show();
                 flashcardReminderController = new FlashcardReminderController();
                 flashcardReminderController.createNotificationChannel(getActivity());
@@ -91,48 +93,32 @@ public class SettingsFragment extends Fragment {
         dailyWordDismissSwitch.setChecked(SharedPreferencesController.dismissDailyWordIsOn(context));
     }
 
-    private void setReminderTimeSpinner(Context context, Spinner reminderHour, Spinner reminderMin) {
+    private void setReminderTimeSpinner(Context context, NumberPicker reminderHour, NumberPicker reminderMin) {
         //set time of reminder time spinner when loading UI
         long time = SharedPreferencesController.getReminderTime(context);
         Date date = new Date(time);
         int hour = date.getHours();
         int minute = date.getMinutes();
-        reminderHour.setSelection(((ArrayAdapter<String>) reminderHour.getAdapter()).getPosition("" + hour));
-        reminderMin.setSelection(((ArrayAdapter<String>) reminderMin.getAdapter()).getPosition("" + minute));
+        reminderHour.setValue(hour);
+        reminderMin.setValue(minute);
     }
 
-    private void setDailyWordTimeSpinner(Context context, Spinner dailyWordHour, Spinner dailyWordMin) {
+    private void setDailyWordTimeSpinner(Context context, NumberPicker dailyWordHour, NumberPicker dailyWordMin) {
         // set time of daily word time spinner when loading UI
         long time = SharedPreferencesController.getDailyWordTime(context);
         Date date = new Date(time);
         int hour = date.getHours();
         int minute = date.getMinutes();
-        dailyWordHour.setSelection(((ArrayAdapter<String>) dailyWordHour.getAdapter()).getPosition("" + hour));
-        dailyWordMin.setSelection(((ArrayAdapter<String>) dailyWordMin.getAdapter()).getPosition("" + minute));
+        dailyWordHour.setValue(hour);
+        dailyWordMin.setValue(minute);
     }
 
-    private void addValueToTimeSpinner(Spinner hourSpinner, Spinner minuteSpinner, Context context) {
+    private void addValueToTimeSpinner(NumberPicker hourSpinner, NumberPicker minuteSpinner, Context context) {
         //add value to time spinner
-        ArrayList<String> listHour = new ArrayList<>();
-        ArrayList<String> listMinute = new ArrayList<>();
-        if (listHour.isEmpty()) {
-            for (int i = 0; i < 24; i++) {
-                listHour.add("" + i);
-            }
-        }
-        if (listMinute.isEmpty()) {
-            for (int i = 0; i < 60; i++) {
-                listMinute.add("" + i);
-            }
-        }
-        ArrayAdapter<String> hourAdapter = new ArrayAdapter<String>(context,
-                android.R.layout.simple_spinner_item, listHour);
-        hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        hourSpinner.setAdapter(hourAdapter);
-        ArrayAdapter<String> minuteAdapter = new ArrayAdapter<String>(context,
-                android.R.layout.simple_spinner_item, listMinute);
-        minuteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        minuteSpinner.setAdapter(minuteAdapter);
+        hourSpinner.setMinValue(0);
+        hourSpinner.setMaxValue(23);
+        minuteSpinner.setMinValue(0);
+        minuteSpinner.setMaxValue(59);
     }
 
     private void setReminderSwitch(Context context, Switch reminderSwitch) {
@@ -147,13 +133,12 @@ public class SettingsFragment extends Fragment {
 
     private void setRef(View view) {
         dailyWordSwitch = view.findViewById(R.id.dailyWordIsOn);
-        dailyWordHour = view.findViewById(R.id.dailyWordHour);
-        dailyWordMin = view.findViewById(R.id.dailyWordMinute);
+        dailyWordHour = view.findViewById(R.id.WODHourPicker);
+        dailyWordMin = view.findViewById(R.id.WODMinPicker);
         reminderSwitch = view.findViewById(R.id.reminderIsOn);
-        reminderHour = view.findViewById(R.id.reminderHour);
-        reminderMin = view.findViewById(R.id.reminderMinute);
+        reminderHour = view.findViewById(R.id.reminderHourPicker);
+        reminderMin = view.findViewById(R.id.reminderMinPicker);
         btnSave = view.findViewById(R.id.btnSaveSetting);
-        btnCancel = view.findViewById(R.id.btnCancelSetting);
         dailyWordDismissSwitch = view.findViewById(R.id.dailyWordDisMissIsOn);
         reminderDismissSwitch = view.findViewById(R.id.reminderDisMissIsOn);
     }

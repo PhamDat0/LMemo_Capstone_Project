@@ -12,10 +12,9 @@ public class SettingController {
     public SettingController() {
     }
 
-    private void setupDailyWordTime(String hourString, String minString, Context context) {
+    private void setupDailyWordTime(int hour, int min, Context context) {
         //get data from UI and set daily time
-        int hour = Integer.parseInt(hourString);
-        int min = Integer.parseInt(minString);
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, hour);
@@ -27,10 +26,8 @@ public class SettingController {
     }
 
 
-    private void setupReminderTime(String hourString, String minString, Context context) {
+    private void setupReminderTime(int hour, int min, Context context) {
         //get data from UI and set reminder time
-        int hour = Integer.parseInt(hourString);
-        int min = Integer.parseInt(minString);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, hour);
@@ -40,8 +37,8 @@ public class SettingController {
         SharedPreferencesController.setReminderTime(context, reminderTime);
     }
 
-    public void saveSettingToSharePreferences(Context context, boolean isDailyWordOn, boolean isDailyWordDismissible, String dailyWordHour, String dailyWordMin,
-                                              boolean isReminderOn, boolean isReminderDismissible, String reminderHour, String reminderMin) {
+    public void saveSettingToSharePreferences(Context context, boolean isDailyWordOn, boolean isDailyWordDismissible, int dailyWordHour, int dailyWordMin,
+                                              boolean isReminderOn, boolean isReminderDismissible, int reminderHour, int reminderMin) {
         // control on click event of save button
         SharedPreferencesController.setDailyWordStatus(context, isDailyWordOn);
         setupDailyWordTime(dailyWordHour, dailyWordMin, context);
