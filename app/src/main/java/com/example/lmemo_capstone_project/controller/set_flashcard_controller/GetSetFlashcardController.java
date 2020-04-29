@@ -21,6 +21,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -148,14 +150,26 @@ public class GetSetFlashcardController {
     private synchronized void updateInterfaceIfFinish() {
         if (isFinish()) {
             ProgressDialog.getInstance().dismiss();
-            listSet = Lists.reverse(listSet);
+            orderListByNewLoadedSetFirst(listSet);
             setFlashCardFragment.updateUI(listSet);
         }
     }
-//
-//    private void orderListByNewLoadedSetFirst(List<SetFlashcard> listSet) {
-//        this.listSet = Lists.reverse(listSet);
-//    }
+
+    private void orderListByNewLoadedSetFirst(List<SetFlashcard> listSet) {
+        Collections.sort(listSet, new Comparator<SetFlashcard>() {
+            @Override
+            public int compare(SetFlashcard o1, SetFlashcard o2) {
+                if (o1.getSetName().compareTo(o2.getSetName()) > 0) {
+                    return -1;
+                } else if (o1.getSetName().compareTo(o2.getSetName()) < 0) {
+                    return 1;
+                } else {
+                    return Integer.compare(0, o1.getOnlineID().compareTo(o2.getOnlineID()));
+                }
+            }
+        });
+        this.listSet = listSet;
+    }
 
     private boolean isFinish() {
         for (SetFlashcard setFlashcard : listSet) {
