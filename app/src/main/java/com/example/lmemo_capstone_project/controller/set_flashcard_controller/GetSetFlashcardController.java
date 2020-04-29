@@ -1,6 +1,7 @@
 package com.example.lmemo_capstone_project.controller.set_flashcard_controller;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardBelongToSetDAO;
@@ -71,33 +72,34 @@ public class GetSetFlashcardController {
         listSet = new ArrayList<>();
         firebaseFirestore.collection(COLLECTION_PATH)
                 .whereGreaterThanOrEqualTo("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
-                .orderBy("name", Query.Direction.ASCENDING).orderBy(FieldPath.documentId()).limit(RECORD_PER_PAGE)
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .orderBy("name", Query.Direction.ASCENDING).orderBy(FieldPath.documentId(), Query.Direction.ASCENDING)
+                .limit(RECORD_PER_PAGE).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                Log.i("SEARCH_SET", "" + documents.size());
                 for (DocumentSnapshot document : documents) {
                     SetFlashcard setFlashcard = getSetFromSnapshot(document);
                     listSet.add(setFlashcard);
                 }
-//                reverseList(listSet);
+                //                reverseList(listSet);
                 getSetOwners();
             }
         });
     }
 
     public void getMoreOnlineSet(String keyword, List<SetFlashcard> baseList) {
-        listSet = baseList;
-        reverseList(listSet);
+        listSet = Lists.reverse(baseList);
         SetFlashcard lastSetInList = listSet.get(listSet.size() - 1);
         firebaseFirestore.collection(COLLECTION_PATH)
                 .whereGreaterThanOrEqualTo("name", keyword).whereLessThanOrEqualTo("name", keyword + '\uf8ff')
-                .orderBy("name", Query.Direction.ASCENDING).orderBy(FieldPath.documentId())
+                .orderBy("name", Query.Direction.ASCENDING).orderBy(FieldPath.documentId(), Query.Direction.ASCENDING)
                 .startAfter(lastSetInList.getSetName(), lastSetInList.getOnlineID()).limit(RECORD_PER_PAGE)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                Log.i("SEARCH_SET", "" + documents.size());
                 for (DocumentSnapshot document : documents) {
                     SetFlashcard setFlashcard = getSetFromSnapshot(document);
                     listSet.add(setFlashcard);
@@ -129,7 +131,8 @@ public class GetSetFlashcardController {
             updateInterfaceIfFinish();
         } else {
             for (final SetFlashcard setFlashcard : listSet) {
-                firebaseFirestore.collection("users").document(setFlashcard.getCreatorID())
+                String creatorID = setFlashcard.getCreatorID();
+                firebaseFirestore.collection("users").document(creatorID)
                         .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -142,17 +145,17 @@ public class GetSetFlashcardController {
         }
     }
 
-    private void updateInterfaceIfFinish() {
+    private synchronized void updateInterfaceIfFinish() {
         if (isFinish()) {
             ProgressDialog.getInstance().dismiss();
-            reverseList(listSet);
+            listSet = Lists.reverse(listSet);
             setFlashCardFragment.updateUI(listSet);
         }
     }
-
-    private void reverseList(List<SetFlashcard> listSet) {
-        this.listSet = Lists.reverse(listSet);
-    }
+//
+//    private void orderListByNewLoadedSetFirst(List<SetFlashcard> listSet) {
+//        this.listSet = Lists.reverse(listSet);
+//    }
 
     private boolean isFinish() {
         for (SetFlashcard setFlashcard : listSet) {

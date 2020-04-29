@@ -84,10 +84,18 @@ public class SetFlashcardAdapter extends BaseAdapter {
     }
 
     private void setupContent(ViewHolder holder, SetFlashcard setFlashcard) {
+        User creator = setFlashcard.getCreator();
         holder.tvSetName.setText("Set Name: " + setFlashcard.getSetName() + "\nContain: " + setFlashcard.getWordID().size() + " words");
-        holder.tvCreatorDisplayName.setText(setFlashcard.getCreator().getDisplayName());
-        Log.e("Contribution_Point:", "" + setFlashcard.getCreator().getContributionPoint());
-        Reward[] bestReward = LMemoDatabase.getInstance(aContext).rewardDAO().getBestReward(setFlashcard.getCreator().getContributionPoint());
+        holder.tvCreatorDisplayName.setText(creator.getDisplayName());
+        if (creator.isGender()) {
+            holder.tvCreatorDisplayName.setText(creator.getDisplayName());
+            holder.tvCreatorDisplayName.setTextColor(Color.BLUE);
+        } else {
+            holder.tvCreatorDisplayName.setText(creator.getDisplayName());
+            holder.tvCreatorDisplayName.setTextColor(Color.MAGENTA);
+        }
+        Log.e("Contribution_Point:", "" + creator.getContributionPoint());
+        Reward[] bestReward = LMemoDatabase.getInstance(aContext).rewardDAO().getBestReward(creator.getContributionPoint());
         Reward reward = bestReward[0];
         String rewardName = reward.getRewardName();
         holder.tvCreatorReward.setText(rewardName);
