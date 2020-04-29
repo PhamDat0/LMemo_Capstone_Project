@@ -51,6 +51,7 @@
                 android:id="@+id/WODHourPicker"
                 android:scaleX="0.75"
                 android:scaleY="0.75"
+                android:theme="@style/NumberPickerText"
                 >
             </NumberPicker>
             <TextView
@@ -66,6 +67,7 @@
                 android:id="@+id/WODMinPicker"
                 android:scaleX="0.75"
                 android:scaleY="0.75"
+                android:theme="@style/NumberPickerText"
                 >
 
             </NumberPicker>
@@ -117,6 +119,7 @@
                 android:id="@+id/reminderHourPicker"
                 android:scaleX="0.75"
                 android:scaleY="0.75"
+                android:theme="@style/NumberPickerText"
                 >
 
             </NumberPicker>
@@ -133,6 +136,7 @@
                 android:id="@+id/reminderMinPicker"
                 android:scaleX="0.75"
                 android:scaleY="0.75"
+                android:theme="@style/NumberPickerText"
                 >
 
             </NumberPicker>
