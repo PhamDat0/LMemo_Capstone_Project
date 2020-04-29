@@ -74,7 +74,7 @@
             android:id="@+id/dailyWordDisMissIsOn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dismiss Notification"
+            android:text="Non-dismissable notification"
             android:textSize="20sp"
             android:textColor="@color/colorPrimaryDark"/>
     </LinearLayout>
@@ -142,7 +142,7 @@
             android:id="@+id/reminderDisMissIsOn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dismiss Notification"
+            android:text="Non-dismissable notification"
             android:textSize="20sp"
             android:textColor="@color/colorPrimaryDark"/>
 
