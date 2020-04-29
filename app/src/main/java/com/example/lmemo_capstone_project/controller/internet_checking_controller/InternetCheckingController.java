@@ -3,6 +3,9 @@ package com.example.lmemo_capstone_project.controller.internet_checking_controll
 import android.content.Context;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class InternetCheckingController {
     /**
@@ -25,14 +28,24 @@ public class InternetCheckingController {
 //            }
 //        }
 
-        Runtime runtime = Runtime.getRuntime();
+//        Runtime runtime = Runtime.getRuntime();
+//        try {
+//            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+//            int exitValue = ipProcess.waitFor();
+//            return (exitValue == 0);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
         try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        } catch (IOException e) {
+            URL url = new URL("http://www.google.com");
+            URLConnection connection = url.openConnection();
+            connection.connect();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
