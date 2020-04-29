@@ -1,5 +1,6 @@
 package com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,13 +104,32 @@ public class SetFlashCardOnlineTab extends Fragment {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onResume() {
         super.onResume();
-        if (InternetCheckingController.isOnline(getContext())) {
-            ProgressDialog.getInstance().show(getContext());
-            controller.getOnlineSet("");
+        if (isMenuVisible()) {
+            if (InternetCheckingController.isOnline(getContext())) {
+                ProgressDialog.getInstance().show(getContext());
+                controller.getOnlineSet("");
+            }
         }
+//        if (InternetCheckingController.isOnline(getContext())) {
+//            ProgressDialog.getInstance().show(getContext());
+//            controller.getOnlineSet("");
+//        }
+    }
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        if (visible) {
+            if (InternetCheckingController.isOnline(getContext())) {
+                ProgressDialog.getInstance().show(getContext());
+                controller.getOnlineSet("");
+            }
+        }
+
+        super.setMenuVisibility(visible);
     }
 
     //Refresh when change tab
