@@ -8,15 +8,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
-import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.GetSetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
-import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
 
 import java.util.List;
@@ -28,10 +27,8 @@ public class SetFlashCardOnlineTab extends Fragment {
 
     private EditText etSearchSet;
     private ImageButton ibSearchSet;
-    private ImageButton ibPrePage;
     private ImageButton ibNextPage;
     private ListView lvOnlineNote;
-    private User currentUser;
     private GetSetFlashcardController controller;
     private List<SetFlashcard> currentListSet;
 
@@ -57,9 +54,13 @@ public class SetFlashCardOnlineTab extends Fragment {
         ibSearchSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProgressDialog.getInstance().show(getContext());
-                String keyword = etSearchSet.getText().toString();
-                controller.getOnlineSet(keyword);
+                if (InternetCheckingController.isOnline(getContext())) {
+                    ProgressDialog.getInstance().show(getContext());
+                    String keyword = etSearchSet.getText().toString();
+                    controller.getOnlineSet(keyword);
+                } else {
+                    Toast.makeText(getContext(), "There is no internet connections", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -78,10 +79,8 @@ public class SetFlashCardOnlineTab extends Fragment {
     private void setupReferences(View inflate) {
         etSearchSet = inflate.findViewById(R.id.etSearchSet);
         ibSearchSet = inflate.findViewById(R.id.ibSearchSet);
-        ibPrePage = inflate.findViewById(R.id.ibPrePage);
         ibNextPage = inflate.findViewById(R.id.ibNextPage);
         lvOnlineNote = inflate.findViewById(R.id.lvOnlineNote);
-        currentUser = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
         controller = new GetSetFlashcardController(this);
     }
 
@@ -94,9 +93,13 @@ public class SetFlashCardOnlineTab extends Fragment {
             ibNextPage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ProgressDialog.getInstance().show(getContext());
-                    String keyword = etSearchSet.getText().toString();
-                    controller.getMoreOnlineSet(keyword, currentListSet);
+                    if (InternetCheckingController.isOnline(getContext())) {
+                        ProgressDialog.getInstance().show(getContext());
+                        String keyword = etSearchSet.getText().toString();
+                        controller.getMoreOnlineSet(keyword, currentListSet);
+                    } else {
+                        Toast.makeText(getContext(), "There is no internet connections", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         } else {

@@ -19,13 +19,13 @@ import com.example.lmemo_capstone_project.controller.StringProcessUtilities;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.RewardDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
+import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.my_account_controller.MyAccountController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Reward;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.IOException;
 import java.util.Date;
 
 
@@ -72,17 +72,7 @@ public class MyAccountFragment extends Fragment {
      * この関数はインターネットの接続を確認します。ある場合はtrueを返します。
      */
     private boolean hasAnInternetConnection() {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return InternetCheckingController.isOnline(getContext());
     }
 
     /**
@@ -164,6 +154,7 @@ public class MyAccountFragment extends Fragment {
         MyAccountController myAccountController = new MyAccountController();
         User user = userDAO.getLocalUser()[0];
         if (hasAnInternetConnection()) {
+            ProgressDialog.getInstance().show(getContext());
             myAccountController.updateSQLWithOnlineInfoForViewInfo(user, userDAO, container, this);
         } else {
             updateUI(container);

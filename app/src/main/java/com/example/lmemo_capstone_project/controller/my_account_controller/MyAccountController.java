@@ -76,6 +76,7 @@ public class MyAccountController {
                 } else {
                     Log.d("myApp", "get failed with ", task.getException());
                 }
+                ProgressDialog.getInstance().dismiss();
             }
         });
     }
