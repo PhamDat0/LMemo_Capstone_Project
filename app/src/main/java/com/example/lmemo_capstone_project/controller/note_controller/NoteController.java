@@ -17,6 +17,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
+import com.example.lmemo_capstone_project.view.home_activity.UIUpdatable;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -273,18 +274,18 @@ public class NoteController {
         noteDAO.insertNote(note);
     }
 
-    public void downloadAllPublicNoteToSQL(final User user) {
+    public void downloadAllPublicNoteToSQL(final User user, final UIUpdatable f) {
         db.collection("notes").whereEqualTo("userID", user.getUserID()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Note[] notes = noteDAO.getUserOnlineNoteOnDevices(user.getUserID());
+                        for (Note note : notes) {
+                            note.setPublic(false);
+                            noteDAO.updateNote(note);
+                        }
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             Log.d("myApp", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                            Note[] notes = noteDAO.getUserOnlineNoteOnDevices(user.getUserID());
-                            for (Note note : notes) {
-                                note.setPublic(false);
-                                noteDAO.updateNote(note);
-                            }
                             Note[] notesByOnlineID = noteDAO.getNotesByOnlineID(documentSnapshot.getId());
                             if (notesByOnlineID.length == 0) {
                                 int noteID;
@@ -302,15 +303,18 @@ public class NoteController {
                                 noteDAO.updateNote(note);
                                 insertWordToNoteOfWord(note, note.getWordList());
                             }
-                            notes = noteDAO.getUserOfflineNoteOnDevices(user.getUserID());
-                            for (Note note : notes) {
-                                if (!StringProcessUtilities.isEmpty(note.getOnlineID())) {
-                                    note.setOnlineID("");
-                                    noteDAO.updateNote(note);
-                                }
+                        }
+                        notes = noteDAO.getUserOfflineNoteOnDevices(user.getUserID());
+                        for (Note note : notes) {
+                            if (!StringProcessUtilities.isEmpty(note.getOnlineID())) {
+                                note.setOnlineID("");
+                                noteDAO.updateNote(note);
                             }
                         }
                         ProgressDialog.getInstance().dismiss();
+                        if (f != null) {
+                            f.updateUI();
+                        }
                     }
                 });
     }
@@ -365,5 +369,9 @@ public class NoteController {
         } else {
             throw new CannotPerformFirebaseRequest("You must logged in");
         }
+    }
+
+    public void downloadAllPublicNoteToSQL(User user) {
+        downloadAllPublicNoteToSQL(user, null);
     }
 }

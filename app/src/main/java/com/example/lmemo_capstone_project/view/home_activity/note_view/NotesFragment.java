@@ -42,8 +42,10 @@ public class NotesFragment extends Fragment {
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         notesPager = new NotesPager(getParentFragmentManager());
-        notesPager.addFragment(new PrivateNoteTab(), "Private");
-        notesPager.addFragment(new PublicNoteTab(), "Public");
+        final PrivateNoteTab privateNoteTab = new PrivateNoteTab();
+        final PublicNoteTab publicNoteTab = new PublicNoteTab();
+        notesPager.addFragment(privateNoteTab, "Private");
+        notesPager.addFragment(publicNoteTab, "Public");
         viewPager.setOffscreenPageLimit(2);
 
         viewPager.setAdapter(notesPager);
@@ -57,9 +59,11 @@ public class NotesFragment extends Fragment {
                 switch (tab.getPosition()) {
                     //Private note
                     case PRIVATE_NOTE:
+                        privateNoteTab.onResume();
                         break;
                     //Public note
                     case PUBLIC_NOTE:
+                        publicNoteTab.onResume();
                         break;
                 }
             }

@@ -1,5 +1,6 @@
 package com.example.lmemo_capstone_project.view.home_activity.note_view;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.example.lmemo_capstone_project.controller.set_flashcard_controller.Se
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
+import com.example.lmemo_capstone_project.view.home_activity.UIUpdatable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +30,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PublicNoteTab extends Fragment {
+public class PublicNoteTab extends Fragment implements UIUpdatable {
 
     private View view;
     private SetFlashcardController setFlashcardController;
@@ -66,25 +68,30 @@ public class PublicNoteTab extends Fragment {
         noteListView.setAdapter(noteListAdapter);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onResume() {
         super.onResume();
+
         if (InternetCheckingController.isOnline(getContext())) {
             ProgressDialog.getInstance().show(getContext());
             User user = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
             if (!user.isGuest()) {
-                getAllPublicSetFlashcard(user);
+//                getAllPublicSetFlashcard(user);
                 getAllPublicNotes(user);
             }
+        } else {
+            loadNoteToUI();
         }
-        loadNoteToUI();
-    }
 
-    private void getAllPublicSetFlashcard(User user) {
-        setFlashcardController.getUserOnlineSet(user);
     }
 
     private void getAllPublicNotes(User user) {
-        addNoteController.downloadAllPublicNoteToSQL(user);
+        addNoteController.downloadAllPublicNoteToSQL(user, this);
+    }
+
+    @Override
+    public void updateUI() {
+        loadNoteToUI();
     }
 }

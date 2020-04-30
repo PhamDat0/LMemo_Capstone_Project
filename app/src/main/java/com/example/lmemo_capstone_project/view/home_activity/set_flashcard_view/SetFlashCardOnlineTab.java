@@ -2,6 +2,7 @@ package com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +22,14 @@ import com.example.lmemo_capstone_project.controller.set_flashcard_controller.Se
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
+import com.example.lmemo_capstone_project.view.home_activity.UIUpdatable;
 
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SetFlashCardOnlineTab extends Fragment {
+public class SetFlashCardOnlineTab extends Fragment implements UIUpdatable {
 
     private EditText etSearchSet;
     private ImageButton ibSearchSet;
@@ -118,37 +120,38 @@ public class SetFlashCardOnlineTab extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (isMenuVisible()) {
-            if (InternetCheckingController.isOnline(getContext())) {
-                ProgressDialog.getInstance().show(getContext());
-                User user = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
-                if (!user.isGuest()) {
-                    getAllPublicSetFlashcard(user);
-                    getAllPublicNotes(user);
-                }
-                controller.getOnlineSet("");
+        Log.i("RESUME", "ONLINE1");
+        if (InternetCheckingController.isOnline(getContext())) {
+            Log.i("RESUME", "ONLINE2");
+            ProgressDialog.getInstance().show(getContext());
+            User user = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
+            if (!user.isGuest()) {
+                getAllPublicSetFlashcard(user);
             }
+            controller.getOnlineSet("");
         }
+
     }
 
     private void getAllPublicSetFlashcard(User user) {
-        setFlashcardController.getUserOnlineSet(user);
+        setFlashcardController.getUserOnlineSet(user, this);
     }
 
-    private void getAllPublicNotes(User user) {
-        addNoteController.downloadAllPublicNoteToSQL(user);
-    }
+//    @Override
+//    public void setMenuVisibility(final boolean visible) {
+//        if (visible) {
+//            if (InternetCheckingController.isOnline(getContext())) {
+//                ProgressDialog.getInstance().show(getContext());
+//                controller.getOnlineSet("");
+//            }
+//        }
+//
+//        super.setMenuVisibility(visible);
+//    }
 
     @Override
-    public void setMenuVisibility(final boolean visible) {
-        if (visible) {
-            if (InternetCheckingController.isOnline(getContext())) {
-                ProgressDialog.getInstance().show(getContext());
-                controller.getOnlineSet("");
-            }
-        }
+    public void updateUI() {
 
-        super.setMenuVisibility(visible);
     }
 
     //Refresh when change tab

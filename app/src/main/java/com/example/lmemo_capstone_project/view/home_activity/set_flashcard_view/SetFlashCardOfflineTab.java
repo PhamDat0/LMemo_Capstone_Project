@@ -1,5 +1,6 @@
 package com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,19 +13,26 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
+import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.GetSetFlashcardController;
+import com.example.lmemo_capstone_project.controller.set_flashcard_controller.SetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
+import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
+import com.example.lmemo_capstone_project.view.home_activity.UIUpdatable;
 
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SetFlashCardOfflineTab extends Fragment {
+public class SetFlashCardOfflineTab extends Fragment implements UIUpdatable {
 
     private Button btAddSet;
     private ListView lvSetList;
     private GetSetFlashcardController getSetFlashcardController;
+    private SetFlashcardController setFlashcardController;
 
     public SetFlashCardOfflineTab() {
         // Required empty public constructor
@@ -90,17 +98,41 @@ public class SetFlashCardOfflineTab extends Fragment {
         lvSetList.setAdapter(setFlashcardAdapter);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("RESUME", "Get here");
-        loadOfflineSet();
+        Log.i("RESUME", "OFFLINE1");
+
+        Log.i("RESUME", "OFFLINE2");
+        if (InternetCheckingController.isOnline(getContext())) {
+            Log.i("RESUME", "OFFLINE3");
+            ProgressDialog.getInstance().show(getContext());
+            User user = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
+            if (!user.isGuest()) {
+                getAllPublicSetFlashcard(user);
+//                    getAllPublicNotes(user);
+            }
+        } else {
+            loadOfflineSet();
+        }
+
+    }
+
+    private void getAllPublicSetFlashcard(User user) {
+        setFlashcardController.getUserOnlineSet(user, this);
     }
 
     private void setupReferences(View view) {
         btAddSet = view.findViewById(R.id.btAddSet);
         lvSetList = view.findViewById(R.id.lvSetList);
         getSetFlashcardController = new GetSetFlashcardController(new SetFlashCardOnlineTab());
+        setFlashcardController = new SetFlashcardController(getContext());
+    }
+
+    @Override
+    public void updateUI() {
+        loadOfflineSet();
     }
 
 

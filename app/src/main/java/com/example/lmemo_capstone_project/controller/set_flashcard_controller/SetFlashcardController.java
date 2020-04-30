@@ -19,6 +19,7 @@ import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
+import com.example.lmemo_capstone_project.view.home_activity.UIUpdatable;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -272,7 +273,7 @@ public class SetFlashcardController {
         });
     }
 
-    public void getUserOnlineSet(final User currentUser) {
+    public void getUserOnlineSet(final User currentUser, final UIUpdatable f) {
         firebaseFirestore.collection(COLLECTION_PATH).whereEqualTo("userID", currentUser.getUserID())
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -294,6 +295,9 @@ public class SetFlashcardController {
                     }
                 }
                 ProgressDialog.getInstance().dismiss();
+                if (f != null) {
+                    f.updateUI();
+                }
             }
         });
     }
@@ -315,5 +319,9 @@ public class SetFlashcardController {
             setFlashcard.setCreator(userDAO.getLocalUser()[0]);
             downloadSet(setFlashcard);
         }
+    }
+
+    public void getUserOnlineSet(User user) {
+        getUserOnlineSet(user, null);
     }
 }
