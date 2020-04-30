@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.lmemo_capstone_project.controller.CannotPerformFirebaseRequest;
+import com.example.lmemo_capstone_project.controller.StringProcessUtilities;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteOfWordDAO;
@@ -16,10 +17,8 @@ import com.example.lmemo_capstone_project.model.room_db_entity.NoteOfWord;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -85,9 +84,9 @@ public class NoteController {
     }
 
     /**
-     * @param note ノートの情報を持っているオブジェクト
+     * @param note   ノートの情報を持っているオブジェクト
      * @param wordID ノートに添付された言葉のIDのリスト
-     * この関数はノートをFireStoreにアップロードします。
+     *               この関数はノートをFireStoreにアップロードします。
      */
     private void addNoteToCloudFireStore(final Note note, final List<Long> wordID) {
         Map<String, Object> addNote = new HashMap<>();
@@ -125,11 +124,11 @@ public class NoteController {
     }
 
     /**
-     * @param note 編集するノート
+     * @param note        編集するノート
      * @param noteContent 新しい内容
-     * @param noteStatus 新しい状態。公開か秘密か
-     * @param words ノートに添付された言葉のリスト
-     * この関数はnoteContentとnoteStatusとwordsでFireStoreにある１つのノートを編集します。
+     * @param noteStatus  新しい状態。公開か秘密か
+     * @param words       ノートに添付された言葉のリスト
+     *                    この関数はnoteContentとnoteStatusとwordsでFireStoreにある１つのノートを編集します。
      */
     private void updateNoteOnFirebase(Note note, String noteContent, boolean noteStatus, List<Word> words) {
         List<Integer> listWordID = new ArrayList<>();
@@ -155,11 +154,11 @@ public class NoteController {
 
 
     /**
-     * @param note 編集するノート
+     * @param note        編集するノート
      * @param noteContent 新しい内容
-     * @param noteStatus 新しい状態。公開か秘密か
-     * @param words ノートに添付された言葉のリスト
-     * この関数はnoteContentとnoteStatusとwordsでSQLiteにある１つのノートを編集します。
+     * @param noteStatus  新しい状態。公開か秘密か
+     * @param words       ノートに添付された言葉のリスト
+     *                    この関数はnoteContentとnoteStatusとwordsでSQLiteにある１つのノートを編集します。
      */
     private void updateNoteInSQLite(Note note, String noteContent, boolean noteStatus, List<Word> words) {
         noteOfWordDAO.deleteAllAssociationOfOneNote(note.getNoteID());
@@ -176,7 +175,7 @@ public class NoteController {
 
     /**
      * @param note 削除するノート
-     * noteをFireStoreから削除し、
+     *             noteをFireStoreから削除し、
      */
     private void deleteNoteFromFB(Note note) {
         final String noteOnlineID = note.getOnlineID();
@@ -274,33 +273,44 @@ public class NoteController {
         noteDAO.insertNote(note);
     }
 
-    public void downloadAllPublicNoteToSQL(User user) {
+    public void downloadAllPublicNoteToSQL(final User user) {
         db.collection("notes").whereEqualTo("userID", user.getUserID()).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                Log.d("myApp", documentSnapshot.getId() + " => " + documentSnapshot.getData());
-                                Note[] notesByOnlineID = noteDAO.getNotesByOnlineID(documentSnapshot.getId());
-                                if (notesByOnlineID.length == 0) {
-                                    int noteID = 0;
-                                    if (noteDAO.getLastNote().length != 0) {
-                                        noteID = noteDAO.getLastNote()[0].getNoteID() + 1;
-                                    } else {
-                                        noteID = 1;
-                                    }
-                                    Note note = getNoteFromSnapshot(documentSnapshot, noteID);
-                                    noteDAO.insertNote(note);
-                                    insertWordToNoteOfWord(note, note.getWordList());
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Log.d("myApp", documentSnapshot.getId() + " => " + documentSnapshot.getData());
+                            Note[] notes = noteDAO.getUserOnlineNoteOnDevices(user.getUserID());
+                            for (Note note : notes) {
+                                note.setPublic(false);
+                                noteDAO.updateNote(note);
+                            }
+                            Note[] notesByOnlineID = noteDAO.getNotesByOnlineID(documentSnapshot.getId());
+                            if (notesByOnlineID.length == 0) {
+                                int noteID;
+                                if (noteDAO.getLastNote().length != 0) {
+                                    noteID = noteDAO.getLastNote()[0].getNoteID() + 1;
                                 } else {
-                                    int noteID = notesByOnlineID[0].getNoteID();
-                                    Note note = getNoteFromSnapshot(documentSnapshot, noteID);
+                                    noteID = 1;
+                                }
+                                Note note = getNoteFromSnapshot(documentSnapshot, noteID);
+                                noteDAO.insertNote(note);
+                                insertWordToNoteOfWord(note, note.getWordList());
+                            } else {
+                                int noteID = notesByOnlineID[0].getNoteID();
+                                Note note = getNoteFromSnapshot(documentSnapshot, noteID);
+                                noteDAO.updateNote(note);
+                                insertWordToNoteOfWord(note, note.getWordList());
+                            }
+                            notes = noteDAO.getUserOfflineNoteOnDevices(user.getUserID());
+                            for (Note note : notes) {
+                                if (!StringProcessUtilities.isEmpty(note.getOnlineID())) {
+                                    note.setOnlineID("");
                                     noteDAO.updateNote(note);
-                                    insertWordToNoteOfWord(note, note.getWordList());
                                 }
                             }
                         }
+                        ProgressDialog.getInstance().dismiss();
                     }
                 });
     }

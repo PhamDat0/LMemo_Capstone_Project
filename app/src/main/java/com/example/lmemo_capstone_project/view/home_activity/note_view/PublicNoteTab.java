@@ -13,9 +13,13 @@ import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.NoteDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.UserDAO;
+import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.note_controller.GetNoteController;
+import com.example.lmemo_capstone_project.controller.note_controller.NoteController;
+import com.example.lmemo_capstone_project.controller.set_flashcard_controller.SetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.Note;
 import com.example.lmemo_capstone_project.model.room_db_entity.User;
+import com.example.lmemo_capstone_project.view.ProgressDialog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +30,9 @@ import java.util.Map;
  */
 public class PublicNoteTab extends Fragment {
 
-    View view;
+    private View view;
+    private SetFlashcardController setFlashcardController;
+    private NoteController addNoteController;
 
     public PublicNoteTab() {
         // Required empty public constructor
@@ -37,15 +43,18 @@ public class PublicNoteTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_public_note_tab, container, false);
+        setFlashcardController = new SetFlashcardController(getContext());
+        addNoteController = new NoteController(getContext());
         loadNoteToUI();
         return view;
     }
 
     private void loadNoteToUI() {
         ListView noteListView = view.findViewById(R.id.noteViewer);
-        NoteDAO noteDAO = LMemoDatabase.getInstance(getContext()).noteDAO();
-        UserDAO userDAO = LMemoDatabase.getInstance(getContext()).userDAO();
-        GetNoteController getNoteController = new GetNoteController(noteDAO, LMemoDatabase.getInstance(getContext()).noteOfWordDAO());
+        LMemoDatabase instance = LMemoDatabase.getInstance(getContext());
+        NoteDAO noteDAO = instance.noteDAO();
+        UserDAO userDAO = instance.userDAO();
+        GetNoteController getNoteController = new GetNoteController(noteDAO, instance.noteOfWordDAO());
         User user = userDAO.getLocalUser()[0];
         List<Note> listNote = getNoteController.getOfflineNote(GetNoteController.GET_OFFLINE_NOTE_PUBLIC, user.getUserID());
         for (Note note : listNote) {
@@ -60,6 +69,22 @@ public class PublicNoteTab extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (InternetCheckingController.isOnline(getContext())) {
+            ProgressDialog.getInstance().show(getContext());
+            User user = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
+            if (!user.isGuest()) {
+                getAllPublicSetFlashcard(user);
+                getAllPublicNotes(user);
+            }
+        }
         loadNoteToUI();
+    }
+
+    private void getAllPublicSetFlashcard(User user) {
+        setFlashcardController.getUserOnlineSet(user);
+    }
+
+    private void getAllPublicNotes(User user) {
+        addNoteController.downloadAllPublicNoteToSQL(user);
     }
 }

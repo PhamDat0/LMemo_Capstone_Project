@@ -4,6 +4,8 @@ public class StringProcessUtilities {
     private static final char[] TYPE_OF_SPACE = {' ', '　', '\n', '\t'};
 
     public static boolean isEmpty(String stringToTest) {
+        if (stringToTest == null)
+            return true;
         if (stringToTest.trim().length() == 0) {
             return true;
         }

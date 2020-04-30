@@ -38,4 +38,10 @@ public interface SetFlashcardDAO {
 
     @Query("SELECT * FROM SetFlashcard WHERE UserID=:userID")
     List<SetFlashcard> getOwnerFlashcard(String userID);
+
+    @Query("SELECT * FROM SetFlashcard WHERE PublicStatus = 1 AND UserID = :userID ")
+    SetFlashcard[] getUserOnlineSetOnDevice(String userID);
+
+    @Query("SELECT * FROM SetFlashcard WHERE PublicStatus = 0 AND UserID = :userID ")
+    SetFlashcard[] getUserOfflineSetOnDevice(String userID);
 }

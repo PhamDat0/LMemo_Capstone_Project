@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.lmemo_capstone_project.controller.StringProcessUtilities;
 import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardBelongToSetDAO;
 import com.example.lmemo_capstone_project.controller.database_controller.room_dao.FlashcardDAO;
@@ -227,6 +228,7 @@ public class SetFlashcardController {
         }
         return listWordID;
     }
+
     public void updateSet(SetFlashcard setFlashcard, String setName, boolean newPublicStatus, List<Word> listOfWord) {
         List<Long> listWordID = getListWordID(listOfWord);
         setFlashcard.setSetName(setName);
@@ -270,15 +272,28 @@ public class SetFlashcardController {
         });
     }
 
-    public void getUserOnlineSet(User currentUser) {
+    public void getUserOnlineSet(final User currentUser) {
         firebaseFirestore.collection(COLLECTION_PATH).whereEqualTo("userID", currentUser.getUserID())
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                for (DocumentSnapshot document : documents) {
-                    SetFlashcard setFlashcard = getSetFromSnapshot(document);
+                SetFlashcard[] setFlashcards = setFlashcardDAO.getUserOnlineSetOnDevice(currentUser.getUserID());
+                for (SetFlashcard setFC : setFlashcards) {
+                    setFC.setPublic(false);
+                    setFlashcardDAO.updateSetFlashcard(setFC);
                 }
+                for (DocumentSnapshot document : documents) {
+                    getSetFromSnapshot(document);
+                }
+                setFlashcards = setFlashcardDAO.getUserOfflineSetOnDevice(currentUser.getUserID());
+                for (SetFlashcard setFC : setFlashcards) {
+                    if (!StringProcessUtilities.isEmpty(setFC.getOnlineID())) {
+                        setFC.setOnlineID("");
+                        setFlashcardDAO.updateSetFlashcard(setFC);
+                    }
+                }
+                ProgressDialog.getInstance().dismiss();
             }
         });
     }

@@ -45,4 +45,9 @@ public interface NoteDAO {
     @Query("SELECT * FROM Note WHERE NoteID = :noteID")
     Note[] getNotesByID(int noteID);
 
+    @Query("SELECT * FROM Note WHERE PublicStatus = 1 AND UserID = :userID")
+    Note[] getUserOnlineNoteOnDevices(String userID);
+
+    @Query("SELECT * FROM Note WHERE PublicStatus = 0 AND UserID = :userID")
+    Note[] getUserOfflineNoteOnDevices(String userID);
 }

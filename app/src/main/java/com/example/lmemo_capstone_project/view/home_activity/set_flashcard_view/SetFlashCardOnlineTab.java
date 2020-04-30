@@ -13,9 +13,13 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
+import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
+import com.example.lmemo_capstone_project.controller.note_controller.NoteController;
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.GetSetFlashcardController;
+import com.example.lmemo_capstone_project.controller.set_flashcard_controller.SetFlashcardController;
 import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
+import com.example.lmemo_capstone_project.model.room_db_entity.User;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
 
 import java.util.List;
@@ -31,6 +35,8 @@ public class SetFlashCardOnlineTab extends Fragment {
     private ListView lvOnlineNote;
     private GetSetFlashcardController controller;
     private List<SetFlashcard> currentListSet;
+    private SetFlashcardController setFlashcardController;
+    private NoteController addNoteController;
 
     public SetFlashCardOnlineTab() {
         // Required empty public constructor
@@ -42,7 +48,6 @@ public class SetFlashCardOnlineTab extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_set_flash_card_online_tab, container, false);
-
         setupReferences(inflate);
 //        loadYourOnlineSet();
         setupActionForButton();
@@ -82,6 +87,8 @@ public class SetFlashCardOnlineTab extends Fragment {
         ibNextPage = inflate.findViewById(R.id.ibNextPage);
         lvOnlineNote = inflate.findViewById(R.id.lvOnlineNote);
         controller = new GetSetFlashcardController(this);
+        setFlashcardController = new SetFlashcardController(getContext());
+        addNoteController = new NoteController(getContext());
     }
 
     public void updateUI(List<SetFlashcard> listSet) {
@@ -114,13 +121,22 @@ public class SetFlashCardOnlineTab extends Fragment {
         if (isMenuVisible()) {
             if (InternetCheckingController.isOnline(getContext())) {
                 ProgressDialog.getInstance().show(getContext());
+                User user = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
+                if (!user.isGuest()) {
+                    getAllPublicSetFlashcard(user);
+                    getAllPublicNotes(user);
+                }
                 controller.getOnlineSet("");
             }
         }
-//        if (InternetCheckingController.isOnline(getContext())) {
-//            ProgressDialog.getInstance().show(getContext());
-//            controller.getOnlineSet("");
-//        }
+    }
+
+    private void getAllPublicSetFlashcard(User user) {
+        setFlashcardController.getUserOnlineSet(user);
+    }
+
+    private void getAllPublicNotes(User user) {
+        addNoteController.downloadAllPublicNoteToSQL(user);
     }
 
     @Override
