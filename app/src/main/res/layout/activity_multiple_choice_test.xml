@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingStart="30dp"
     android:paddingEnd="30dp"
-    android:background="@color/lightpurple"
+    android:background="@color/mainColor"
     tools:context=".view.home_activity.flashcard_view.review_activity.MultipleChoiceTestActivity">
     <ScrollView
         android:layout_width="match_parent"
