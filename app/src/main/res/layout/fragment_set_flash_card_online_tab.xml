@@ -54,7 +54,7 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:src="@drawable/ic_back"
-            android:visibility="invisible"
+            android:visibility="gone"
             />
         <ImageButton
             android:id="@+id/ibNextPage"
@@ -62,8 +62,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/white"
-            android:src="@drawable/ic_next"
-            android:visibility="invisible"
+            android:src="@drawable/ic_reload"
+            android:visibility="visible"
            />
     </LinearLayout>
 </RelativeLayout>
