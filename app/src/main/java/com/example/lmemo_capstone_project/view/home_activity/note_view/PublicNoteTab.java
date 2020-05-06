@@ -74,10 +74,10 @@ public class PublicNoteTab extends Fragment implements UIUpdatable {
         super.onResume();
 
         if (InternetCheckingController.isOnline(getContext())) {
-            ProgressDialog.getInstance().show(getContext());
             User user = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
             if (!user.isGuest()) {
 //                getAllPublicSetFlashcard(user);
+                ProgressDialog.getInstance().show(getContext());
                 getAllPublicNotes(user);
             }
         } else {

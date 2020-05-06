@@ -107,11 +107,13 @@ public class SetFlashCardOfflineTab extends Fragment implements UIUpdatable {
         Log.i("RESUME", "OFFLINE2");
         if (InternetCheckingController.isOnline(getContext())) {
             Log.i("RESUME", "OFFLINE3");
-            ProgressDialog.getInstance().show(getContext());
             User user = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
             if (!user.isGuest()) {
+                ProgressDialog.getInstance().show(getContext());
                 getAllPublicSetFlashcard(user);
 //                    getAllPublicNotes(user);
+            } else {
+                loadOfflineSet();
             }
         } else {
             loadOfflineSet();

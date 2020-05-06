@@ -42,8 +42,8 @@ public class SettingControllerTest {
     public void saveSettingToSharePreferences() {
         //test 1:
         settingController.saveSettingToSharePreferences(appContext, EXPECTED_DAILY_1,
-                EXPECTED_DAILY_DISMISSIBLE_1, EXPECTED_HOURS_1, EXPECTED_MINUTE_1, EXPECTED_REMINDER_1,
-                EXPECTED_REMINDER_DISMISSIBLE_1, EXPECTED_HOURS_1, EXPECTED_MINUTE_1);
+                EXPECTED_DAILY_DISMISSIBLE_1, Integer.parseInt(EXPECTED_HOURS_1), Integer.parseInt(EXPECTED_MINUTE_1), EXPECTED_REMINDER_1,
+                EXPECTED_REMINDER_DISMISSIBLE_1, Integer.parseInt(EXPECTED_HOURS_1), Integer.parseInt(EXPECTED_MINUTE_1));
         assertEquals(SharedPreferencesController.dailyWordIsOn(appContext), EXPECTED_DAILY_1);
         assertEquals(SharedPreferencesController.dismissDailyWordIsOn(appContext), EXPECTED_DAILY_1);
         assertForHourAndMinuteForDaily(EXPECTED_HOURS_1, EXPECTED_MINUTE_1);
@@ -52,8 +52,8 @@ public class SettingControllerTest {
         assertForHourAndMinuteForReminder(EXPECTED_HOURS_1, EXPECTED_MINUTE_1);
         //test 2:
         settingController.saveSettingToSharePreferences(appContext, EXPECTED_DAILY_2,
-                EXPECTED_DAILY_DISMISSIBLE_2, EXPECTED_HOURS_2, EXPECTED_MINUTE_2, EXPECTED_REMINDER_2,
-                EXPECTED_REMINDER_DISMISSIBLE_2, EXPECTED_HOURS_2, EXPECTED_MINUTE_2);
+                EXPECTED_DAILY_DISMISSIBLE_2, Integer.parseInt(EXPECTED_HOURS_2), Integer.parseInt(EXPECTED_MINUTE_2), EXPECTED_REMINDER_2,
+                EXPECTED_REMINDER_DISMISSIBLE_2, Integer.parseInt(EXPECTED_HOURS_2), Integer.parseInt(EXPECTED_MINUTE_2));
         assertEquals(SharedPreferencesController.dailyWordIsOn(appContext), EXPECTED_DAILY_2);
         assertEquals(SharedPreferencesController.dismissDailyWordIsOn(appContext), EXPECTED_DAILY_2);
         assertForHourAndMinuteForDaily(EXPECTED_HOURS_2, EXPECTED_MINUTE_2);
@@ -62,8 +62,8 @@ public class SettingControllerTest {
         assertForHourAndMinuteForReminder(EXPECTED_HOURS_2, EXPECTED_MINUTE_2);
         //test 3:
         settingController.saveSettingToSharePreferences(appContext, EXPECTED_DAILY_1,
-                EXPECTED_DAILY_DISMISSIBLE_1, EXPECTED_HOURS_3, EXPECTED_MINUTE_3, EXPECTED_REMINDER_1,
-                EXPECTED_REMINDER_DISMISSIBLE_1, EXPECTED_HOURS_3, EXPECTED_MINUTE_3);
+                EXPECTED_DAILY_DISMISSIBLE_1, Integer.parseInt(EXPECTED_HOURS_3), Integer.parseInt(EXPECTED_MINUTE_3), EXPECTED_REMINDER_1,
+                EXPECTED_REMINDER_DISMISSIBLE_1, Integer.parseInt(EXPECTED_HOURS_3), Integer.parseInt(EXPECTED_MINUTE_3));
         assertEquals(SharedPreferencesController.dailyWordIsOn(appContext), EXPECTED_DAILY_1);
         assertEquals(SharedPreferencesController.dismissDailyWordIsOn(appContext), EXPECTED_DAILY_1);
         assertForHourAndMinuteForDaily(EXPECTED_HOURS_3, EXPECTED_MINUTE_3);
@@ -72,8 +72,8 @@ public class SettingControllerTest {
         assertForHourAndMinuteForReminder(EXPECTED_HOURS_3, EXPECTED_MINUTE_3);
         //test 4
         settingController.saveSettingToSharePreferences(appContext, EXPECTED_DAILY_1,
-                EXPECTED_DAILY_DISMISSIBLE_2, EXPECTED_HOURS_1, EXPECTED_MINUTE_1, EXPECTED_REMINDER_2,
-                EXPECTED_REMINDER_DISMISSIBLE_1, EXPECTED_HOURS_3, EXPECTED_MINUTE_3);
+                EXPECTED_DAILY_DISMISSIBLE_2, Integer.parseInt(EXPECTED_HOURS_1), Integer.parseInt(EXPECTED_MINUTE_1), EXPECTED_REMINDER_2,
+                EXPECTED_REMINDER_DISMISSIBLE_1, Integer.parseInt(EXPECTED_HOURS_3), Integer.parseInt(EXPECTED_MINUTE_3));
         assertEquals(SharedPreferencesController.dailyWordIsOn(appContext), EXPECTED_DAILY_1);
         assertEquals(SharedPreferencesController.dismissDailyWordIsOn(appContext), EXPECTED_DAILY_2);
         assertForHourAndMinuteForDaily(EXPECTED_HOURS_1, EXPECTED_MINUTE_1);
