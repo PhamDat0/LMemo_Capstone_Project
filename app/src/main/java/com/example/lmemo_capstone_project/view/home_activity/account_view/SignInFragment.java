@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -132,16 +133,22 @@ public class SignInFragment extends Fragment {
         Toast.makeText(getActivity(), "Log Out Successful", Toast.LENGTH_SHORT).show();
     }
     private void updateUI(FirebaseUser user) {
+        TextView tvUserEmail = view.findViewById(R.id.tvUserEmail);
         if (user != null) {
             //update UI if user login successful
             Toast.makeText(getActivity(), user.getEmail(), Toast.LENGTH_SHORT).show();
             view.findViewById(R.id.btnFaceLogin).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.btnGoogleLogin).setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.signInBackGround1).setVisibility(View.GONE);
+            view.findViewById(R.id.signInBackGround2).setVisibility(View.GONE);
+            view.findViewById(R.id.welcomeBackground).setVisibility(View.VISIBLE);
+            tvUserEmail.setText(user.getDisplayName());
         } else {
             //update UI if user login fail or log out
             Toast.makeText(getActivity(), "Logged out", Toast.LENGTH_SHORT).show();
             view.findViewById(R.id.btnFaceLogin).setVisibility(View.VISIBLE);
             view.findViewById(R.id.btnGoogleLogin).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.welcomeBackground).setVisibility(View.GONE);
         }
 
     }
