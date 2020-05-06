@@ -7,17 +7,26 @@
     tools:context=".view.home_activity.set_flashcard_view.AddToSetDialog">
 
     <!-- TODO: Update blank fragment layout -->
-
-    <ListView
-        android:id="@+id/lvListSet"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btSaveSet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/mainColor"
-        android:text="SAVE" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+            <ListView
+                android:id="@+id/lvListSet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btSaveSet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/mainColor"
+                android:text="SAVE" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
