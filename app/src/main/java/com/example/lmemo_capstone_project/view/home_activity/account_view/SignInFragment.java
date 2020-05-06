@@ -60,6 +60,7 @@ public class SignInFragment extends Fragment {
     private UserAuthenticationController controller;
     private View view;
     LoginButton btnFaceLogin;
+
     public SignInFragment() {
         // Required empty public constructor
     }
@@ -74,6 +75,7 @@ public class SignInFragment extends Fragment {
         facebookCreateSignInOption();
         return view;
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,14 +85,15 @@ public class SignInFragment extends Fragment {
 
         googleCreateSignInOption();
     }
+
     @Override
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         controller.checkCurrentUser(currentUser);
         updateUI(currentUser);
-
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -109,7 +112,8 @@ public class SignInFragment extends Fragment {
         // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
-    private void setupOnClickListener(){
+
+    private void setupOnClickListener() {
         SignInButton btnGoogleLogin = view.findViewById(R.id.btnGoogleLogin);
         btnGoogleLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,13 +129,16 @@ public class SignInFragment extends Fragment {
             }
         });
     }
-    public void LogOutFirebaseAndSQLite(){
+
+    public void logOutFirebaseAndSQLite() {
         googleCreateSignInOption();
         facebookSignOut();
         googleSignOut();
         controller.useAppAsGuest();
+        updateUI(null);
         Toast.makeText(getActivity(), "Log Out Successful", Toast.LENGTH_SHORT).show();
     }
+
     private void updateUI(FirebaseUser user) {
         TextView tvUserEmail = view.findViewById(R.id.tvUserEmail);
         if (user != null) {
@@ -148,6 +155,8 @@ public class SignInFragment extends Fragment {
             Toast.makeText(getActivity(), "Logged out", Toast.LENGTH_SHORT).show();
             view.findViewById(R.id.btnFaceLogin).setVisibility(View.VISIBLE);
             view.findViewById(R.id.btnGoogleLogin).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.signInBackGround1).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.signInBackGround2).setVisibility(View.VISIBLE);
             view.findViewById(R.id.welcomeBackground).setVisibility(View.GONE);
         }
 
@@ -212,8 +221,7 @@ public class SignInFragment extends Fragment {
 
         if (AccessToken.getCurrentAccessToken() == null) {
             return; // already logged out
-        }
-        else{
+        } else {
             FirebaseAuth.getInstance().signOut();
         }
         new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest

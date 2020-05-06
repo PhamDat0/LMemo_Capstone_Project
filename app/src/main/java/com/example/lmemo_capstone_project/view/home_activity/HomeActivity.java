@@ -253,7 +253,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             fragmentTransaction.runOnCommit(new Runnable() {
                 @Override
                 public void run() {
-                    fragment.LogOutFirebaseAndSQLite();
+                    fragment.logOutFirebaseAndSQLite();
                 }
             });
             fragmentTransaction.commit();
