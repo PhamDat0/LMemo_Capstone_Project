@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.lmemo_capstone_project.R;
-import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.internet_checking_controller.InternetCheckingController;
 import com.example.lmemo_capstone_project.controller.note_controller.NoteController;
 import com.example.lmemo_capstone_project.controller.set_flashcard_controller.GetSetFlashcardController;
@@ -123,11 +122,12 @@ public class SetFlashCardOnlineTab extends Fragment implements UIUpdatable {
         Log.i("RESUME", "ONLINE1");
         if (InternetCheckingController.isOnline(getContext())) {
             Log.i("RESUME", "ONLINE2");
-            User user = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
-            if (!user.isGuest()) {
-                ProgressDialog.getInstance().show(getContext());
-                getAllPublicSetFlashcard(user);
-            }
+//            User user = LMemoDatabase.getInstance(getContext()).userDAO().getLocalUser()[0];
+//            if (!user.isGuest()) {
+//                ProgressDialog.getInstance().show(getContext());
+//                getAllPublicSetFlashcard(user);
+//            }
+            ProgressDialog.getInstance().show(getContext());
             controller.getOnlineSet("");
         }
 
