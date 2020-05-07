@@ -35,6 +35,7 @@ import com.example.lmemo_capstone_project.view.home_activity.note_view.NotesFrag
 import com.example.lmemo_capstone_project.view.home_activity.search_view.SearchFragment;
 import com.example.lmemo_capstone_project.view.home_activity.search_view.WordSearchingFragment;
 import com.example.lmemo_capstone_project.view.home_activity.set_flashcard_view.SetFragment;
+import com.facebook.FacebookSdk;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,6 +59,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
+        FacebookSdk.sdkInitialize(this);
         Log.i("Open_successful", "Error is really in DB");
 
         setContentView(R.layout.activity_home);
