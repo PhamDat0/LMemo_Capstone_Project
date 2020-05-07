@@ -184,29 +184,33 @@ public class GetNoteController {
         Log.d("myApp", "How many times userlist is call");
         listUser = new ArrayList<>();
         isProcessing = !(listNote.size() == 0);
-        for (Note note : listNote) {
-            String creatorUserID = note.getCreatorUserID();
-            DocumentReference userRef = db.collection("users").document(creatorUserID);
-            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            Log.d("myApp", "DocumentSnapshot data: " + document.getData());
-                            User user = document.toObject(User.class);
-                            Map<String, Object> userMap = document.getData();
-                            user.setGender((Boolean) userMap.get("isMale"));
-                            listUser.add(user);
-                            compareTwoListSize();
+        if (listNote.size() != 0) {
+            for (Note note : listNote) {
+                String creatorUserID = note.getCreatorUserID();
+                DocumentReference userRef = db.collection("users").document(creatorUserID);
+                userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d("myApp", "DocumentSnapshot data: " + document.getData());
+                                User user = document.toObject(User.class);
+                                Map<String, Object> userMap = document.getData();
+                                user.setGender((Boolean) userMap.get("isMale"));
+                                listUser.add(user);
+                                compareTwoListSize();
+                            } else {
+                                Log.d("myApp", "No such document");
+                            }
                         } else {
-                            Log.d("myApp", "No such document");
+                            Log.d("myApp", "get failed with ", task.getException());
                         }
-                    } else {
-                        Log.d("myApp", "get failed with ", task.getException());
                     }
-                }
-            });
+                });
+            }
+        } else {
+            compareTwoListSize();
         }
     }
 

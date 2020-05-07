@@ -68,29 +68,33 @@ public class GetCommentController {
         Log.d("myApp", "How many times userlist is call");
         listUser = new ArrayList<>();
         isProcessing = !(listComment.size() == 0);
-        for (Comment comment : listComment) {
-            String userID = comment.getUserID();
-            DocumentReference userRef = db.collection("users").document(userID);
-            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            Log.d("myApp", "DocumentSnapshot data: " + document.getData());
-                            User user = document.toObject(User.class);
-                            Map<String, Object> userMap = document.getData();
-                            user.setGender((Boolean) userMap.get("isMale"));
-                            listUser.add(user);
-                            compareTwoListSize();
+        if (listComment.size() != 0) {
+            for (Comment comment : listComment) {
+                String userID = comment.getUserID();
+                DocumentReference userRef = db.collection("users").document(userID);
+                userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d("myApp", "DocumentSnapshot data: " + document.getData());
+                                User user = document.toObject(User.class);
+                                Map<String, Object> userMap = document.getData();
+                                user.setGender((Boolean) userMap.get("isMale"));
+                                listUser.add(user);
+                                compareTwoListSize();
+                            } else {
+                                Log.d("myAppComment", "No such document");
+                            }
                         } else {
-                            Log.d("myAppComment", "No such document");
+                            Log.d("myAppComment", "get failed with ", task.getException());
                         }
-                    } else {
-                        Log.d("myAppComment", "get failed with ", task.getException());
                     }
-                }
-            });
+                });
+            }
+        } else {
+            compareTwoListSize();
         }
     }
 
