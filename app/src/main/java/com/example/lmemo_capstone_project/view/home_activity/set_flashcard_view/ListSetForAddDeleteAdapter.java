@@ -18,7 +18,6 @@ import com.example.lmemo_capstone_project.model.room_db_entity.SetFlashcard;
 import com.example.lmemo_capstone_project.model.room_db_entity.Word;
 import com.example.lmemo_capstone_project.view.ProgressDialog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class ListSetForAddDeleteAdapter extends BaseAdapter {
@@ -92,9 +91,8 @@ class ListSetForAddDeleteAdapter extends BaseAdapter {
                     setFlashcard.getWordID().remove((long) word.getWordID())
             );
         }
-        List<Word> words = getListWord(setFlashcard.getWordID());
         try {
-            setFlashcardController.updateSet(setFlashcard, setFlashcard.getSetName(), setFlashcard.isPublic(), words);
+            setFlashcardController.updateSet(setFlashcard, setFlashcard.getSetName(), setFlashcard.isPublic(), setFlashcard.getWordID());
         } catch (Exception e) {
             ProgressDialog.getInstance().dismiss();
             setFlashcard.getWordID().add((long) word.getWordID());
@@ -102,20 +100,6 @@ class ListSetForAddDeleteAdapter extends BaseAdapter {
             holder.cbFlashcardBelongToSet.setChecked(!isChecked);
             notifyDataSetChanged();
         }
-    }
-
-    private List<Word> getListWord(List<Long> wordID) {
-        List<Word> result = new ArrayList<>();
-        for (Long id : wordID) {
-            Word word = new Word();
-            long wID = id;
-            word.setWordID((int) wID);
-            result.add(word);
-        }
-        Log.i("HAS_OR_NOT", "" +
-                result.size()
-        );
-        return result;
     }
 
     private void notifyNoInternet() {

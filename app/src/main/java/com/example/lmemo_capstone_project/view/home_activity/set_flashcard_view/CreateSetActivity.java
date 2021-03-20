@@ -138,10 +138,19 @@ public class CreateSetActivity extends AppCompatActivity {
     }
 
     private void performEditSet() {
-        setFlashcardController.updateSet(setFlashcard, txtSetName.getText().toString(), isSetPublic.isChecked(), associatedWordAdapter.getListOfWord());
+        List<Long> listWordId = getListWordId(associatedWordAdapter.getListOfWord());
+        setFlashcardController.updateSet(setFlashcard, txtSetName.getText().toString(), isSetPublic.isChecked(), listWordId);
         waitToFinish();
 //        NoteController editAndDeleteNoteController = new NoteController(this);
 //        editAndDeleteNoteController.updateNote(setFlashcard, txtSetName.getText().toString(), isSetPublic.isChecked(), associatedWordAdapter.getListOfWord());
+    }
+
+    private List<Long> getListWordId(List<Word> listOfWord) {
+        List<Long> result = new ArrayList<>();
+        for (Word word : listOfWord) {
+            result.add((long) word.getWordID());
+        }
+        return result;
     }
 
     private void addSetHandle() {

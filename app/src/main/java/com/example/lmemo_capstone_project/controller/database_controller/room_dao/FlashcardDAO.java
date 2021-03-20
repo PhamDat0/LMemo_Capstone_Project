@@ -17,6 +17,9 @@ public interface FlashcardDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertFlashcard(Flashcard flashcard);
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertAllFlashcard(List<Flashcard> flashcards);
+
     @Update
     void updateFlashcard(Flashcard flashcard);
 

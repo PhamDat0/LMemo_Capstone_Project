@@ -3,6 +3,7 @@ package com.example.lmemo_capstone_project.controller.database_controller.room_d
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.lmemo_capstone_project.model.room_db_entity.FlashcardBelongToSet;
@@ -13,6 +14,9 @@ import java.util.List;
 public interface FlashcardBelongToSetDAO {
     @Insert
     void insertFlashcardBelongToSet(FlashcardBelongToSet flashcardBelongToSet);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertAllFlashcardBelongToSet(List<FlashcardBelongToSet> flashcardBelongToSets);
 
     @Delete
     void deleteFlashcardBelongToSet(FlashcardBelongToSet flashcardBelongToSet);

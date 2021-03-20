@@ -163,18 +163,22 @@ public class SetFlashcardController {
 
     private void insertAssociationBetweenSetAndFlashcard(SetFlashcard setFlashcard) {
         flashcardBelongToSetDAO.deleteAllAssociationWithSet(setFlashcard.getSetID());
-        FlashcardBelongToSet flashcardBelongToSet = new FlashcardBelongToSet();
-        flashcardBelongToSet.setSetID(setFlashcard.getSetID());
+
         List<Long> wordIDList = setFlashcard.getWordID();
+        List<FlashcardBelongToSet> flashcards = new ArrayList<>();
         for (Long wordID : wordIDList) {
             long wordIDToConvert = wordID;
+            FlashcardBelongToSet flashcardBelongToSet = new FlashcardBelongToSet();
+            flashcardBelongToSet.setSetID(setFlashcard.getSetID());
             flashcardBelongToSet.setFlashcardID((int) wordIDToConvert);
-            flashcardBelongToSetDAO.insertFlashcardBelongToSet(flashcardBelongToSet);
+            flashcards.add(flashcardBelongToSet);
         }
+        flashcardBelongToSetDAO.insertAllFlashcardBelongToSet(flashcards);
     }
 
     private void insertNecessaryFlashcard(SetFlashcard setFlashcard) {
         List<Long> wordIDList = setFlashcard.getWordID();
+        List<Flashcard> flashcards = new ArrayList<>();
         for (Long wordID : wordIDList) {
             long wordIDToConvert = wordID;
             Flashcard flashcard = new Flashcard();
@@ -183,8 +187,9 @@ public class SetFlashcardController {
             flashcard.setAccuracy(0);
             flashcard.setSpeedPerCharacter(10);
             flashcard.setKanaLength(wordDAO.getOneWord((int) wordIDToConvert).getKana().length());
-            flashcardDAO.insertFlashcard(flashcard);
+            flashcards.add(flashcard);
         }
+        flashcardDAO.insertAllFlashcard(flashcards);
     }
 
     private int getSetIDFromOnlineID(SetFlashcard setFlashcard) {
@@ -230,8 +235,7 @@ public class SetFlashcardController {
         return listWordID;
     }
 
-    public void updateSet(SetFlashcard setFlashcard, String setName, boolean newPublicStatus, List<Word> listOfWord) {
-        List<Long> listWordID = getListWordID(listOfWord);
+    public void updateSet(SetFlashcard setFlashcard, String setName, boolean newPublicStatus, List<Long> listWordID) {
         setFlashcard.setSetName(setName);
         setFlashcard.setWordID(listWordID);
         if (setFlashcard.isPublic()) {

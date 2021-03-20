@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lmemo_capstone_project.R;
 import com.example.lmemo_capstone_project.controller.SharedPreferencesController;
-import com.example.lmemo_capstone_project.controller.database_controller.LMemoDatabase;
 import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.DictionaryFileReader;
 import com.example.lmemo_capstone_project.controller.dictrionary_data_controller.KanjiFileReader;
 import com.example.lmemo_capstone_project.controller.flashcard_reminder_controller.FlashcardReminderController;
@@ -24,10 +23,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        LMemoDatabase.getInstance(getApplicationContext());
-//        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
-//        SharedPreferencesController.setDictionaryDataState(getApplicationContext(), false);
         Log.i("SHARE_PRE", SharedPreferencesController.hasDictionaryData(getApplicationContext()) + "");
+
+
         flashcardReminderController = new FlashcardReminderController();
         flashcardReminderController.createNotificationChannel(this);
         flashcardReminderController.startAlarm(SharedPreferencesController.reminderIsOn(getApplicationContext()), true, this,
